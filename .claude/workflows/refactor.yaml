@@ -1,0 +1,296 @@
+name: Refactoring Workflow
+description: Safely improves code quality without changing external behavior, protected by the existing test suite.
+triggers:
+  - code_smell_detected
+  - technical_debt_reduction
+  - performance_optimization
+variables:
+  TARGET_COMPONENT: required # File or module to refactor
+  REFACTOR_REASON: required # e.g., "High complexity", "Duplicated logic"
+context_files:
+  - claude.md
+  - .claude/agents/code-tester-agent.md
+  - .claude/agents/code-reviewer-agent.md
+  - .claude/agents/doc-manager-agent.md
+
+# =============================================================================
+# STEP 1: BASELINE - Verify Test Coverage
+# =============================================================================
+steps:
+  - name: establish_baseline
+    agent: code-tester-agent
+    prompt: |
+      **OBJECTIVE**: Establish a test baseline before refactoring.
+      
+      **CONTEXT**:
+      - Target: {{TARGET_COMPONENT}}
+      - Reason: {{REFACTOR_REASON}}
+      
+      **READ FIRST**:
+      1. `claude.md`: For test coverage requirements.
+      2. `.claude/agents/code-tester-agent.md`: Testing standards and patterns.
+      3. Existing tests for `{{TARGET_COMPONENT}}`.
+      
+      ---
+      
+      ## Baseline Check
+      
+      1.  **Run All Tests**:
+          ```bash
+          [Insert test command from claude.md]
+          ```
+          **Gate**: ALL tests must be passing. If not, stop and fix bugs first.
+      
+      2.  **Check Coverage**:
+          ```bash
+          [Insert coverage command from claude.md] --collectCoverageFrom="{{TARGET_COMPONENT}}"
+          ```
+          **Gate**: Coverage must meet the project's "refactoring threshold" (e.g., > 80%) as defined in `claude.md`.
+      
+      ---
+      
+      ## CONSTRAINTS (CRITICAL)
+      
+      - **DO NOT REFACTOR IF TESTS ARE FAILING.**
+      - **DO NOT REFACTOR IF COVERAGE IS TOO LOW.** Refactoring without tests is blind and dangerous.
+      
+      ---
+      
+      **OUTPUT**:
+      - Confirmation that all tests pass.
+      - Current test coverage percentage for `{{TARGET_COMPONENT}}`.
+      - Go/No-Go decision for refactoring.
+    output: |
+      Baseline Report:
+      - Test Status: ALL PASSING ✅
+      - Coverage for {{TARGET_COMPONENT}}: [Percentage]%
+    validation:
+      - all_tests_pass: true
+      - coverage_sufficient: true
+    checkpoint: |
+      ⚠️ **MANUAL REVIEW REQUIRED**
+      
+      1. Are all tests passing?
+      2. Is coverage high enough to proceed safely?
+      
+      If coverage is too low, run a "test-writing" workflow first.
+      
+      Type "approve" to proceed to refactoring.
+
+# =============================================================================
+# STEP 2: PLAN REFACTOR
+# =============================================================================
+  - name: plan_refactor
+    agent: code-reviewer-agent
+    depends_on: establish_baseline
+    prompt: |
+      **OBJECTIVE**: Create a step-by-step plan for refactoring.
+      
+      **CONTEXT**:
+      - Target: {{TARGET_COMPONENT}}
+      - Reason: {{REFACTOR_REASON}}
+      
+      **READ FIRST**:
+      1. `claude.md`: For architecture and design patterns.
+      2. `.claude/agents/code-reviewer-agent.md`: Code quality and architecture standards.
+      3. The code for `{{TARGET_COMPONENT}}`.
+      
+      ---
+      
+      ## Analysis
+      
+      1.  **Identify Code Smells**:
+          - [ ] Duplicated logic
+          - [ ] Long methods / Large classes
+          - [ ] High complexity
+          - [ ] Tight coupling
+          - [ ] Unclear naming
+          - [ ] Architecture violations
+      
+      2.  **Propose Refactoring Patterns**:
+          - e.g., "Extract Method" for long functions.
+          - e.g., "Introduce Parameter Object" for long argument lists.
+          - e.g., "Move logic to Domain layer" for architecture violation.
+      
+      ---
+      
+      ## Refactoring Plan
+      
+      Create a list of small, atomic changes.
+      
+      1.  [Refactor Step 1: e.g., "Rename variable `data` to `userProfile`"]
+      2.  [Refactor Step 2: e.g., "Extract validation logic into `validateUserProfile()` function"]
+      3.  [Refactor Step 3: e.g., "Remove duplicated error handling"]
+      
+      **Goal**: Each step should be small enough to be verifiable by running the tests.
+      
+      ---
+      
+      **OUTPUT**:
+      - A numbered list of atomic refactoring steps.
+    output: |
+      Refactoring Plan:
+      1. [Step 1]
+      2. [Step 2]
+      3. [Step 3]
+      ...
+    validation:
+      - plan_created: true
+      - steps_are_atomic: true
+
+# =============================================================================
+# STEP 3: INCREMENTAL REFACTOR
+# =============================================================================
+  - name: incremental_refactor
+    agent: primary_ai
+    depends_on: plan_refactor
+    prompt: |
+      **OBJECTIVE**: Execute the refactoring plan while keeping all tests green.
+      
+      **CONTEXT**:
+      - Plan: [Reference output from plan_refactor]
+      
+      ---
+      
+      ## Refactoring Loop
+      
+      **CRITICAL PROCESS**:
+      
+      ```
+      FOR each step in the refactoring plan:
+        1. Make ONE atomic change.
+        2. Run ALL tests for the component.
+        3. IF tests fail:
+             Revert the change.
+             Re-evaluate the step.
+             STOP if plan is flawed.
+        4. IF tests pass:
+             Continue to the next step.
+      ```
+      
+      ---
+      
+      ## CONSTRAINTS (CRITICAL)
+      
+      1.  **NO behavior changes**. The external behavior of the component must remain identical.
+      2.  **ALL TESTS MUST PASS** at the end of *every* step.
+      3.  Do not add new features.
+      
+      ---
+      
+      ## Validation Command
+      
+      Run tests *after every single change*:
+      ```bash
+      [Insert test command from claude.md]
+      ```
+      **Expected Output**: ALL TESTS PASS ✅ (repeatedly)
+      
+      ---
+      
+      **OUTPUT**:
+      - A diff of the cumulative code changes.
+      - Confirmation that all tests passed after every step.
+    output: |
+      Refactoring complete.
+      Code changes:
+      - [Diff of all changes]
+    validation:
+      - all_tests_pass: true
+      - behavior_unchanged: true
+      - plan_executed: true
+
+# =============================================================================
+# STEP 4: QUALITY REVIEW
+# =============================================================================
+  - name: quality_review
+    agent: code-reviewer-agent
+    depends_on: incremental_refactor
+    prompt: |
+      **OBJECTIVE**: Ensure refactored code meets quality and architecture standards
+
+      **CONTEXT**
+      - Target Component: {{TARGET_COMPONENT}}
+      - Refactor Reason: {{REFACTOR_REASON}}
+      - Refactoring Changes: [Reference output from incremental_refactor]
+
+      **REVIEW CRITERIA**
+      1. Clean Architecture compliance
+      2. Code quality improvements achieved
+      3. No behavior changes introduced
+      4. Performance considerations
+      5. Maintainability improvements
+      6. Type safety and error handling
+
+      **QUALITY CHECKS**
+      - Code readability and clarity improved
+      - Proper naming conventions followed
+      - Complex logic simplified
+      - Duplicated code eliminated
+      - Architecture violations resolved
+      - Test coverage maintained or improved
+
+    output: |
+      Quality review completed:
+      - Architecture compliance: ✅/❌
+      - Code quality rating: [excellent/good/needs_improvement]
+      - Refactoring goals achieved: [yes/no]
+      - Recommendations: [list]
+
+    validation:
+      - quality_standards_met: true
+      - architecture_compliant: true
+      - no_regressions: true
+
+# =============================================================================
+# STEP 5: DOCUMENT & LEARN
+# =============================================================================
+  - name: document_and_learn
+    agent: doc-manager-agent
+    depends_on: quality_review
+    prompt: |
+      **OBJECTIVE**: Document the improvements and capture learnings.
+      
+      **CONTEXT**:
+      - Refactor Reason: {{REFACTOR_REASON}}
+      - Changes: [Reference output from incremental_refactor]
+      
+      ---
+      
+      ## 1. Documentation
+      
+      - **Code Docs**: Update documentation for any changed function signatures, classes, or modules.
+      - **Architecture Docs**: If the refactor resolved an architecture violation, update any relevant diagrams or ADRs.
+      
+      ## 2. Knowledge Capture
+      
+      - **Update `.claude/memory/learned-patterns.md`**:
+        - **Before (Pitfall)**: [Describe the old, problematic pattern]
+        - **After (Pattern)**: [Describe the new, improved pattern]
+        - **Reason**: [Explain why the new pattern is better]
+      
+      ---
+      
+      **OUTPUT**:
+      - List of documentation files updated.
+      - New entry for the "learned patterns" memory.
+    output: |
+      Documentation updated:
+      - [List of updated docs]
+      Knowledge captured:
+      - .claude/memory/learned-patterns.md
+    validation:
+      - documentation_complete: true
+      - patterns_captured: true
+
+final_checklist: |
+  Refactoring complete when:
+  - [ ] Baseline tests pass and coverage sufficient
+  - [ ] Refactoring plan created and reviewed
+  - [ ] Incremental changes applied successfully
+  - [ ] All tests pass after each change
+  - [ ] Code quality review completed
+  - [ ] No behavior changes introduced
+  - [ ] Architecture compliance verified
+  - [ ] Documentation updated
+  - [ ] Patterns and learnings captured

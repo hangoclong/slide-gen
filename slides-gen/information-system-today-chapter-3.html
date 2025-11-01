@@ -1,0 +1,1340 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Chapter 3: Managing the IS Infrastructure and Services</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Roboto+Mono&display=swap" rel="stylesheet">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js" integrity="sha512-GsLlZN/3F2ErC5ifS5QtgpiJtWd43JWSuIgh7mbzZ8zBps+dvLusV+eNQATqgA/HdeKFVgA5v3S/cIrLF7QnIg==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    <script src="https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.min.js"></script>
+    <style>
+        :root {
+            --bg-grad-start: #f5f3ff;
+            --bg-grad-end: #ddd6fe;
+            --bg-grad-mid-1: #f5f3ff;
+            --bg-grad-mid-2: #ede9fe;
+            --bg-grad-mid-3: #ddd6fe;
+            --text-primary: #334155;
+            --header-main: #4338ca;
+            --header-sub: #4f46e5;
+            --border-header: #a5b4fc;
+            --nav-button-bg: #4f46e5;
+            --nav-button-hover-bg: #4338ca;
+            --info-card-border: #6366f1;
+            --conclusion-border: #6366f1;
+            --conclusion-text: #4338ca;
+            --process-step-bg: #eef2ff;
+            --process-step-border: #c7d2fe;
+            --step-number-bg: #4f46e5;
+            --inline-code-bg: #eef2ff;
+            --inline-code-text: #312e81;
+            --layer-box-bg: #e0e7ff;
+            --layer-box-border: #c7d2fe;
+            --flow-arrow-color: #6366f1;
+            --scrollbar-thumb: #a78bfa;
+            --scrollbar-track: #ddd6fe;
+        }
+
+        /* --- Base and Layout --- */
+        html, body { height: 100%; margin: 0; padding: 0; overflow: hidden; }
+        body { display: flex; justify-content: center; align-items: center; background: linear-gradient(135deg, var(--bg-grad-start) 0%, var(--bg-grad-end) 100%); font-family: 'Poppins', sans-serif; color: var(--text-primary); transition: background 0.3s ease; }
+        .presentation-container { position: relative; aspect-ratio: 16 / 9; width: 100%; height: auto; max-width: 100vw; max-height: 100vh; background-color: var(--bg-grad-start); box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1), 0 4px 10px rgba(0, 0, 0, 0.05); border-radius: 8px; display: flex; flex-direction: column; overflow: hidden; }
+        @media (min-aspect-ratio: 16/9) { .presentation-container { width: auto; height: 100%; } }
+
+        /* --- Slide Styling --- */
+        .slide { flex-grow: 1; padding: clamp(1.8rem, 3.5vh, 2.8rem) clamp(2.2rem, 4.5vw, 4.0rem); padding-bottom: calc(clamp(1.8rem, 3.5vh, 2.8rem) + 55px); overflow-y: auto; display: none; flex-direction: column; line-height: 1.7; scrollbar-width: thin; scrollbar-color: var(--scrollbar-thumb) var(--scrollbar-track); position: relative; background-color: var(--bg-grad-start); background-image: linear-gradient(160deg, var(--bg-grad-mid-1) 0%, var(--bg-grad-mid-2) 30%, var(--bg-grad-mid-3) 70%, var(--bg-grad-end) 100%); aspect-ratio: 16 / 9; height: 100%; box-sizing: border-box; transition: background-image 0.3s ease; }
+        .slide::-webkit-scrollbar { width: 8px; }
+        .slide::-webkit-scrollbar-track { background: var(--scrollbar-track); border-radius: 4px; }
+        .slide::-webkit-scrollbar-thumb { background-color: var(--scrollbar-thumb); border-radius: 4px; border: 2px solid var(--scrollbar-track); }
+        .slide.active { display: flex; }
+
+        /* --- Footer and Controls --- */
+        .slide-footer { position: absolute; bottom: 0; left: 0; width: 100%; z-index: 15; background-color: rgba(248, 250, 252, 0.85); backdrop-filter: blur(4px); border-top: 1px solid rgba(209, 213, 219, 0.5); padding: clamp(0.2rem, 0.4vh, 0.3rem) clamp(1rem, 2vw, 2rem); display: flex; justify-content: space-between; align-items: center; opacity: 0; visibility: hidden; transition: opacity 0.3s ease-in-out, visibility 0.3s ease-in-out; pointer-events: none; }
+        .slide-footer.show-footer { opacity: 1; visibility: visible; pointer-events: auto; }
+        .footer-controls { display: flex; align-items: center; gap: clamp(0.6rem, 1.1vw, 1.1rem); }
+        .nav-button, .options-button, .reveal-answer-btn { padding: clamp(0.25rem, 0.5vh, 0.4rem) clamp(0.9rem, 1.3vw, 1.3rem); background-color: var(--nav-button-bg); color: white; border-radius: 4px; text-decoration: none; font-size: clamp(0.8rem, 1.3vh, 0.9rem); font-weight: 500; transition: background-color 0.2s ease-in-out, opacity 0.2s ease-in-out, box-shadow 0.2s ease-in-out; border: none; cursor: pointer; line-height: 1.4; }
+        .nav-button:hover:not(:disabled), .options-button:hover, .reveal-answer-btn:hover { background-color: var(--nav-button-hover-bg); box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1); }
+        .nav-button:disabled { background-color: #d1d5db; color: #6b7280; cursor: not-allowed; opacity: 0.8; box-shadow: none; }
+        .options-button { background-color: #64748b; padding: clamp(0.25rem, 0.5vh, 0.4rem); line-height: 0; }
+        .options-button:hover { background-color: #475569; }
+        .options-button svg { width: clamp(1.0rem, 1.6vh, 1.2rem); height: clamp(1.0rem, 1.6vh, 1.2rem); fill: white; }
+
+        /* --- Settings/Export Drawer Menu --- */
+        #settingsDrawer { position: absolute; bottom: 0; left: 0; width: 100%; background-color: #ffffff; border-top: 1px solid #e2e8f0; box-shadow: 0 -4px 12px rgba(0, 0, 0, 0.1); padding: clamp(1rem, 2vh, 1.5rem) clamp(1.5rem, 3vw, 2rem); transform: translateY(100%); transition: transform 0.3s ease-in-out; z-index: 25; }
+        #settingsDrawer.active { transform: translateY(0); }
+        .drawer-section { margin-bottom: 1rem; }
+        .drawer-section:last-child { margin-bottom: 0; }
+        .drawer-section h3 { font-size: 1rem; font-weight: 600; color: #475569; margin-bottom: 0.75rem; text-align: center; }
+        .drawer-buttons-container { display: flex; justify-content: center; align-items: center; gap: clamp(0.6rem, 1.1vw, 1.1rem); flex-wrap: wrap; }
+        .drawer-button { padding: clamp(0.6rem, 1.1vh, 0.8rem) clamp(1.1rem, 1.6vw, 1.6rem); background-color: #16a34a; color: white; border: none; border-radius: 4px; font-size: clamp(0.95rem, 1.6vh, 1.05rem); font-weight: 500; cursor: pointer; transition: background-color 0.2s ease, opacity 0.2s ease; }
+        .drawer-button:hover:not(:disabled) { background-color: #15803d; }
+        .drawer-button:disabled { background-color: #9ca3af; cursor: not-allowed; opacity: 0.7; }
+        .theme-button { border: 2px solid transparent; }
+        .theme-button.active { border-color: var(--header-main); box-shadow: 0 0 0 2px var(--header-main); }
+
+        /* --- Content Styling --- */
+
+        .two-panel-wrapper {
+            display: flex;
+            width: 100%;
+            height: 100%;
+            align-items: stretch;
+        }
+        .two-panel-wrapper.image-right {
+            flex-direction: row-reverse;
+        }
+        .image-panel {
+            flex: 0 0 33%;
+            position: relative;
+        }
+        .image-panel img {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            border-radius: 20px;
+        }
+        .text-panel {
+            flex: 1 1 67%;
+            padding: clamp(1.8rem, 3.5vh, 2.8rem) clamp(2.2rem, 4.5vw, 4.0rem);
+            box-sizing: border-box;
+            overflow-y: auto;
+        }
+
+        .slide h1 { color: var(--header-main); font-size: clamp(2.5em, 4.0vw, 3.5em); font-weight: 700; margin-bottom: 1.4rem; padding-bottom: 0.6rem; line-height: 1.35; border-bottom: 3px solid var(--border-header); }
+        .slide.session-title-slide h1 { font-size: clamp(3.2em, 4.8vw, 4.5em); border-bottom: none; margin-bottom: 1.2rem; color: var(--header-main); }
+        .slide.session-title-slide h2 { font-size: clamp(1.7em, 2.8vw, 2.5em); font-weight: 400; margin-bottom: 1.0rem; color: var(--header-sub); }
+        .slide.session-title-slide .slide-content-wrapper { display: flex; flex-direction: column; justify-content: center; align-items: center; text-align: center; height: 100%; }
+        .slide h2 { color: var(--header-sub); font-size: clamp(1.6em, 2.4vw, 2.2em); font-weight: 600; margin-top: 1.8rem; margin-bottom: 1rem; }
+        .slide p, .slide ul, .slide ol { color: var(--text-primary); margin-bottom: 1rem; font-size: clamp(1.0em, 1.5vw, 1.3em); line-height: 1.8; }
+        .slide ul, .slide ol { margin-left: 1.8rem; margin-bottom: 1rem; }
+        .slide ul { list-style-type: disc; }
+        .slide ol { list-style-type: decimal; }
+        .slide li { margin-bottom: 0.8rem; }
+        .slide pre { background-color: #1e293b; color: #f8fafc; border: 1px solid #334155; padding: 0.9rem; border-radius: 6px; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word; font-family: 'Roboto Mono', 'Courier New', Courier, monospace; font-size: clamp(0.85em, 1.1vw, 1.0em); margin-top: 0.6rem; margin-bottom: 1.1rem; line-height: 1.5; }
+        .slide code { font-family: 'Roboto Mono', 'Courier New', Courier, monospace; }
+        .slide code.inline { background-color: var(--inline-code-bg); color: var(--inline-code-text); padding: 0.2em 0.5em; border-radius: 4px; font-size: 0.95em; white-space: normal; }
+        .slide .conclusion { font-weight: 600; margin-top: 1.4rem; border-left: 4px solid var(--conclusion-border); padding-left: 0.9rem; color: var(--conclusion-text); font-size: clamp(1.0em, 1.5vw, 1.3em); }
+        .info-card { background-color: #fff; border-radius: 8px; padding: clamp(0.9rem, 1.6vh, 1.3rem); box-shadow: 0 2px 4px rgba(0,0,0,0.05); border-left: 4px solid var(--info-card-border); margin-bottom: 0.9rem; }
+        .comparison-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: clamp(1rem, 2vw, 1.5rem); margin-top: 1.2rem; }
+        .comparison-card { background-color: #f8fafc; border: 1px solid #e2e8f0; border-radius: 8px; padding: clamp(0.9rem, 1.6vh, 1.3rem); }
+        .comparison-card h3 { font-weight: 600; color: var(--header-main); margin-bottom: 0.6rem; text-align: center; border-bottom: 2px solid var(--border-header); padding-bottom: 0.4rem; font-size: clamp(1.15em, 1.75vw, 1.55em); }
+        .process-step { display: flex; align-items: center; margin-bottom: 0.9rem; background-color: var(--process-step-bg); padding: 0.7rem; border-radius: 6px; border: 1px solid var(--process-step-border); }
+        .step-number { background-color: var(--step-number-bg); color: white; border-radius: 50%; width: clamp(26px, 3.2vh, 32px); height: clamp(26px, 3.2vh, 32px); display: inline-flex; justify-content: center; align-items: center; font-weight: 600; margin-right: 0.9rem; flex-shrink: 0; font-size: clamp(0.85em, 1.25vh, 0.95em); }
+        .slide .highlight { color: #dc2626; font-weight: 700; }
+        .slide .highlight-green { color: #16a34a; font-weight: 600; }
+        .summary-list-check li::before { content: '✔'; margin-right: 0.8rem; color: #16a34a; }
+        .ai-assist-prompt { background-color: #ecfdf5; border-left: 4px solid #10b981; padding: 0.8rem; margin-top: 1rem; border-radius: 4px; }
+        .ai-assist-prompt strong { color: #047857; }
+        .mermaid { background-color: #f8fafc; border: 1px solid #e2e8f0; border-radius: 8px; padding: 1rem; margin-top: 1rem; display: flex; justify-content: center; align-items: center; min-height: 150px; }
+        .answer-explanation { display: none; margin-top: 1rem; }
+
+        /* --- STYLES FOR PRINTING (FIXED) --- */
+        @media print {
+            .slide-footer, #settingsDrawer, .options-button, .nav-button, .slide-counter, .reveal-answer-btn { display: none !important; }
+            body { background: none !important; display: block !important; height: auto !important; overflow: visible !important; font-size: 10pt; }
+            .presentation-container { width: 100% !important; height: auto !important; max-width: none !important; max-height: none !important; box-shadow: none !important; border-radius: 0 !important; overflow: visible !important; aspect-ratio: auto !important; background-color: transparent !important; }
+            .slide { display: flex !important; flex-direction: column !important; width: 100% !important; height: 100vh !important; overflow: hidden !important; page-break-before: always !important; page-break-inside: avoid !important; padding: 0.5in !important; margin: 0 !important; border: none !important; box-shadow: none !important; aspect-ratio: auto !important; background-color: var(--bg-grad-start) !important; background-image: linear-gradient(160deg, var(--bg-grad-mid-1) 0%, var(--bg-grad-mid-2) 30%, var(--bg-grad-mid-3) 70%, var(--bg-grad-end) 100%) !important; -webkit-print-color-adjust: exact !important; print-color-adjust: exact !important; }
+            .slide:first-child { page-break-before: auto !important; }
+            .slide h1 { font-size: 18pt !important; }
+            .slide h2 { font-size: 14pt !important; }
+            .slide p, .slide ul, .slide ol, .slide li { font-size: 11pt !important; line-height: 1.4 !important; }
+            .slide code.inline, .slide pre code { font-size: 10pt !important; }
+            .slide pre { padding: 0.5rem !important; }
+            .info-card, .comparison-card, .process-step, .ai-assist-prompt { background-color: #fff !important; border-color: #ccc !important; box-shadow: none !important; }
+            .step-number { background-color: #ccc !important; color: #000 !important; }
+            .comparison-grid { grid-template-columns: 1fr !important; }
+            .mermaid { background-color: #f8fafc !important; -webkit-print-color-adjust: exact !important; print-color-adjust: exact !important; }
+            .mermaid svg { max-width: 100%; height: auto; }
+        }
+        @page { size: landscape; margin: 0.5in; }
+    </style>
+</head>
+<body>
+    <div class="presentation-container">
+
+        <!-- Slide 1: Title Slide -->
+        <div id="slide-1" class="slide active session-title-slide">
+            <div class="slide-content-wrapper">
+                <h1>Managing the IS Infrastructure and Services</h1>
+                <h2>Chapter 3</h2>
+                <p class="instructor-info" style="margin-top: 2rem;">Instructor: N. Long Ha (PhD)</p>
+                <p class="instructor-info" style="margin-top: 2rem;">University of Economics, Hue University</p>
+            </div>
+        </div>
+
+        <!-- Slide 2: Learning Objectives -->
+        <div id="slide-2" class="slide">
+            <h1>Learning Objectives</h1>
+            <ol>
+                <li>Describe how changes in the competitive landscape influence IS infrastructure needs.</li>
+                <li>Describe the essential components of an organization's IS infrastructure.</li>
+                <li>Discuss managerial issues associated with managing an IS infrastructure.</li>
+                <li>Describe cloud computing and other current trends that can help address IS infrastructure challenges.</li>
+            </ol>
+        </div>
+
+        <!-- Slide 3: Preview -->
+        <div id="slide-3" class="slide">
+            <h1>The Foundation of the Digital World</h1>
+            <p>Just as a city relies on its physical infrastructure (roads, power, water), a modern digital business relies on its <code class="inline">Information Systems (IS) Infrastructure</code>.</p>
+            <div class="info-card">
+                <p>This infrastructure is the backbone that supports all business processes, competitive strategy, and data management. Effectively managing it is a complex but critical activity in today's digital world.</p>
+            </div>
+            <p>This chapter explores the key components of this infrastructure and the managerial challenges of building and maintaining it.</p>
+        </div>
+
+        <!-- Slide 4: Analogy: City vs. IS Infrastructure -->
+        <div id="slide-4" class="slide">
+            <h1>Analogy: A City's Infrastructure</h1>
+            <p>A city's infrastructure provides essential services, some visible, some invisible.</p>
+            <div class="comparison-grid">
+                <div class="comparison-card">
+                    <h3>Visible Infrastructure</h3>
+                    <ul>
+                        <li>Streets & Highways</li>
+                        <li>Schools & Hospitals</li>
+                        <li>Parks</li>
+                    </ul>
+                </div>
+                <div class="comparison-card">
+                    <h3>"Invisible" Infrastructure</h3>
+                    <ul>
+                        <li>Power & Water Lines</li>
+                        <li>Sewage Systems</li>
+                        <li>Communication Networks</li>
+                    </ul>
+                </div>
+            </div>
+            <p class="conclusion">A strong infrastructure makes a city more livable and attractive to businesses. The same is true for a company's IS infrastructure.</p>
+        </div>
+
+        <!-- Slide 5: The IS Infrastructure Defined -->
+        <div id="slide-5" class="slide">
+            <h1>What is IS Infrastructure?</h1>
+            <p>Businesses rely on an <code class="inline">information systems infrastructure</code> to support their operations, analytics, and strategy.</p>
+            <div class="info-card">
+                <h3>IS Infrastructure</h3>
+                <p>The hardware, system software, storage, networking, and data centers that form the foundation for an organization's information systems.</p>
+            </div>
+            <p>No matter the specific system, the infrastructure provides three basic capabilities: <strong>processing, storage, and transmission</strong> of data.</p>
+        </div>
+
+        <!-- Slide 6: Mermaid: Core Capabilities -->
+        <div id="slide-6" class="slide">
+            <h1>Core Capabilities of IS Infrastructure</h1>
+            <div class="mermaid">
+                graph TD
+                    A[IS Infrastructure] --> B[Processing];
+                    A --> C[Storage];
+                    A --> D[Transmission];
+
+                    subgraph Core Components
+                        E[Hardware]
+                        F[Software]
+                        G[Networking]
+                        H[Data Centers]
+                    end
+
+                    E --> A
+                    F --> A
+                    G --> A
+                    H --> A
+
+                    style A fill:#dbeafe,stroke:#4f46e5,stroke-width:2px
+                    style B fill:#eef2ff,stroke:#4338ca,stroke-width:1px
+                    style C fill:#eef2ff,stroke:#4338ca,stroke-width:1px
+                    style D fill:#eef2ff,stroke:#4338ca,stroke-width:1px
+            </div>
+            <p>These capabilities are delivered through the combination of core hardware, software, and networking components.</p>
+        </div>
+
+        <!-- Slide 7: IS Infrastructure vs. IS Architecture -->
+        <div id="slide-7" class="slide">
+            <h1>Infrastructure vs. Architecture</h1>
+            <p>These two terms are related but distinct.</p>
+            <div class="comparison-grid">
+                <div class="comparison-card">
+                    <h3>IS Infrastructure</h3>
+                    <p>The broad, flexible set of technical capabilities available to the organization. It's the "what you have."</p>
+                </div>
+                <div class="comparison-card">
+                    <h3>IS Architecture</h3>
+                    <p>The formal description of how specific technologies and systems are arranged to support specific business processes and strategy. It's the "how you use it."</p>
+                </div>
+            </div>
+            <p class="conclusion">A well-designed architecture leverages the infrastructure to achieve business goals.</p>
+        </div>
+
+        <!-- Slide 8: Business-IT Alignment -->
+        <div id="slide-8" class="slide">
+            <h1>The Goal: Business-IT Alignment</h1>
+            <p><code class="inline">Business-IT alignment</code> is the continuous process of adjusting business goals and the IS architecture to achieve business objectives.</p>
+            <div class="mermaid">
+                graph LR
+                    A[Changing Business Conditions] --> B(Refine IS Architecture);
+                    B --> C[Implement/Utilize IS Infrastructure];
+                    C --> D(Enable Innovative Business Models);
+                    D --> A;
+                style A fill:#e0f2fe,stroke:#0ea5e9,stroke-width:1px
+                style B fill:#dbeafe,stroke:#4f46e5,stroke-width:1px
+                style C fill:#eef2ff,stroke:#4338ca,stroke-width:1px
+                style D fill:#dbeafe,stroke:#4f46e5,stroke-width:1px
+            </div>
+            <p>This alignment is a dynamic cycle: business needs drive infrastructure changes, and new infrastructure capabilities enable new business opportunities.</p>
+        </div>
+
+        <!-- Slide 9: Knowledge Check 1 -->
+        <div id="slide-9" class="slide">
+            <h1>Knowledge Check</h1>
+            <h2>The formal description of how an organization's technologies, systems, and processes support its specific business strategy is the:</h2>
+            <ul>
+                <li>A) IS Infrastructure</li>
+                <li>B) IS Architecture</li>
+                <li>C) Business-IT Alignment</li>
+                <li>D) Operating System</li>
+            </ul>
+            <button class="reveal-answer-btn">Reveal Answer</button>
+            <div class="answer-explanation">
+                <div class="info-card">
+                    <h3>Correct Answer: B</h3>
+                    <p>The IS Architecture describes how the specific capabilities from the overarching IS Infrastructure are designed and arranged to support the specific strategy and processes of an organization.</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 10: Part 2 Title -->
+        <div id="slide-10" class="slide session-title-slide">
+            <div class="slide-content-wrapper">
+                <h1>Part 2: Core Components of IS Infrastructure</h1>
+                <h2>A Deeper Dive</h2>
+            </div>
+        </div>
+
+        <!-- Slide 11: Component 1: Hardware -->
+        <div id="slide-11" class="slide">
+            <h1>Component 1: Hardware</h1>
+            <p>Hardware refers to the physical computers that run the applications and databases necessary for processing transactions and analyzing data.</p>
+            <p>Organizations use different classes of computers to support various business processes.</p>
+            <h2>Six General Classes of Computers:</h2>
+            <ol>
+                <li>Supercomputer</li>
+                <li>Mainframe</li>
+                <li>Server</li>
+                <li>Workstation</li>
+                <li>Personal Computer</li>
+                <li>Mobile Device</li>
+            </ol>
+        </div>
+
+        <!-- Slide 12: Hardware: Supercomputers & Mainframes -->
+        <div id="slide-12" class="slide">
+            <h1>Hardware: The Heavy Lifters</h1>
+            <div class="comparison-grid">
+                <div class="comparison-card">
+                    <h3>Supercomputer</h3>
+                    <p>The most powerful and expensive computers, used for massive scientific problems (e.g., climate modeling, nuclear research). Not typically used by business organizations.</p>
+                </div>
+                <div class="comparison-card">
+                    <h3>Mainframe</h3>
+                    <p>Large, central computing systems for major corporations. Optimized for high availability, security, and resource utilization. Used for mission-critical applications like transaction processing.</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 13: Hardware: Servers, Workstations, PCs -->
+        <div id="slide-13" class="slide">
+            <h1>Hardware: Business & Personal Computing</h1>
+            <div class="comparison-grid">
+                <div class="comparison-card">
+                    <h3>Server</h3>
+                    <p>A computer on a network that provides services (files, printing, web pages) to other users. Optimized for many concurrent users.</p>
+                </div>
+                <div class="comparison-card">
+                    <h3>Workstation</h3>
+                    <p>High-performance single-user computers for tasks like engineering, medical imaging, and graphic design. Optimized for visualization and 3D rendering.</p>
+                </div>
+                <div class="comparison-card">
+                    <h3>Personal Computer (PC)</h3>
+                    <p>General-purpose computers for personal productivity and small business tasks.</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 14: Hardware: Mobile & Embedded -->
+        <div id="slide-14" class="slide">
+            <h1>Hardware: The Edge and Beyond</h1>
+            <div class="comparison-grid">
+                <div class="comparison-card">
+                    <h3>Mobile Devices</h3>
+                    <p>Smartphones and tablets that have become an integral part of an organization's IS infrastructure, enabling work from anywhere.</p>
+                </div>
+                <div class="comparison-card">
+                    <h3>Embedded Systems</h3>
+                    <p>Specialized computers optimized for a specific task, from controlling traffic lights to playing MP3s. A key part of the Internet of Things (IoT).</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 15: Two-Panel Image: Computer Characteristics Table -->
+        <div id="slide-15" class="slide">
+            <div class="two-panel-wrapper">
+                <div class="image-panel">
+                    <img src="img-information-system-today-chapter-3/slide-15.png" alt="Table of computer characteristics">
+                </div>
+                <div class="text-panel">
+                    <h1>Comparing Computer Types</h1>
+                    <p>This table summarizes the key characteristics of the different classes of computers used in organizations, from powerful supercomputers to handheld mobile devices.</p>
+                    <p>Notice the vast differences in simultaneous users, cost, and memory, which dictate their typical use cases.</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 16: The Internet of Things (IoT) -->
+        <div id="slide-16" class="slide">
+            <h1>The Internet of Things (IoT)</h1>
+            <p>The IoT is a network of physical objects embedded with sensors, software, and other technologies that connect and exchange data over the internet.</p>
+            <h2>Key IoT Technologies:</h2>
+            <ul>
+                <li><strong>Sensors:</strong> Detect changes in environmental conditions (temperature, pressure, motion).</li>
+                <li><strong>Controllers (PLCs):</strong> Automate machines and processes.</li>
+                <li><strong>Radio Frequency Identification (RFID):</strong> Uses electromagnetic energy to transmit data, replacing traditional barcodes.</li>
+            </ul>
+        </div>
+
+        <!-- Slide 17: Focus on: RFID Technology -->
+        <div id="slide-17" class="slide">
+            <h1>Focus on: RFID</h1>
+            <p><code class="inline">Radio Frequency Identification (RFID)</code> is rapidly replacing the standard barcode for tracking products and assets.</p>
+            <div class="info-card">
+                <h3>Advantages over Barcodes:</h3>
+                <ul>
+                    <li>Does not require line-of-sight scanning.</li>
+                    <li>Can be read from a greater distance.</li>
+                    <li>Can hold more data, which can be updated.</li>
+                    <li>Readable regardless of position or visibility.</li>
+                </ul>
+            </div>
+            <p>RFID tags can be passive (small, inexpensive, short-range) or active (larger, battery-powered, long-range).</p>
+        </div>
+
+        <!-- Slide 18: Knowledge Check 2 -->
+        <div id="slide-18" class="slide">
+            <h1>Knowledge Check</h1>
+            <h2>A computer optimized for visualization and rendering of 3D models for engineering or animation is a:</h2>
+            <ul>
+                <li>A) Server</li>
+                <li>B) Mainframe</li>
+                <li>C) Workstation</li>
+                <li>D) Supercomputer</li>
+            </ul>
+            <button class="reveal-answer-btn">Reveal Answer</button>
+            <div class="answer-explanation">
+                <div class="info-card">
+                    <h3>Correct Answer: C</h3>
+                    <p>Workstations are specifically designed for demanding single-user tasks like engineering, medical imaging, or graphics design, featuring fast processors, large memory, and advanced video cards.</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 19: Component 2: System Software -->
+        <div id="slide-19" class="slide">
+            <h1>Component 2: System Software</h1>
+            <p>Application software (like Word or Excel) cannot interact directly with hardware. It needs an intermediary.</p>
+            <div class="info-card">
+                <h3>System Software</h3>
+                <p>The collection of programs that control the basic operations of computer hardware. The most prominent type is the <code class="inline">Operating System (OS)</code>.</p>
+            </div>
+            <p>Examples: Windows, macOS, Linux, Android, iOS.</p>
+        </div>
+
+        <!-- Slide 20: Mermaid: Role of the Operating System -->
+        <div id="slide-20" class="slide">
+            <h1>The Role of the Operating System</h1>
+            <p>The OS acts as a coordinator between all the different parts of a computer system.</p>
+            <div class="mermaid">
+                graph TD
+                    User --> App["Application Software"];
+                    App --> OS["Operating System"];
+                    OS --> Hardware;
+                    OS --> Peripherals;
+
+                    style User fill:#eef2ff,stroke:#4338ca,stroke-width:1px
+                    style App fill:#e0e7ff,stroke:#4f46e5,stroke-width:1px
+                    style OS fill:#dbeafe,stroke:#4f46e5,stroke-width:2px
+                    style Hardware fill:#e0e7ff,stroke:#4f46e5,stroke-width:1px
+                    style Peripherals fill:#e0e7ff,stroke:#4f46e5,stroke-width:1px
+            </div>
+            <p>It provides a common layer, so applications don't have to be written for every single hardware model.</p>
+        </div>
+
+        <!-- Slide 21: Component 3: Storage -->
+        <div id="slide-21" class="slide">
+            <h1>Component 3: Storage</h1>
+            <p>Organizations need to reliably store and retrieve tremendous amounts of data. There are three distinct types of data based on purpose:</p>
+            <div class="comparison-grid">
+                <div class="comparison-card">
+                    <h3>Operational Data</h3>
+                    <p>Data used for managing business processes, like processing transactions. Requires fast access.</p>
+                </div>
+                <div class="comparison-card">
+                    <h3>Backup Data</h3>
+                    <p>Short-term copies of data, used to recover from a system-related disaster.</p>
+                </div>
+                <div class="comparison-card">
+                    <h3>Archival Data</h3>
+                    <p>Long-term copies of data, often for compliance and reporting purposes. Access speed is less critical.</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 22: Two-Panel Image: Storage Media -->
+        <div id="slide-22" class="slide">
+            <div class="two-panel-wrapper image-right">
+                <div class="image-panel">
+                    <img src="img-information-system-today-chapter-3/slide-22.png" alt="Images of different storage media">
+                </div>
+                <div class="text-panel">
+                    <h1>Choosing the Right Storage</h1>
+                    <p>Different data types call for different storage technologies:</p>
+                    <ul>
+                        <li><strong>Hard Drives (HDD) & Flash Storage (SSD):</strong> Offer high access speeds. Ideal for <code class="inline">operational data</code> and frequent backups where quick recovery is needed.</li>
+                        <li><strong>Magnetic Tapes:</strong> Very low cost and have a long shelf life (up to 30 years). Ideal for <code class="inline">archival data</code> where access speed is not a priority.</li>
+                    </ul>
+                    <p class="conclusion">The choice of storage medium is a trade-off between speed, cost, and longevity.</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 23: Knowledge Check 3 -->
+        <div id="slide-23" class="slide">
+            <h1>Knowledge Check</h1>
+            <h2>Long-term copies of organizational data, often used for compliance and reporting, are known as:</h2>
+            <ul>
+                <li>A) Operational data</li>
+                <li>B) Backup data</li>
+                <li>C) Archival data</li>
+                <li>D) Volatile data</li>
+            </ul>
+            <button class="reveal-answer-btn">Reveal Answer</button>
+            <div class="answer-explanation">
+                <div class="info-card">
+                    <h3>Correct Answer: C</h3>
+                    <p>Archival data is stored for long-term purposes, such as meeting legal compliance requirements (e.g., Sarbanes-Oxley Act). Access speed is less critical than low cost and durability, making magnetic tape a common choice.</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 24: Component 4: Networking -->
+        <div id="slide-24" class="slide">
+            <h1>Component 4: Networking</h1>
+            <p>Individual pieces of technology have little value on their own. It is through <code class="inline">networking</code>—connecting them together—that business value is realized.</p>
+            <p>Computer networking is the sharing of data or services. It requires three things:</p>
+            <ol>
+                <li>A sender and a receiver.</li>
+                <li>A pathway or transmission medium (e.g., cable, wireless).</li>
+                <li>Rules or <code class="inline">protocols</code> governing communication.</li>
+            </ol>
+        </div>
+
+        <!-- Slide 25: Networking: Bandwidth -->
+        <div id="slide-25" class="slide">
+            <h1>Networking: Bandwidth</h1>
+            <p>To transmit vast amounts of data in a timely manner, adequate bandwidth is needed.</p>
+            <div class="info-card">
+                <h3>Bandwidth</h3>
+                <p>The transmission capacity of a computer or communications channel, measured in bits per second (bps). It represents how much data can be reliably transmitted in one second.</p>
+            </div>
+            <p>Downloading a 45-minute TV show (200 MB):</p>
+            <ul>
+                <li>~9 hours on a 56 Kbps modem.</li>
+                <li>~6 minutes on a 1 Mbps DSL connection.</li>
+                <li>~2 minutes on a 15 Mbps high-speed connection.</li>
+            </ul>
+        </div>
+
+        <!-- Slide 26: Network Models -->
+        <div id="slide-26" class="slide">
+            <h1>Network Models: Who Does What?</h1>
+            <div class="comparison-grid">
+                <div class="comparison-card">
+                    <h3>Client-Server Network</h3>
+                    <p>Servers and clients have defined roles. Servers <strong>provide</strong> services, and clients (like your PC) <strong>request</strong> services. This is the typical business model.</p>
+                </div>
+                <div class="comparison-card">
+                    <h3>Peer-to-Peer (P2P) Network</h3>
+                    <p>Any computer (a "peer") may both request and provide services. All peers have equivalent capabilities. Common in small offices or for file-sharing (e.g., BitTorrent).</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 27: Network Types -->
+        <div id="slide-27" class="slide">
+            <h1>Types of Networks by Size</h1>
+            <div class="comparison-grid">
+                <div class="comparison-card">
+                    <h3>Personal Area Network (PAN)</h3>
+                    <p>Wireless communication between devices in a very small area (e.g., Bluetooth headset to phone). Under 10 meters.</p>
+                </div>
+                <div class="comparison-card">
+                    <h3>Local Area Network (LAN)</h3>
+                    <p>Sharing of resources between users, typically within a single building (e.g., an office network). Can be wired or wireless (WLAN/Wi-Fi).</p>
+                </div>
+                <div class="comparison-card">
+                    <h3>Wide Area Network (WAN)</h3>
+                    <p>Connects multiple LANs over a large physical distance, from a city to worldwide. The Internet is the largest WAN.</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 28: The Internet and the World Wide Web -->
+        <div id="slide-28" class="slide">
+            <h1>The Internet vs. The World Wide Web</h1>
+            <p>These terms are often used interchangeably, but they are not the same thing.</p>
+            <div class="info-card">
+                <p><strong>The Internet:</strong> A large, worldwide collection of networks that use a common protocol (TCP/IP) to communicate. It is the <span class="highlight">infrastructure</span>.</p>
+                <p><strong>The World Wide Web:</strong> A system of interlinked documents on the internet. It is a <span class="highlight">service</span> that runs on the internet, providing a graphical interface to access content.</p>
+            </div>
+        </div>
+
+        <!-- Slide 29: Core Web Concepts -->
+        <div id="slide-29" class="slide">
+            <h1>Core Web Concepts</h1>
+            <ul>
+                <li><strong>Web Page:</strong> A document containing content and hyperlinks.</li>
+                <li><strong>HTML (Hypertext Markup Language):</strong> The standard method for specifying the structure and content of web pages.</li>
+                <li><strong>HTTP (Hypertext Transfer Protocol):</strong> The protocol used by web servers to process user requests for pages.</li>
+                <li><strong>URL (Uniform Resource Locator):</strong> A unique address used to identify and locate a particular web page.</li>
+            </ul>
+        </div>
+
+        <!-- Slide 30: Two-Panel Image: Dissecting a URL -->
+        <div id="slide-30" class="slide">
+            <div class="two-panel-wrapper">
+                <div class="image-panel">
+                    <img src="img-information-system-today-chapter-3/slide-30.png" alt="Diagram of a URL's components">
+                </div>
+                <div class="text-panel">
+                    <h1>Dissecting a URL</h1>
+                    <p>A URL has three main parts:</p>
+                    <ol>
+                        <li><strong>Host Name:</strong> The particular web server that will respond (e.g., <code class="inline">www</code>, <code class="inline">maps</code>).</li>
+                        <li><strong>Domain Name:</strong> Helps people recognize the company or person (e.g., <code class="inline">google</code>).</li>
+                        <li><strong>Top-Level Domain (TLD):</strong> Indicates the type of organization (e.g., <code class="inline">.com</code>, <code class="inline">.edu</code>, <code class="inline">.gov</code>).</li>
+                    </ol>
+                    <p>The URL may also include a path to a specific resource on the server.</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 31: IP Addresses -->
+        <div id="slide-31" class="slide">
+            <h1>IP Addresses: The Real Address</h1>
+            <p>All domain names are associated with one or more <code class="inline">Internet Protocol (IP) addresses</code>.</p>
+            <div class="info-card">
+                <p>An IP address is a unique numeric address that identifies a computer or device on the internet, allowing the network to route messages to the proper destination.</p>
+            </div>
+            <div class="comparison-grid">
+                <div class="comparison-card">
+                    <h3>IPv4</h3>
+                    <p>32-bit address, written as four numbers separated by periods (e.g., 128.196.128.233). Running out of addresses.</p>
+                </div>
+                <div class="comparison-card">
+                    <h3>IPv6</h3>
+                    <p>128-bit address, allowing for a vastly larger number of connected devices to support the IoT.</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 32: APIs: The Connective Tissue -->
+        <div id="slide-32" class="slide">
+            <h1>APIs: The Connective Tissue of the Web</h1>
+            <p>Web protocols are not just for web pages. They are also the basis for <code class="inline">Application Programming Interfaces (APIs)</code>.</p>
+            <div class="info-card">
+                <h3>API</h3>
+                <p>An interface that allows different applications to communicate and exchange data or functionality. A service consumer (like the Uber app) can access services from a provider (like Google Maps) without needing to know how the service is built.</p>
+            </div>
+            <p>APIs are the foundation of the modern "API Economy," enabling seamless integration between different services.</p>
+        </div>
+
+        <!-- Slide 33: The Deep Web and Dark Web -->
+        <div id="slide-33" class="slide">
+            <h1>The Deep Web vs. The Dark Web</h1>
+            <p>Not all web content is indexed by search engines like Google.</p>
+            <div class="comparison-grid">
+                <div class="comparison-card">
+                    <h3>The Deep Web</h3>
+                    <p>Parts of the web that cannot be indexed by conventional search engines. This includes private databases, content behind paywalls, and corporate intranets. Most of the web is the deep web.</p>
+                </div>
+                <div class="comparison-card">
+                    <h3>The Dark Web</h3>
+                    <p>A small part of the deep web used for nefarious purposes (e.g., illegal trade). It is typically only accessible using specialized browsers (like Tor) that provide anonymity.</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 34: Intranets and Extranets -->
+        <div id="slide-34" class="slide">
+            <h1>Intranets and Extranets</h1>
+            <p>Organizations use web technologies for private communications as well.</p>
+            <ul>
+                <li><strong>Intranet:</strong> A private network, contained within an organization, that uses web technologies to share internal information. It is secured behind a <code class="inline">firewall</code>.</li>
+                <li><strong>Extranet:</strong> A private part of the internet that is cordoned off from ordinary users, enabling two or more firms to use the internet to do business together securely (often using VPNs).</li>
+            </ul>
+        </div>
+
+        <!-- Slide 35: Mermaid: Network Access -->
+        <div id="slide-35" class="slide">
+            <h1>Who Can Access What?</h1>
+            <div class="mermaid">
+                graph TD
+                    A[Internet] --> B{Public Access};
+                    C[Intranet] --> D{Employees Only};
+                    E[Extranet] --> F{Business Partners Only};
+
+                    style A fill:#e0f2fe,stroke:#0ea5e9,stroke-width:2px
+                    style C fill:#dbeafe,stroke:#4f46e5,stroke-width:2px
+                    style E fill:#eef2ff,stroke:#4338ca,stroke-width:2px
+            </div>
+            <p>Access becomes more restricted as you move from the public internet to private corporate networks.</p>
+        </div>
+
+        <!-- Slide 36: Knowledge Check 4 -->
+        <div id="slide-36" class="slide">
+            <h1>Knowledge Check</h1>
+            <h2>A private network, contained within an organization, that uses web technologies to share internal information is called a(n):</h2>
+            <ul>
+                <li>A) Internet</li>
+                <li>B) Extranet</li>
+                <li>C) Intranet</li>
+                <li>D) Dark Web</li>
+            </ul>
+            <button class="reveal-answer-btn">Reveal Answer</button>
+            <div class="answer-explanation">
+                <div class="info-card">
+                    <h3>Correct Answer: C</h3>
+                    <p>An intranet is like a private, internal version of the World Wide Web, used for disseminating corporate information, training, and project management among authorized employees.</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 37: Component 5: Data Centers -->
+        <div id="slide-37" class="slide">
+            <h1>Component 5: Data Centers</h1>
+            <p>To handle the massive volume of data, organizations need hundreds or thousands of servers. These are housed in <code class="inline">data centers</code>.</p>
+            <div class="info-card">
+                <h3>Data Center</h3>
+                <p>A dedicated space for an organization's IS infrastructure components. They range from a single server room to entire buildings.</p>
+            </div>
+            <p>Key considerations for data centers include:</p>
+            <ul>
+                <li>Power and cooling (a major expense).</li>
+                <li>Security and protection from natural disasters.</li>
+                <li>Connectivity and low latency.</li>
+                <li>Modularity for easy expansion.</li>
+            </ul>
+        </div>
+
+        <!-- Slide 38: Part 3 Title -->
+        <div id="slide-38" class="slide session-title-slide">
+            <div class="slide-content-wrapper">
+                <h1>Part 3: Key Drivers for Evolving the IS Infrastructure</h1>
+                <h2>The Challenge of Constant Change</h2>
+            </div>
+        </div>
+
+        <!-- Slide 39: Driver 1: Rapid Obsolescence -->
+        <div id="slide-39" class="slide">
+            <h1>Driver 1: Rapid Obsolescence</h1>
+            <p>Technology evolves at a blistering pace. This creates a constant pressure to upgrade.</p>
+            <div class="info-card">
+                <h3>Moore's Law</h3>
+                <p>An observation made by Intel co-founder Gordon Moore in 1965, who hypothesized that the number of transistors on a chip would double about every two years. This prediction has held remarkably true for decades, driving exponential growth in computing power.</p>
+            </div>
+            <p>This rapid advancement leads to shorter IT cycles (new devices every 6-12 months) and the challenge of <code class="inline">planned obsolescence</code>.</p>
+        </div>
+
+        <!-- Slide 40: The Hardware/Software Cycle -->
+        <div id="slide-40" class="slide">
+            <h1>The Vicious Cycle of Upgrades</h1>
+            <p>Hardware and software obsolescence are locked in a self-perpetuating cycle.</p>
+            <div class="mermaid">
+                graph LR
+                    A[New, More Powerful Hardware] --> B(Enables New, More Powerful Software);
+                    B --> A;
+                style A fill:#e0f2fe,stroke:#0ea5e9,stroke-width:2px
+                style B fill:#dbeafe,stroke:#4f46e5,stroke-width:2px
+            </div>
+            <p>New software is developed to take advantage of new hardware capabilities. However, this new software often requires the new hardware to run, forcing users and organizations to upgrade both.</p>
+        </div>
+
+        <!-- Slide 41: Driver 2: Big Data & Storage Needs -->
+        <div id="slide-41" class="slide">
+            <h1>Driver 2: Big Data & Storage Needs</h1>
+            <p>Organizations are collecting and analyzing vast amounts of data from websites, social media, and sensors to gain business intelligence.</p>
+            <p>This "data explosion" creates a relentless demand for:</p>
+            <ul>
+                <li>More storage space.</li>
+                <li>More powerful computing hardware.</li>
+                <li>More advanced database management systems.</li>
+                <li>More network bandwidth to handle the data flow.</li>
+            </ul>
+        </div>
+
+        <!-- Slide 42: Driver 3: Demand Fluctuations -->
+        <div id="slide-42" class="slide">
+            <h1>Driver 3: Demand Fluctuations</h1>
+            <p>The demand for computing resources is often not constant. It fluctuates, creating a major challenge for infrastructure planning.</p>
+            <div class="info-card">
+                <p>Up to <strong>70%</strong> of organizations' IS infrastructures are utilized at only <strong>20%</strong> of their capacity.</p>
+            </div>
+            <p>This leads to two undesirable states:</p>
+            <ul>
+                <li>Having too few resources during peak times (e.g., holiday shopping season), leading to lost business.</li>
+                <li>Having too many idle resources most of the time, wasting money.</li>
+            </ul>
+        </div>
+
+        <!-- Slide 43: Driver 4: Increasing Energy Needs -->
+        <div id="slide-43" class="slide">
+            <h1>Driver 4: Increasing Energy Needs</h1>
+            <p>More powerful hardware consumes more electricity and generates more heat, requiring more energy for cooling.</p>
+            <div class="info-card">
+                <p>A single server rack in a data center can consume as much power as <strong>10 homes</strong>.</p>
+            </div>
+            <p>For organizations with thousands of computers, rising energy costs are a major issue, impacting both the bottom line and the company's environmental footprint.</p>
+        </div>
+
+        <!-- Slide 44: Driver 5: The Need for Agility -->
+        <div id="slide-44" class="slide">
+            <h1>Driver 5: The Need for Agility</h1>
+            <p>Modern organizations must innovate constantly to survive. This requires an agile, experimental approach, like the <code class="inline">lean startup methodology</code>.</p>
+            <p>This involves rapid cycles of building and testing "minimum viable products" (MVPs).</p>
+            <p class="conclusion">It makes little sense to invest heavily in new, permanent infrastructure for an experiment that might fail. Organizations need a flexible, temporary way to provision resources.</p>
+        </div>
+
+        <!-- Slide 45: Knowledge Check 5 -->
+        <div id="slide-45" class="slide">
+            <h1>Knowledge Check</h1>
+            <h2>The observation that the number of transistors on a chip doubles approximately every two years is known as:</h2>
+            <ul>
+                <li>A) The Law of Agility</li>
+                <li>B) Moore's Law</li>
+                <li>C) The Law of Obsolescence</li>
+                <li>D) The Cloud Computing Law</li>
+            </ul>
+            <button class="reveal-answer-btn">Reveal Answer</button>
+            <div class="answer-explanation">
+                <div class="info-card">
+                    <h3>Correct Answer: B</h3>
+                    <p>Moore's Law, predicted by Intel co-founder Gordon Moore, has been a key driver of the rapid increase in computing power and the corresponding cycle of hardware and software obsolescence.</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 46: Part 4 Title -->
+        <div id="slide-46" class="slide session-title-slide">
+            <div class="slide-content-wrapper">
+                <h1>Part 4: Cloud Computing & Modern Trends</h1>
+                <h2>Addressing Infrastructure Challenges</h2>
+            </div>
+        </div>
+
+        <!-- Slide 47: What is Cloud Computing? -->
+        <div id="slide-47" class="slide">
+            <h1>What is Cloud Computing?</h1>
+            <p>Given the challenges of managing infrastructure, there has been a shift from building and maintaining IS to consuming it as a service.</p>
+            <div class="info-card">
+                <h3>Cloud Computing</h3>
+                <p>A model for enabling ubiquitous, convenient, on-demand network access to a shared pool of configurable computing resources (e.g., networks, servers, storage, applications) that can be rapidly provisioned and released with minimal management effort.</p>
+            </div>
+            <p>It uses a <code class="inline">utility computing</code> model, where you "rent" resources and pay only for what you use.</p>
+        </div>
+
+        <!-- Slide 48: Two-Panel Image: Cloud Characteristics -->
+        <div id="slide-48" class="slide">
+            <div class="two-panel-wrapper image-right">
+                <div class="image-panel">
+                    <img src="img-information-system-today-chapter-3/slide-48.png" alt="Icons representing cloud computing characteristics">
+                </div>
+                <div class="text-panel">
+                    <h1>Essential Cloud Characteristics</h1>
+                    <ul>
+                        <li><strong>On-Demand Self-Service:</strong> Access resources as needed without human interaction.</li>
+                        <li><strong>Rapid Elasticity:</strong> Scale resources up or down almost instantaneously.</li>
+                        <li><strong>Broad Network Access:</strong> Access services from anywhere with an internet connection.</li>
+                        <li><strong>Resource Pooling:</strong> Providers serve multiple customers from a shared pool of resources.</li>
+                        <li><strong>Measured Service:</strong> Pay only for what you use, like a utility.</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 49: Cloud Service Models -->
+        <div id="slide-49" class="slide">
+            <h1>Cloud Service Models</h1>
+            <p>Cloud services are offered in different "layers," depending on how much control the customer needs.</p>
+            <div class="comparison-grid">
+                <div class="comparison-card">
+                    <h3>Infrastructure as a Service (IaaS)</h3>
+                    <p>Provides basic processing, storage, and networking. The customer has the most control. (e.g., Amazon Web Services)</p>
+                </div>
+                <div class="comparison-card">
+                    <h3>Platform as a Service (PaaS)</h3>
+                    <p>Provides a platform for customers to run their own applications. User controls the app, provider manages the platform. (e.g., Microsoft Azure)</p>
+                </div>
+                <div class="comparison-card">
+                    <h3>Software as a Service (SaaS)</h3>
+                    <p>The customer uses applications provided by the vendor. Easiest to deploy, least control. (e.g., Gmail, Salesforce)</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 50: Mermaid: The Cloud Stack -->
+        <div id="slide-50" class="slide">
+            <h1>The Cloud Service Stack</h1>
+            <div class="mermaid">
+                graph LR
+                    subgraph You Manage
+                        A(Applications)
+                        B(Data)
+                    end
+                    subgraph Provider Manages
+                        C(Runtime)
+                        D(Middleware)
+                        E(OS)
+                        F(Virtualization)
+                        G(Servers)
+                        H(Storage)
+                        I(Networking)
+                    end
+
+                    subgraph SaaS
+                        A --- B --- C --- D --- E --- F --- G --- H --- I
+                    end
+                    subgraph PaaS
+                        A --- B;
+                        C --- D --- E --- F --- G --- H --- I
+                    end
+                    subgraph IaaS
+                        A --- B --- C --- D --- E;
+                        F --- G --- H --- I
+                    end
+
+                    style SaaS fill:#eef2ff,stroke:#4338ca,stroke-width:1px
+                    style PaaS fill:#e0e7ff,stroke:#4f46e5,stroke-width:1px
+                    style IaaS fill:#dbeafe,stroke:#4f46e5,stroke-width:1px
+            </div>
+            <p>As you move from IaaS to SaaS, you manage less, and the provider manages more.</p>
+        </div>
+
+        <!-- Slide 51: Cloud Types: Public vs. Private -->
+        <div id="slide-51" class="slide">
+            <h1>Cloud Types: Public vs. Private</h1>
+            <div class="comparison-grid">
+                <div class="comparison-card">
+                    <h3>Public Cloud</h3>
+                    <p>Services are provided by a third-party vendor (e.g., Amazon, Google) and can be used by any interested party on a pay-per-use basis. Offers massive scalability.</p>
+                </div>
+                <div class="comparison-card">
+                    <h3>Private Cloud</h3>
+                    <p>An internal cloud, owned and operated by the organization itself. It provides self-service and utility computing but gives the organization full control over data and security.</p>
+                </div>
+            </div>
+            <p class="conclusion">Many organizations use a <code class="inline">hybrid cloud</code> approach, combining public and private clouds for different needs.</p>
+        </div>
+
+        <!-- Slide 52: Managing the Cloud: Key Issues -->
+        <div id="slide-52" class="slide">
+            <h1>Managing the Cloud: Key Issues</h1>
+            <p>Moving to the cloud is not without risks. Management must consider several strategic issues:</p>
+            <ul>
+                <li><strong>Availability & Reliability:</strong> What happens if the provider has an outage?</li>
+                <li><strong>Scalability:</strong> Can the provider meet future business needs?</li>
+                <li><strong>Viability:</strong> What if the provider goes out of business?</li>
+                <li><strong>Security, Privacy & Compliance:</strong> How is sensitive data protected? Who has access?</li>
+                <li><strong>Openness:</strong> How difficult is it to move to another provider (vendor lock-in)?</li>
+                <li><strong>Cost:</strong> Is it truly cheaper than an in-house infrastructure in the long run?</li>
+            </ul>
+        </div>
+
+        <!-- Slide 53: In-Class Assignment -->
+        <div id="slide-53" class="slide">
+            <h1>In-Class Assignment (30 Mins)</h1>
+            <h2>To the Cloud, or Not to the Cloud?</h2>
+            <p>Imagine you are the CIO of a mid-sized regional bank. You are considering moving some of your IT infrastructure to a public cloud provider like Amazon Web Services (AWS).</p>
+            <p>Your task is to create a brief (1-page) risk assessment memo for the CEO.</p>
+            <div class="ai-assist-prompt">
+                <p><strong>Use AI to help you structure your memo and identify risks.</strong></p>
+                <p><strong>Example Prompts for ChatGPT/Gemini:</strong></p>
+                <ul>
+                    <li>"I'm writing a risk assessment for a bank moving to the public cloud. What are the top 5 security and compliance risks I should focus on? Frame them for a non-technical CEO."</li>
+                    <li>"Generate a list of questions a bank should ask a potential cloud provider regarding data privacy, availability, and regulatory compliance (like HIPAA and Sarbanes-Oxley)."</li>
+                    <li>"Create a simple pro/con list for a financial institution considering a hybrid cloud strategy vs. a full public cloud migration."</li>
+                </ul>
+            </div>
+            <p>Focus on the key issues of security, compliance, and viability.</p>
+        </div>
+
+        <!-- Slide 54: Advanced Application: SOA -->
+        <div id="slide-54" class="slide">
+            <h1>Advanced Trend: Service-Oriented Architecture (SOA)</h1>
+            <p>To achieve greater agility, organizations are moving away from large, monolithic applications toward a <code class="inline">Service-Oriented Architecture (SOA)</code>.</p>
+            <div class="info-card">
+                <h3>SOA</h3>
+                <p>An approach where business processes are broken down into individual, reusable "services" (like "check inventory" or "process credit card"). These services can be combined like building blocks to create flexible applications.</p>
+            </div>
+            <p>APIs are the key technology used to connect these services.</p>
+        </div>
+
+        <!-- Slide 55: Advanced Trend: Grid Computing -->
+        <div id="slide-55" class="slide">
+            <h1>Advanced Trend: Grid Computing</h1>
+            <p>For problems too large for even a supercomputer, organizations can use <code class="inline">grid computing</code>.</p>
+            <div class="info-card">
+                <h3>Grid Computing</h3>
+                <p>Combining the computing power of a large number of smaller, independent, networked computers into a cohesive system to solve a single large problem.</p>
+            </div>
+            <p>Large tasks are broken into small chunks, which are distributed to computers on the grid to be solved in parallel. Example: Folding@Home for disease research.</p>
+        </div>
+
+        <!-- Slide 56: Advanced Trend: Edge Computing & CDNs -->
+        <div id="slide-56" class="slide">
+            <h1>Advanced Trend: Edge Computing</h1>
+            <p>To reduce latency, processing is moving from centralized data centers to the "edges" of the network, closer to the user.</p>
+            <div class="comparison-grid">
+                <div class="comparison-card">
+                    <h3>Content Delivery Network (CDN)</h3>
+                    <p>A network of servers in various geographic locations that store copies of website content. The server closest to the user delivers the content, speeding up access.</p>
+                </div>
+                <div class="comparison-card">
+                    <h3>Edge Computing</h3>
+                    <p>An evolution of CDNs where not just data, but also processing, is moved to the edge. This is crucial for low-latency applications like IoT, autonomous vehicles, and real-time analytics.</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 57: Advanced Trend: IP Convergence -->
+        <div id="slide-57" class="slide">
+            <h1>Advanced Trend: IP Convergence</h1>
+            <p><code class="inline">IP Convergence</code> is the use of the Internet Protocol (IP) for transporting voice, video, fax, and data traffic over a single, shared network.</p>
+            <p>This has enabled new forms of communication and collaboration at much lower costs.</p>
+            <ul>
+                <li><strong>Voice over IP (VoIP):</strong> Placing telephone calls over the internet (e.g., Skype).</li>
+                <li><strong>Videoconferencing over IP:</strong> Transmitting video data for meetings over the internet (e.g., Zoom, Google Meet).</li>
+            </ul>
+        </div>
+
+        <!-- Slide 58: Advanced Trend: Green Computing -->
+        <div id="slide-58" class="slide">
+            <h1>Advanced Trend: Green Computing</h1>
+            <p>Rising energy costs and environmental concerns have made <code class="inline">green computing</code> a major focus.</p>
+            <div class="info-card">
+                <h3>Green Computing</h3>
+                <p>The practice of using computing resources more efficiently to reduce environmental impacts and energy consumption.</p>
+            </div>
+            <h2>Key Practices:</h2>
+            <ul>
+                <li>Using virtualization and cloud computing to consolidate servers.</li>
+                <li>Installing power management software.</li>
+                <li>Reducing paper waste.</li>
+                <li>Properly recycling or refurbishing obsolete hardware.</li>
+            </ul>
+        </div>
+
+        <!-- Slide 59: Key Takeaways -->
+        <div id="slide-59" class="slide">
+            <h1>Session Recap: Key Takeaways</h1>
+            <ul class="summary-list-check">
+                <li>The IS infrastructure (hardware, software, storage, networking, data centers) is the foundation of the digital business.</li>
+                <li>Managing this infrastructure is challenging due to rapid obsolescence, demand fluctuations, and rising energy costs.</li>
+                <li>Cloud computing offers a flexible, scalable, and cost-effective solution by providing infrastructure as a utility.</li>
+                <li>Cloud models (IaaS, PaaS, SaaS) offer different levels of control and are chosen based on business needs.</li>
+                <li>Advanced trends like SOA, Edge Computing, and IP Convergence are further transforming how we build and use systems.</li>
+            </ul>
+        </div>
+
+        <!-- Slide 60: Final Slide -->
+        <div id="slide-60" class="slide session-title-slide">
+            <div class="slide-content-wrapper">
+                <h1>Questions?</h1>
+                <h2>Open Discussion</h2>
+            </div>
+        </div>
+
+        <!-- FOOTER AND CONTROLS -->
+        <div class="slide-footer">
+            <button id="optionsBtn" class="options-button" title="Settings">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor">
+                    <path d="M10 3a1.5 1.5 0 110 3 1.5 1.5 0 010-3zM10 8.5a1.5 1.5 0 110 3 1.5 1.5 0 010-3zM11.5 14a1.5 1.5 0 10-3 0 1.5 1.5 0 003 0z" />
+                </svg>
+            </button>
+            <div class="footer-controls">
+                <button id="prevBtn" class="nav-button">Previous</button>
+                <span id="slideCounter" class="slide-counter">Slide 1 / 60</span>
+                <button id="nextBtn" class="nav-button">Next</button>
+            </div>
+            <div style="width: 40px;"></div> 
+        </div>
+
+        <!-- SETTINGS DRAWER -->
+        <div id="settingsDrawer">
+            <div class="drawer-section">
+                <h3>Theme</h3>
+                <div id="themeSwitcher" class="drawer-buttons-container"></div>
+            </div>
+            <div class="drawer-section">
+                <h3>Export</h3>
+                <div class="drawer-buttons-container">
+                    <button id="exportPdfBtn" class="drawer-button">Current Slide (PDF)</button>
+                    <button id="printAllBtn" class="drawer-button">All Slides (PDF)</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            // --- DOM Element References ---
+            const slides = document.querySelectorAll('.slide');
+            const prevBtn = document.getElementById('prevBtn');
+            const nextBtn = document.getElementById('nextBtn');
+            const slideCounter = document.getElementById('slideCounter');
+            const optionsBtn = document.getElementById('optionsBtn');
+            const settingsDrawer = document.getElementById('settingsDrawer');
+            const exportPdfBtn = document.getElementById('exportPdfBtn');
+            const printAllBtn = document.getElementById('printAllBtn');
+            const themeSwitcherContainer = document.getElementById('themeSwitcher');
+            const presentationContainer = document.querySelector('.presentation-container');
+            const slideFooter = document.querySelector('.slide-footer');
+
+            // --- State Variables ---
+            let currentSlideIndex = 0;
+            const totalSlides = 60; // *** IMPORTANT: Updated slide count ***
+            let footerTimeoutId = null;
+            
+            // --- Constants ---
+            const FOOTER_HIDE_DELAY = 3000;
+            const PDF_PAGE_WIDTH_IN = 11;
+            const PDF_PAGE_HEIGHT_IN = PDF_PAGE_WIDTH_IN * 9 / 16;
+
+            // --- THEME DATA ---
+            const themes = {
+                'Leaf Green': {
+                    '--bg-grad-start': '#f0fdf4', '--bg-grad-end': '#dcfce7', '--bg-grad-mid-1': '#f0fdf4', '--bg-grad-mid-2': '#dcfce7', '--bg-grad-mid-3': '#bbf7d0',
+                    '--text-primary': '#334155', '--header-main': '#166534', '--header-sub': '#15803d', '--border-header': '#86efac',
+                    '--nav-button-bg': '#16a34a', '--nav-button-hover-bg': '#15803d', '--info-card-border': '#22c55e', '--conclusion-border': '#22c55e',
+                    '--conclusion-text': '#166534', '--process-step-bg': '#f0fdf4', '--process-step-border': '#bbf7d0', '--step-number-bg': '#16a34a',
+                    '--inline-code-bg': '#dcfce7', '--inline-code-text': '#14532d', '--layer-box-bg': '#dcfce7', '--layer-box-border': '#86efac',
+                    '--flow-arrow-color': '#22c55e', '--scrollbar-thumb': '#4ade80', '--scrollbar-track': '#dcfce7'
+                },
+                'Original Purple': {
+                    '--bg-grad-start': '#f5f3ff', '--bg-grad-end': '#ddd6fe', '--bg-grad-mid-1': '#f5f3ff', '--bg-grad-mid-2': '#ede9fe', '--bg-grad-mid-3': '#ddd6fe',
+                    '--text-primary': '#334155', '--header-main': '#4338ca', '--header-sub': '#4f46e5', '--border-header': '#a5b4fc',
+                    '--nav-button-bg': '#4f46e5', '--nav-button-hover-bg': '#4338ca', '--info-card-border': '#6366f1', '--conclusion-border': '#6366f1',
+                    '--conclusion-text': '#4338ca', '--process-step-bg': '#eef2ff', '--process-step-border': '#c7d2fe', '--step-number-bg': '#4f46e5',
+                    '--inline-code-bg': '#eef2ff', '--inline-code-text': '#312e81', '--layer-box-bg': '#e0e7ff', '--layer-box-border': '#c7d2fe',
+                    '--flow-arrow-color': '#6366f1', '--scrollbar-thumb': '#a78bfa', '--scrollbar-track': '#ddd6fe'
+                },
+                'Ocean Blue': {
+                    '--bg-grad-start': '#f0f9ff', '--bg-grad-end': '#dbeafe', '--bg-grad-mid-1': '#f0f9ff', '--bg-grad-mid-2': '#e0f2fe', '--bg-grad-mid-3': '#bae6fd',
+                    '--text-primary': '#334155', '--header-main': '#0c4a6e', '--header-sub': '#0369a1', '--border-header': '#7dd3fc',
+                    '--nav-button-bg': '#0ea5e9', '--nav-button-hover-bg': '#0284c7', '--info-card-border': '#38bdf8', '--conclusion-border': '#38bdf8',
+                    '--conclusion-text': '#0c4a6e', '--process-step-bg': '#f0f9ff', '--process-step-border': '#bae6fd', '--step-number-bg': '#0ea5e9',
+                    '--inline-code-bg': '#e0f2fe', '--inline-code-text': '#075985', '--layer-box-bg': '#e0f2fe', '--layer-box-border': '#7dd3fc',
+                    '--flow-arrow-color': '#38bdf8', '--scrollbar-thumb': '#38bdf8', '--scrollbar-track': '#dbeafe'
+                },
+                'Slate Gray': {
+                    '--bg-grad-start': '#f8fafc', '--bg-grad-end': '#e2e8f0', '--bg-grad-mid-1': '#f8fafc', '--bg-grad-mid-2': '#f1f5f9', '--bg-grad-mid-3': '#e2e8f0',
+                    '--text-primary': '#334155', '--header-main': '#1e293b', '--header-sub': '#334155', '--border-header': '#94a3b8',
+                    '--nav-button-bg': '#475569', '--nav-button-hover-bg': '#334155', '--info-card-border': '#64748b', '--conclusion-border': '#64748b',
+                    '--conclusion-text': '#1e293b', '--process-step-bg': '#f8fafc', '--process-step-border': '#e2e8f0', '--step-number-bg': '#475569',
+                    '--inline-code-bg': '#f1f5f9', '--inline-code-text': '#1e293b', '--layer-box-bg': '#f1f5f9', '--layer-box-border': '#cbd5e1',
+                    '--flow-arrow-color': '#64748b', '--scrollbar-thumb': '#94a3b8', '--scrollbar-track': '#e2e8f0'
+                }
+            };
+
+            // --- Core Functions ---
+            function applyTheme(themeName) {
+                const theme = themes[themeName];
+                if (!theme) return;
+                for (const [key, value] of Object.entries(theme)) {
+                    document.documentElement.style.setProperty(key, value);
+                }
+                localStorage.setItem('presentationTheme', themeName);
+                document.querySelectorAll('.theme-button').forEach(btn => {
+                    btn.classList.toggle('active', btn.dataset.theme === themeName);
+                });
+            }
+
+            function populateThemeSwitcher() {
+                Object.keys(themes).forEach(themeName => {
+                    const button = document.createElement('button');
+                    button.className = 'drawer-button theme-button';
+                    button.textContent = themeName;
+                    button.dataset.theme = themeName;
+                    button.style.backgroundColor = themes[themeName]['--nav-button-bg'];
+                    button.addEventListener('click', () => applyTheme(themeName));
+                    themeSwitcherContainer.appendChild(button);
+                });
+            }
+            
+            function initializeMermaidDiagrams() {
+                document.querySelectorAll('.mermaid').forEach(el => {
+                    el.setAttribute('data-mermaid', el.innerHTML.trim());
+                });
+            }
+
+            function showSlide(index) {
+                if (index < 0 || index >= totalSlides) return;
+                slides.forEach((slide, i) => slide.classList.toggle('active', i === index));
+                const activeSlide = slides[index];
+                if (activeSlide) {
+                    activeSlide.scrollTop = 0;
+                    setTimeout(() => {
+                        if (window.mermaid) {
+                          try {
+                            activeSlide.querySelectorAll('.mermaid').forEach(el => {
+                                const code = el.getAttribute('data-mermaid');
+                                if (code) {
+                                    el.innerHTML = code;
+                                    el.removeAttribute('data-processed');
+                                }
+                            });
+                            mermaid.run({ nodes: activeSlide.querySelectorAll('.mermaid') });
+                          } catch (e) {
+                            console.error("Mermaid rendering error:", e);
+                            activeSlide.querySelectorAll('.mermaid').forEach(el => el.innerHTML = 'Error rendering diagram.');
+                          }
+                        }
+                    }, 50);
+                }
+                slideCounter.textContent = `Slide ${index + 1} / ${totalSlides}`;
+                prevBtn.disabled = index === 0;
+                nextBtn.disabled = index === totalSlides - 1;
+                settingsDrawer.classList.remove('active');
+                currentSlideIndex = index;
+            }
+
+            function nextSlide() { showSlide(currentSlideIndex + 1); }
+            function prevSlide() { showSlide(currentSlideIndex - 1); }
+            function toggleSettingsDrawer() { settingsDrawer.classList.toggle('active'); }
+            
+            // --- PDF and Print Functions (FIXED) ---
+            function exportCurrentSlideToPdf() {
+                const activeSlide = document.querySelector('.slide.active');
+                if (!activeSlide) return;
+
+                const drawer = document.getElementById('settingsDrawer');
+                const originalStyles = {
+                    footerClassList: Array.from(slideFooter.classList), footerInlineDisplay: slideFooter.style.display,
+                    drawerDisplay: drawer.style.display, drawerTransform: drawer.style.transform,
+                    slideOverflow: activeSlide.style.overflowY, slideHeight: activeSlide.style.height, slideAspectRatio: activeSlide.style.aspectRatio
+                };
+                
+                exportPdfBtn.disabled = true; printAllBtn.disabled = true; exportPdfBtn.textContent = 'Exporting...'; optionsBtn.disabled = true;
+                if (footerTimeoutId) { clearTimeout(footerTimeoutId); footerTimeoutId = null; }
+                slideFooter.style.display = 'none'; drawer.style.display = 'none'; drawer.classList.remove('active');
+
+                activeSlide.style.overflowY = 'visible'; activeSlide.style.height = 'auto'; activeSlide.style.aspectRatio = 'auto';
+
+                const slideNumber = currentSlideIndex + 1;
+                const filename = `IS_Today_Ch3_Slide_${slideNumber}.pdf`;
+                const opt = {
+                    margin: [0.1, 0.1, 0.1, 0.1],
+                    filename: filename,
+                    image: { type: 'jpeg', quality: 0.98 },
+                    html2canvas: { scale: 2.5, useCORS: true, logging: false, scrollY: 0 },
+                    jsPDF: { unit: 'in', format: [PDF_PAGE_WIDTH_IN, PDF_PAGE_HEIGHT_IN], orientation: 'landscape' }
+                };
+                
+                html2pdf().set(opt).from(activeSlide).save().catch(err => {
+                    console.error('PDF export error:', err);
+                }).finally(() => {
+                    slideFooter.style.display = originalStyles.footerInlineDisplay;
+                    slideFooter.className = '';
+                    originalStyles.footerClassList.forEach(cls => slideFooter.classList.add(cls));
+                    drawer.style.display = originalStyles.drawerDisplay;
+                    drawer.style.transform = originalStyles.drawerTransform;
+                    activeSlide.style.overflowY = originalStyles.slideOverflow;
+                    activeSlide.style.height = originalStyles.slideHeight;
+                    activeSlide.style.aspectRatio = originalStyles.slideAspectRatio;
+                    exportPdfBtn.disabled = false;
+                    printAllBtn.disabled = false;
+                    exportPdfBtn.textContent = 'Current Slide (PDF)';
+                    optionsBtn.disabled = false;
+                });
+            }
+
+            async function triggerPrintAllSlides() {
+                settingsDrawer.classList.remove('active');
+                if (footerTimeoutId) { clearTimeout(footerTimeoutId); footerTimeoutId = null; }
+                slideFooter.classList.remove('show-footer');
+                
+                if(window.mermaid) {
+                    try {
+                        await mermaid.run({ nodes: document.querySelectorAll('.mermaid') });
+                    } catch(e) {
+                        console.error("Mermaid printing error:", e);
+                    }
+                }
+                
+                window.print();
+            }
+
+            // --- Event Listeners ---
+            prevBtn.addEventListener('click', prevSlide);
+            nextBtn.addEventListener('click', nextSlide);
+            optionsBtn.addEventListener('click', toggleSettingsDrawer);
+            exportPdfBtn.addEventListener('click', exportCurrentSlideToPdf);
+            printAllBtn.addEventListener('click', triggerPrintAllSlides);
+
+            document.querySelectorAll('.reveal-answer-btn').forEach(button => {
+                button.addEventListener('click', () => {
+                    const explanation = button.nextElementSibling;
+                    if (explanation && explanation.classList.contains('answer-explanation')) {
+                        explanation.style.display = 'block';
+                        button.style.display = 'none';
+                    }
+                });
+            });
+            
+            // --- Initial Setup ---
+            mermaid.initialize({ startOnLoad: false, theme: 'base', themeVariables: {
+                'primaryColor': '#f8fafc', 'primaryTextColor': '#334155', 'lineColor': '#475569',
+                'textColor': '#334155', 'fontSize': '16px',
+            }});
+            
+            initializeMermaidDiagrams();
+            populateThemeSwitcher();
+            const savedTheme = localStorage.getItem('presentationTheme') || 'Original Purple';
+            applyTheme(savedTheme);
+            showSlide(currentSlideIndex);
+
+            // --- Keyboard and Mouse Listeners ---
+            document.addEventListener('keydown', (e) => {
+                if (e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA') return;
+                if (e.key === 'ArrowRight' || e.key === ' ' || e.key === 'PageDown') nextSlide();
+                if (e.key === 'ArrowLeft' || e.key === 'PageUp') prevSlide();
+                if (e.key === 'Escape') settingsDrawer.classList.remove('active');
+            });
+            presentationContainer.addEventListener('mousemove', () => {
+                 if (footerTimeoutId) clearTimeout(footerTimeoutId);
+                 slideFooter.classList.add('show-footer');
+                 footerTimeoutId = setTimeout(() => slideFooter.classList.remove('show-footer'), FOOTER_HIDE_DELAY);
+            });
+            presentationContainer.addEventListener('mouseleave', () => { if (footerTimeoutId) clearTimeout(footerTimeoutId); slideFooter.classList.remove('show-footer'); });
+            document.addEventListener('click', (e) => {
+                if (settingsDrawer.classList.contains('active') && !settingsDrawer.contains(e.target) && !optionsBtn.contains(e.target)) {
+                    settingsDrawer.classList.remove('active');
+                }
+            });
+        });
+    </script>
+</body>
+</html>

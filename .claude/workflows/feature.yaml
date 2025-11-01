@@ -1,0 +1,870 @@
+name: Feature Development Workflow (TDD)
+description: Red-Green-Refactor cycle following Testing Trophy and Clean Architecture
+
+triggers:
+  - feature_request
+  - user_story
+  - enhancement
+
+variables:
+  FEATURE_NAME: required
+  FEATURE_DESCRIPTION: required
+  AFFECTED_LAYERS: required
+  COMPONENT_TYPE: optional
+
+context_files:
+  - claude.md
+  - .claude/agents/code-tester.md
+  - .claude/agents/code-reviewer.md
+  - .claude/agents/code-debugger.md
+  - .claude/agents/doc-manager.md
+
+# =============================================================================
+# STEP 1: RED PHASE - Write Failing Tests
+# =============================================================================
+
+steps:
+  - name: test_specification
+    agent: code-tester-agent
+    prompt: |
+      **OBJECTIVE**: Write comprehensive FAILING tests that specify feature behavior
+      
+      **FEATURE**
+      - Name: {{FEATURE_NAME}}
+      - Description: {{FEATURE_DESCRIPTION}}
+      - Layers: {{AFFECTED_LAYERS}}
+      - Component: {{COMPONENT_TYPE}}
+      
+      **READ FIRST**
+      1. claude.md - Understand project architecture, tech stack, conventions
+      2. .claude/agents/code-tester.md - Testing standards and patterns
+      3. Similar test files - Follow existing patterns
+      
+      ---
+      
+      ## Test Strategy Selection
+      
+      Apply Testing Trophy principles:
+      
+      **Component Tests (Default - 70%)**
+      - When: Any UI changes, form interactions, user workflows
+      - Where: Co-located with component
+      - Tool: Check claude.md for component testing framework
+      - Focus: User perspective, accessibility, visual behavior
+      
+      **Unit Tests (20%)**
+      - When: Complex business logic, algorithms, pure functions
+      - Where: Co-located with implementation
+      - Tool: Check claude.md for unit testing framework
+      - Focus: Isolated logic, edge cases, validation rules
+      
+      **Integration Tests (10%)**
+      - When: Data layer operations, external services, database queries
+      - Where: Co-located with repository/adapter
+      - Tool: Check claude.md for integration testing approach
+      - Focus: System boundaries, data integrity, RLS policies
+      
+      ---
+      
+      ## Test Requirements
+      
+      ### Coverage Targets
+      From claude.md:
+      - Minimum coverage: [Check project threshold]
+      - Critical paths: [Check requirements]
+      - Layer-specific: [Check layer conventions]
+      
+      ### Test Scenarios to Cover
+      
+      **Happy Path**
+      - Feature works as intended with valid inputs
+      - Expected outputs returned
+      - State changes correctly
+      
+      **Edge Cases**
+      - Boundary values (min, max, empty, null)
+      - Concurrent operations
+      - Race conditions
+      - Partial data scenarios
+      
+      **Error Cases**
+      - Invalid inputs
+      - Missing required data
+      - Authorization failures
+      - External service failures
+      - Constraint violations
+      
+      **Business Rules**
+      - Domain-specific validation
+      - State transitions
+      - Permission checks
+      - Data integrity rules
+      
+      ---
+      
+      ## Layer-Specific Test Requirements
+      
+      ### If Domain Layer Affected
+      - Entity validation rules
+      - Business logic correctness
+      - Domain event handling
+      - No external dependencies in tests
+      - Pure domain concepts only
+      
+      ### If Application Layer Affected
+      - Use-case orchestration flow
+      - Port interface contracts
+      - DTO transformations
+      - Cross-entity coordination
+      - Transaction boundaries
+      
+      ### If Infrastructure Layer Affected
+      - Repository operations (CRUD)
+      - Database constraints enforcement
+      - External API integration
+      - Security policies (RLS, permissions)
+      - Data mapping (DB ↔ Domain)
+      
+      ### If Presentation Layer Affected
+      - Component rendering states
+      - User interactions (click, type, submit)
+      - Form validation feedback
+      - Loading/error/empty states
+      - Accessibility compliance
+      - Responsive behavior
+      
+      ---
+      
+      ## Test File Organization
+      
+      Follow project conventions from claude.md:
+      - File naming: [Check convention]
+      - File location: [Co-located or separate?]
+      - Test structure: [describe/it pattern]
+      - Mock strategy: [What to mock]
+      
+      ### Test Structure Pattern
+```
+      Outer describe: Component/Class/Module name
+        Inner describe: Method/Feature being tested
+          Individual test: Specific scenario
+            Arrange: Setup
+            Act: Execute
+            Assert: Verify
+```
+      
+      ---
+      
+      ## Quality Checklist
+      
+      Before submitting tests:
+      
+      **Test Independence**
+      - [ ] Each test runs in isolation
+      - [ ] No test depends on another test's state
+      - [ ] Setup/teardown properly handled
+      
+      **Test Clarity**
+      - [ ] Test names describe WHAT and WHEN
+      - [ ] Arrange-Act-Assert structure clear
+      - [ ] Assertions specific and meaningful
+      
+      **Mock Strategy**
+      - [ ] External dependencies mocked
+      - [ ] Database calls mocked in unit tests
+      - [ ] Real DB used in integration tests (if applicable)
+      - [ ] Mock data realistic
+      
+      **Coverage**
+      - [ ] All acceptance criteria covered
+      - [ ] Edge cases identified and tested
+      - [ ] Error scenarios tested
+      - [ ] Business rules validated
+      
+      **Architecture Compliance**
+      - [ ] Tests respect layer boundaries
+      - [ ] No cross-layer leakage in unit tests
+      - [ ] Dependency injection properly mocked
+      
+      ---
+      
+      ## Output Requirements
+      
+      Generate:
+      1. Test files following project naming convention
+      2. Co-located with implementation (or per project structure)
+      3. All tests MUST FAIL when run
+      4. Clear test descriptions using Given-When-Then
+      5. Mock setup for external dependencies
+      
+      ## Validation Commands
+      
+      From claude.md, use project test commands:
+      - Component tests: [Insert command]
+      - Unit tests: [Insert command]
+      - Integration tests: [Insert command]
+      - Coverage report: [Insert command]
+      
+      Expected result: ALL TESTS FAIL ❌
+      
+      ---
+      
+      ## CONSTRAINTS
+      
+      **CRITICAL - DO NOT VIOLATE:**
+      - NO production code in this step
+      - NO implementation files
+      - NO "TODO" tests without assertions
+      - Tests MUST be executable and fail
+      - Follow project conventions from claude.md
+      
+      ---
+      
+      **OUTPUT**: Test files only, ready for review
+    
+    output: |
+      Test files created at appropriate locations
+      Test count: [number]
+      Coverage scope: [what's tested]
+    
+    validation:
+      - tests_exist: true
+      - tests_executable: true
+      - tests_fail_initially: true
+      - no_production_code: true
+      - follows_conventions: true
+    
+    checkpoint: |
+      ⚠️ MANUAL REVIEW REQUIRED
+      
+      Before proceeding to GREEN phase:
+      1. Run tests - confirm they fail
+      2. Review test coverage - adequate?
+      3. Check test quality - clear and maintainable?
+      4. Verify architecture alignment
+      
+      Type "approve" to proceed to implementation
+
+# =============================================================================
+# STEP 2: GREEN PHASE - Minimal Implementation
+# =============================================================================
+
+  - name: minimal_implementation
+    agent: primary_ai
+    depends_on: test_specification
+    prompt: |
+      **OBJECTIVE**: Write MINIMAL code to make all tests pass
+      
+      **CONTEXT**
+      - Feature: {{FEATURE_NAME}}
+      - Layers: {{AFFECTED_LAYERS}}
+      - Tests: [Reference test_specification output]
+      
+      **READ FIRST**
+      1. claude.md - Architecture rules, tech stack, conventions
+      2. Test files from RED phase - Requirements to satisfy
+      3. .claude/agents/code-reviewer.md - Code quality and architecture patterns
+      4. Similar implementations - Follow existing patterns
+      
+      ---
+      
+      ## Implementation Order
+      
+      **Clean Architecture: Always inside-out**
+      
+      1. Domain layer (innermost)
+      2. Application layer
+      3. Infrastructure layer
+      4. Presentation layer (outermost)
+      
+      Each layer builds on the previous, respecting dependency rules.
+      
+      ---
+      
+      ## Layer Implementation Guidelines
+      
+      ### Domain Layer
+      
+      **Location**: [Check claude.md for domain path]
+      
+      **Create/Update:**
+      - Entities with validation logic
+      - Value objects
+      - Domain services
+      - Port interfaces (contracts)
+      - Domain events (if applicable)
+      
+      **Rules:**
+      - Zero external dependencies
+      - Pure business logic only
+      - Framework-agnostic
+      - Self-validating entities
+      - Throw domain-specific errors
+      
+      **Checklist:**
+      - [ ] Entities created with validation
+      - [ ] Port interfaces defined
+      - [ ] Business rules enforced
+      - [ ] No framework imports
+      - [ ] Domain errors properly typed
+      
+      ---
+      
+      ### Application Layer
+      
+      **Location**: [Check claude.md for application path]
+      
+      **Create/Update:**
+      - Use-case classes/functions
+      - Application services
+      - DTOs (Data Transfer Objects)
+      - Port interfaces for external services
+      - Application-level validation
+      
+      **Rules:**
+      - Depends ONLY on domain layer
+      - Orchestrates domain logic
+      - Uses dependency injection
+      - Returns DTOs or domain entities
+      - Handles transaction boundaries
+      
+      **Checklist:**
+      - [ ] Use-cases created
+      - [ ] DTOs defined with validation schemas
+      - [ ] Port interfaces for infrastructure
+      - [ ] Dependency injection configured
+      - [ ] Application errors properly typed
+      
+      ---
+      
+      ### Infrastructure Layer
+      
+      **Location**: [Check claude.md for infrastructure path]
+      
+      **Create/Update:**
+      - Repository implementations
+      - External service adapters
+      - Database access code
+      - Framework-specific code
+      - Configuration management
+      
+      **Rules:**
+      - Implements domain/application ports
+      - Framework-specific details here
+      - Data mappers (DB ↔ Domain)
+      - Error translation (external → domain)
+      - Dependency injection registration
+      
+      **Checklist:**
+      - [ ] Repositories implement port interfaces
+      - [ ] Data mappers created (DB naming ↔ Domain naming)
+      - [ ] External services wrapped
+      - [ ] DI container updated
+      - [ ] Infrastructure errors handled
+      
+      ---
+      
+      ### Presentation Layer
+      
+      **Location**: [Check claude.md for presentation path]
+      
+      **Create/Update:**
+      - UI components
+      - API routes/controllers
+      - Request/response handlers
+      - Client-side validation
+      - State management
+      
+      **Rules:**
+      - Uses application layer via DI
+      - Framework-specific UI code
+      - Input validation (client + server)
+      - Proper error handling/display
+      - Loading states management
+      
+      **Checklist:**
+      - [ ] Components follow project patterns
+      - [ ] API routes delegate to use-cases
+      - [ ] Validation using project schema library
+      - [ ] Error states handled
+      - [ ] Loading states handled
+      
+      ---
+      
+      ## Cross-Cutting Concerns
+      
+      ### Dependency Injection
+      - Register all implementations in DI container
+      - Use interface types for injection
+      - Follow project's DI pattern from claude.md
+      
+      ### Validation
+      - Use project's validation library (check claude.md)
+      - Define schemas co-located with DTOs
+      - Validate at system boundaries (API, forms)
+      
+      ### Error Handling
+      - Create typed error classes per layer
+      - Translate errors at layer boundaries
+      - Provide meaningful error messages
+      - Include error codes where applicable
+      
+      ### Naming Conventions
+      From claude.md:
+      - Files: [Check convention]
+      - Variables: [Check convention]
+      - Database: [Check convention]
+      - Classes/Functions: [Check convention]
+      
+      ---
+      
+      ## Implementation Strategy
+      
+      **Minimal Means:**
+      - Write just enough code to pass tests
+      - No premature optimization
+      - No extra features "just in case"
+      - No gold-plating or over-engineering
+      - Direct, straightforward implementation
+      
+      **But Still Professional:**
+      - Follow architecture rules strictly
+      - Use proper error handling
+      - Type everything correctly
+      - Follow naming conventions
+      - Document assumptions with comments
+      
+      ---
+      
+      ## Quality Gates
+      
+      Before completing this step:
+      
+      **Tests**
+      - [ ] All tests from RED phase now PASS ✅
+      - [ ] No tests skipped or commented out
+      - [ ] No flaky tests
+      
+      **Architecture**
+      - [ ] Dependency rule respected (inside-out only)
+      - [ ] Layers properly separated
+      - [ ] Interfaces defined before implementations
+      - [ ] No cross-layer violations
+      
+      **Code Quality**
+      - [ ] Types explicit (no 'any' unless justified)
+      - [ ] Validation on all inputs
+      - [ ] Error handling in place
+      - [ ] Follows project conventions
+      - [ ] No debug code (console.log, etc.)
+      
+      **Integration**
+      - [ ] DI container updated
+      - [ ] Routes/endpoints registered
+      - [ ] Database schema aligned (if changes)
+      - [ ] No hardcoded values
+      
+      ---
+      
+      ## Validation Commands
+      
+      Run these before marking complete:
+```bash
+      # Run the specific tests
+      [Test command for this feature]
+      
+      # Type checking
+      [Typecheck command from claude.md]
+      
+      # Linting
+      [Lint command from claude.md]
+      
+      # Full test suite (optional but recommended)
+      [Full test command]
+```
+      
+      Expected: All checks pass ✅
+      
+      ---
+      
+      ## CONSTRAINTS
+      
+      **CRITICAL - DO NOT VIOLATE:**
+      - Make tests pass - that's the goal
+      - Follow Clean Architecture dependency rules
+      - No refactoring yet (save for next phase)
+      - No additional features beyond tests
+      - Use existing patterns from codebase
+      - Document any temporary workarounds
+      
+      ---
+      
+      **OUTPUT**: Working implementation, all tests passing
+    
+    output: |
+      Implementation files created/updated:
+      - Domain layer: [files]
+      - Application layer: [files]
+      - Infrastructure layer: [files]
+      - Presentation layer: [files]
+      - DI configuration: [updated]
+    
+    validation:
+      - all_tests_pass: true
+      - typescript_valid: true
+      - linting_pass: true
+      - architecture_compliant: true
+      - no_violations: true
+    
+    checkpoint: |
+      ⚠️ MANUAL REVIEW REQUIRED
+      
+      Before proceeding to REFACTOR phase:
+      1. All tests pass?
+      2. Architecture rules followed?
+      3. Code minimal (no over-engineering)?
+      4. Ready for quality improvements?
+      
+      Type "approve" to proceed to refactoring
+
+# =============================================================================
+# STEP 3: REFACTOR PHASE - Improve Quality & Document
+# =============================================================================
+
+  - name: refactor_and_document
+    agent: primary_ai
+    depends_on: minimal_implementation
+    prompt: |
+      **OBJECTIVE**: Elevate working code to production quality
+      
+      **CONTEXT**
+      - Feature: {{FEATURE_NAME}}
+      - Implementation: [Reference minimal_implementation output]
+      - All tests passing: ✅
+      
+      **READ FIRST**
+      1. claude.md - Quality standards, documentation requirements
+      2. Implementation from GREEN phase
+      3. .claude/agents/code-reviewer.md - Code quality and architecture patterns
+      4. .claude/agents/doc-manager.md - Documentation standards
+      
+      ---
+      
+      ## Refactoring Principles
+      
+      **Golden Rule**: Keep all tests passing throughout refactoring
+      
+      After EVERY change:
+      1. Run affected tests
+      2. Verify they still pass
+      3. Commit if stable
+      4. Continue refactoring
+      
+      If tests fail: Revert immediately, adjust approach
+      
+      ---
+      
+      ## Code Quality Improvements
+      
+      ### 1. Readability Enhancements
+      
+      **Extract Complex Logic**
+      - Long functions → Multiple small functions
+      - Nested logic → Guard clauses
+      - Magic numbers → Named constants
+      - Unclear names → Descriptive names
+      
+      **Improve Naming**
+      - Variables: What they represent
+      - Functions: What they do (verb-noun)
+      - Classes: What they model (noun)
+      - Booleans: Use auxiliary verbs (is, has, can)
+      
+      **Simplify Conditionals**
+      - Nested if → Early returns (guard clauses)
+      - Complex boolean → Named variables
+      - Multiple conditions → Extracted predicates
+      
+      ### 2. Code Duplication Removal
+      
+      **Identify Patterns**
+      - Similar code blocks → Extract function
+      - Repeated validation → Shared validator
+      - Common transformations → Utility function
+      - Similar tests → Shared test helpers
+      
+      **Extract Common Logic**
+      - Create helper functions
+      - Create utility classes
+      - Create shared constants
+      - Update all usages
+      
+      ### 3. Performance Optimization
+      
+      **Only If Measurable Issue:**
+      - N+1 queries → Batch operations
+      - Repeated calculations → Cache results
+      - Large loops → Optimize algorithms
+      - Memory leaks → Fix resource cleanup
+      
+      **Measure First:**
+      - Profile before optimizing
+      - Set performance benchmarks
+      - Validate improvements
+      - Don't premature optimize
+      
+      ### 4. Type Safety Improvements
+      
+      **Strengthen Types**
+      - Remove 'any' types
+      - Add generic constraints
+      - Use discriminated unions
+      - Leverage type inference
+      
+      **Add Type Guards**
+      - Runtime type validation
+      - Narrow union types
+      - Safe type assertions
+      
+      ### 5. Error Handling Refinement
+      
+      **Consistent Error Strategy**
+      - Typed error classes per layer
+      - Meaningful error messages
+      - Include context in errors
+      - Proper error propagation
+      
+      **User-Facing Errors**
+      - Clear, actionable messages
+      - No technical jargon
+      - Suggest solutions
+      - Log technical details separately
+      
+      ---
+      
+      ## Architecture Refinements
+      
+      ### Dependency Review
+      - Are dependencies pointing inward? ✓
+      - Are there circular dependencies? ✗
+      - Can we reduce coupling?
+      - Are abstractions stable?
+      
+      ### Interface Review
+      - Are port interfaces minimal?
+      - Are contracts clear?
+      - Can we simplify signatures?
+      - Is documentation sufficient?
+      
+      ### Layer Boundaries
+      - Is each layer cohesive?
+      - Are responsibilities clear?
+      - Can we reduce cross-layer chatter?
+      - Are mappers handling translation?
+      
+      ---
+      
+      ## Test Quality Improvements
+      
+      ### Test Readability
+      - Extract test data builders
+      - Create custom matchers/assertions
+      - Improve test names
+      - Remove duplicated setup
+      
+      ### Test Coverage Gaps
+      - Identify untested edge cases
+      - Add missing error scenarios
+      - Improve assertion quality
+      - Check coverage report
+      
+      ### Test Maintenance
+      - Extract common fixtures
+      - Create shared test utilities
+      - Reduce brittleness
+      - Improve test isolation
+      
+      ---
+      
+      ## Documentation Requirements
+      
+      From claude.md documentation standards:
+      
+      ### Code Documentation
+      
+      **Public APIs**
+      - Function purpose
+      - Parameter descriptions
+      - Return value description
+      - Throws/errors
+      - Usage examples
+      - Performance considerations (if relevant)
+      
+      **Complex Logic**
+      - Why it exists (not what it does)
+      - Assumptions made
+      - Trade-offs chosen
+      - Related components
+      
+      **Architecture Decisions**
+      - If pattern differs from norm, explain why
+      - Document alternatives considered
+      - Note future improvement opportunities
+      
+      ### Update Project Documentation
+      
+      **If New Feature:**
+      - Update feature list
+      - Add usage examples
+      - Update API documentation
+      - Add to changelog
+      
+      **If Architecture Change:**
+      - Update architecture docs
+      - Update diagrams
+      - Document migration path (if breaking)
+      - Update ADRs (Architecture Decision Records)
+      
+      **If Database Change:**
+      - Update schema documentation
+      - Document migration steps
+      - Update ER diagrams
+      
+      ---
+      
+      ## Knowledge Capture
+      
+      Update `.claude/memory/learned-patterns.md`:
+      
+      **Patterns Used**
+      - What pattern solved what problem
+      - Code examples
+      - When to use this pattern
+      - Trade-offs
+      
+      **Challenges Overcome**
+      - What didn't work
+      - What we learned
+      - How we solved it
+      - Future considerations
+      
+      **Conventions Established**
+      - New patterns for the project
+      - Naming conventions
+      - Testing approaches
+      - Architecture patterns
+      
+      ---
+      
+      ## Refactoring Checklist
+      
+      Before marking complete:
+      
+      **Code Quality**
+      - [ ] Functions are small and focused
+      - [ ] Names are clear and descriptive
+      - [ ] No code duplication
+      - [ ] Complex logic extracted
+      - [ ] Consistent style throughout
+      
+      **Architecture**
+      - [ ] Clean Architecture maintained
+      - [ ] Dependency rules respected
+      - [ ] Layers properly separated
+      - [ ] Interfaces clean and minimal
+      
+      **Tests**
+      - [ ] All tests still pass ✅
+      - [ ] Tests are readable
+      - [ ] Test coverage adequate
+      - [ ] No flaky tests
+      
+      **Documentation**
+      - [ ] Public APIs documented
+      - [ ] Complex logic explained
+      - [ ] Project docs updated
+      - [ ] Changelog updated
+      - [ ] Memory/patterns captured
+      
+      **Performance**
+      - [ ] No obvious bottlenecks
+      - [ ] Resource cleanup proper
+      - [ ] Performance targets met
+      
+      **Security**
+      - [ ] Input validation complete
+      - [ ] No hardcoded secrets
+      - [ ] Authorization checks in place
+      - [ ] Error messages don't leak info
+      
+      ---
+      
+      ## Validation Commands
+      
+      Final verification:
+```bash
+      # Full test suite
+      [Test command from claude.md]
+      
+      # Coverage report
+      [Coverage command]
+      
+      # Type checking
+      [Typecheck command]
+      
+      # Linting
+      [Lint command]
+      
+      # Build
+      [Build command]
+```
+      
+      All must pass ✅
+      
+      ---
+      
+      ## Refactoring Constraints
+      
+      **Rules:**
+      - Tests must pass after EVERY change
+      - Commit frequently (small, atomic changes)
+      - No new features (scope creep)
+      - No changing test behavior (only improving test code)
+      - Maintain backward compatibility (unless documented)
+      
+      **When to Stop:**
+      - Code is clear and maintainable
+      - No obvious improvements left
+      - Tests remain passing
+      - Documentation complete
+      - Team review would be positive
+      
+      Don't over-refactor. Perfect is enemy of good.
+      
+      ---
+      
+      **OUTPUT**: Production-ready feature with documentation
+    
+    output: |
+      Refactoring completed:
+      - Code improvements: [summary]
+      - Documentation updated: [list]
+      - Patterns learned: [captured in memory]
+      - Performance: [if applicable]
+    
+    validation:
+      - all_tests_pass: true
+      - coverage_maintained: true
+      - documentation_complete: true
+      - quality_improved: true
+      - patterns_captured: true
+    
+    final_checklist: |
+      Feature complete when:
+      - [ ] All tests passing (RED → GREEN → REFACTOR complete)
+      - [ ] Code quality production-ready
+      - [ ] Architecture compliant
+      - [ ] Documentation updated
+      - [ ] Patterns captured in memory
+      - [ ] Ready for peer review
+      - [ ] Deployable

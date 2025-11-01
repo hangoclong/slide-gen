@@ -1,0 +1,1181 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Chapter 2: Gaining Competitive Advantage Through IS</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Roboto+Mono&display=swap" rel="stylesheet">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js" integrity="sha512-GsLlZN/3F2ErC5ifS5QtgpiJtWd43JWSuIgh7mbzZ8zBps+dvLusV+eNQATqgA/HdeKFVgA5v3S/cIrLF7QnIg==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    <script src="https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.min.js"></script>
+    <style>
+        :root {
+            --bg-grad-start: #f5f3ff;
+            --bg-grad-end: #ddd6fe;
+            --bg-grad-mid-1: #f5f3ff;
+            --bg-grad-mid-2: #ede9fe;
+            --bg-grad-mid-3: #ddd6fe;
+            --text-primary: #334155;
+            --header-main: #4338ca;
+            --header-sub: #4f46e5;
+            --border-header: #a5b4fc;
+            --nav-button-bg: #4f46e5;
+            --nav-button-hover-bg: #4338ca;
+            --info-card-border: #6366f1;
+            --conclusion-border: #6366f1;
+            --conclusion-text: #4338ca;
+            --process-step-bg: #eef2ff;
+            --process-step-border: #c7d2fe;
+            --step-number-bg: #4f46e5;
+            --inline-code-bg: #eef2ff;
+            --inline-code-text: #312e81;
+            --layer-box-bg: #e0e7ff;
+            --layer-box-border: #c7d2fe;
+            --flow-arrow-color: #6366f1;
+            --scrollbar-thumb: #a78bfa;
+            --scrollbar-track: #ddd6fe;
+        }
+
+        /* --- Base and Layout --- */
+        html, body { height: 100%; margin: 0; padding: 0; overflow: hidden; }
+        body { display: flex; justify-content: center; align-items: center; background: linear-gradient(135deg, var(--bg-grad-start) 0%, var(--bg-grad-end) 100%); font-family: 'Poppins', sans-serif; color: var(--text-primary); transition: background 0.3s ease; }
+        .presentation-container { position: relative; aspect-ratio: 16 / 9; width: 100%; height: auto; max-width: 100vw; max-height: 100vh; background-color: var(--bg-grad-start); box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1), 0 4px 10px rgba(0, 0, 0, 0.05); border-radius: 8px; display: flex; flex-direction: column; overflow: hidden; }
+        @media (min-aspect-ratio: 16/9) { .presentation-container { width: auto; height: 100%; } }
+
+        /* --- Slide Styling --- */
+        .slide { flex-grow: 1; padding: clamp(1.8rem, 3.5vh, 2.8rem) clamp(2.2rem, 4.5vw, 4.0rem); padding-bottom: calc(clamp(1.8rem, 3.5vh, 2.8rem) + 55px); overflow-y: auto; display: none; flex-direction: column; line-height: 1.7; scrollbar-width: thin; scrollbar-color: var(--scrollbar-thumb) var(--scrollbar-track); position: relative; background-color: var(--bg-grad-start); background-image: linear-gradient(160deg, var(--bg-grad-mid-1) 0%, var(--bg-grad-mid-2) 30%, var(--bg-grad-mid-3) 70%, var(--bg-grad-end) 100%); aspect-ratio: 16 / 9; height: 100%; box-sizing: border-box; transition: background-image 0.3s ease; }
+        .slide::-webkit-scrollbar { width: 8px; }
+        .slide::-webkit-scrollbar-track { background: var(--scrollbar-track); border-radius: 4px; }
+        .slide::-webkit-scrollbar-thumb { background-color: var(--scrollbar-thumb); border-radius: 4px; border: 2px solid var(--scrollbar-track); }
+        .slide.active { display: flex; }
+
+        /* --- Footer and Controls --- */
+        .slide-footer { position: absolute; bottom: 0; left: 0; width: 100%; z-index: 15; background-color: rgba(248, 250, 252, 0.85); backdrop-filter: blur(4px); border-top: 1px solid rgba(209, 213, 219, 0.5); padding: clamp(0.2rem, 0.4vh, 0.3rem) clamp(1rem, 2vw, 2rem); display: flex; justify-content: space-between; align-items: center; opacity: 0; visibility: hidden; transition: opacity 0.3s ease-in-out, visibility 0.3s ease-in-out; pointer-events: none; }
+        .slide-footer.show-footer { opacity: 1; visibility: visible; pointer-events: auto; }
+        .footer-controls { display: flex; align-items: center; gap: clamp(0.6rem, 1.1vw, 1.1rem); }
+        .nav-button, .options-button, .reveal-answer-btn { padding: clamp(0.25rem, 0.5vh, 0.4rem) clamp(0.9rem, 1.3vw, 1.3rem); background-color: var(--nav-button-bg); color: white; border-radius: 4px; text-decoration: none; font-size: clamp(0.8rem, 1.3vh, 0.9rem); font-weight: 500; transition: background-color 0.2s ease-in-out, opacity 0.2s ease-in-out, box-shadow 0.2s ease-in-out; border: none; cursor: pointer; line-height: 1.4; }
+        .nav-button:hover:not(:disabled), .options-button:hover, .reveal-answer-btn:hover { background-color: var(--nav-button-hover-bg); box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1); }
+        .nav-button:disabled { background-color: #d1d5db; color: #6b7280; cursor: not-allowed; opacity: 0.8; box-shadow: none; }
+        .options-button { background-color: #64748b; padding: clamp(0.25rem, 0.5vh, 0.4rem); line-height: 0; }
+        .options-button:hover { background-color: #475569; }
+        .options-button svg { width: clamp(1.0rem, 1.6vh, 1.2rem); height: clamp(1.0rem, 1.6vh, 1.2rem); fill: white; }
+
+        /* --- Settings/Export Drawer Menu --- */
+        #settingsDrawer { position: absolute; bottom: 0; left: 0; width: 100%; background-color: #ffffff; border-top: 1px solid #e2e8f0; box-shadow: 0 -4px 12px rgba(0, 0, 0, 0.1); padding: clamp(1rem, 2vh, 1.5rem) clamp(1.5rem, 3vw, 2rem); transform: translateY(100%); transition: transform 0.3s ease-in-out; z-index: 25; }
+        #settingsDrawer.active { transform: translateY(0); }
+        .drawer-section { margin-bottom: 1rem; }
+        .drawer-section:last-child { margin-bottom: 0; }
+        .drawer-section h3 { font-size: 1rem; font-weight: 600; color: #475569; margin-bottom: 0.75rem; text-align: center; }
+        .drawer-buttons-container { display: flex; justify-content: center; align-items: center; gap: clamp(0.6rem, 1.1vw, 1.1rem); flex-wrap: wrap; }
+        .drawer-button { padding: clamp(0.6rem, 1.1vh, 0.8rem) clamp(1.1rem, 1.6vw, 1.6rem); background-color: #16a34a; color: white; border: none; border-radius: 4px; font-size: clamp(0.95rem, 1.6vh, 1.05rem); font-weight: 500; cursor: pointer; transition: background-color 0.2s ease, opacity 0.2s ease; }
+        .drawer-button:hover:not(:disabled) { background-color: #15803d; }
+        .drawer-button:disabled { background-color: #9ca3af; cursor: not-allowed; opacity: 0.7; }
+        .theme-button { border: 2px solid transparent; }
+        .theme-button.active { border-color: var(--header-main); box-shadow: 0 0 0 2px var(--header-main); }
+
+        /* --- Content Styling --- */
+
+        .two-panel-wrapper {
+            display: flex;
+            width: 100%;
+            height: 100%;
+            align-items: stretch;
+        }
+        .two-panel-wrapper.image-right {
+            flex-direction: row-reverse;
+        }
+        .image-panel {
+            flex: 0 0 33%;
+            position: relative;
+        }
+        .image-panel img {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            border-radius: 20px;
+        }
+        .text-panel {
+            flex: 1 1 67%;
+            padding: clamp(1.8rem, 3.5vh, 2.8rem) clamp(2.2rem, 4.5vw, 4.0rem);
+            box-sizing: border-box;
+            overflow-y: auto;
+        }
+
+        .slide h1 { color: var(--header-main); font-size: clamp(2.5em, 4.0vw, 3.5em); font-weight: 700; margin-bottom: 1.4rem; padding-bottom: 0.6rem; line-height: 1.35; border-bottom: 3px solid var(--border-header); }
+        .slide.session-title-slide h1 { font-size: clamp(3.2em, 4.8vw, 4.5em); border-bottom: none; margin-bottom: 1.2rem; color: var(--header-main); }
+        .slide.session-title-slide h2 { font-size: clamp(1.7em, 2.8vw, 2.5em); font-weight: 400; margin-bottom: 1.0rem; color: var(--header-sub); }
+        .slide.session-title-slide .slide-content-wrapper { display: flex; flex-direction: column; justify-content: center; align-items: center; text-align: center; height: 100%; }
+        .slide h2 { color: var(--header-sub); font-size: clamp(1.6em, 2.4vw, 2.2em); font-weight: 600; margin-top: 1.8rem; margin-bottom: 1rem; }
+        .slide p, .slide ul, .slide ol { color: var(--text-primary); margin-bottom: 1rem; font-size: clamp(1.0em, 1.5vw, 1.3em); line-height: 1.8; }
+        .slide ul, .slide ol { margin-left: 1.8rem; margin-bottom: 1rem; }
+        .slide ul { list-style-type: disc; }
+        .slide ol { list-style-type: decimal; }
+        .slide li { margin-bottom: 0.8rem; }
+        .slide pre { background-color: #1e293b; color: #f8fafc; border: 1px solid #334155; padding: 0.9rem; border-radius: 6px; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word; font-family: 'Roboto Mono', 'Courier New', Courier, monospace; font-size: clamp(0.85em, 1.1vw, 1.0em); margin-top: 0.6rem; margin-bottom: 1.1rem; line-height: 1.5; }
+        .slide code { font-family: 'Roboto Mono', 'Courier New', Courier, monospace; }
+        .slide code.inline { background-color: var(--inline-code-bg); color: var(--inline-code-text); padding: 0.2em 0.5em; border-radius: 4px; font-size: 0.95em; white-space: normal; }
+        .slide .conclusion { font-weight: 600; margin-top: 1.4rem; border-left: 4px solid var(--conclusion-border); padding-left: 0.9rem; color: var(--conclusion-text); font-size: clamp(1.0em, 1.5vw, 1.3em); }
+        .info-card { background-color: #fff; border-radius: 8px; padding: clamp(0.9rem, 1.6vh, 1.3rem); box-shadow: 0 2px 4px rgba(0,0,0,0.05); border-left: 4px solid var(--info-card-border); margin-bottom: 0.9rem; }
+        .comparison-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: clamp(1rem, 2vw, 1.5rem); margin-top: 1.2rem; }
+        .comparison-card { background-color: #f8fafc; border: 1px solid #e2e8f0; border-radius: 8px; padding: clamp(0.9rem, 1.6vh, 1.3rem); }
+        .comparison-card h3 { font-weight: 600; color: var(--header-main); margin-bottom: 0.6rem; text-align: center; border-bottom: 2px solid var(--border-header); padding-bottom: 0.4rem; font-size: clamp(1.15em, 1.75vw, 1.55em); }
+        .process-step { display: flex; align-items: center; margin-bottom: 0.9rem; background-color: var(--process-step-bg); padding: 0.7rem; border-radius: 6px; border: 1px solid var(--process-step-border); }
+        .step-number { background-color: var(--step-number-bg); color: white; border-radius: 50%; width: clamp(26px, 3.2vh, 32px); height: clamp(26px, 3.2vh, 32px); display: inline-flex; justify-content: center; align-items: center; font-weight: 600; margin-right: 0.9rem; flex-shrink: 0; font-size: clamp(0.85em, 1.25vh, 0.95em); }
+        .slide .highlight { color: #dc2626; font-weight: 700; }
+        .slide .highlight-green { color: #16a34a; font-weight: 600; }
+        .summary-list-check li::before { content: '✔'; margin-right: 0.8rem; color: #16a34a; }
+        .ai-assist-prompt { background-color: #ecfdf5; border-left: 4px solid #10b981; padding: 0.8rem; margin-top: 1rem; border-radius: 4px; }
+        .ai-assist-prompt strong { color: #047857; }
+        .mermaid { background-color: #f8fafc; border: 1px solid #e2e8f0; border-radius: 8px; padding: 1rem; margin-top: 1rem; display: flex; justify-content: center; align-items: center; min-height: 150px; }
+        .answer-explanation { display: none; margin-top: 1rem; }
+
+        /* --- STYLES FOR PRINTING (FIXED) --- */
+        @media print {
+            .slide-footer, #settingsDrawer, .options-button, .nav-button, .slide-counter, .reveal-answer-btn { display: none !important; }
+            body { background: none !important; display: block !important; height: auto !important; overflow: visible !important; font-size: 10pt; }
+            .presentation-container { width: 100% !important; height: auto !important; max-width: none !important; max-height: none !important; box-shadow: none !important; border-radius: 0 !important; overflow: visible !important; aspect-ratio: auto !important; background-color: transparent !important; }
+            .slide { display: flex !important; flex-direction: column !important; width: 100% !important; height: 100vh !important; overflow: hidden !important; page-break-before: always !important; page-break-inside: avoid !important; padding: 0.5in !important; margin: 0 !important; border: none !important; box-shadow: none !important; aspect-ratio: auto !important; background-color: var(--bg-grad-start) !important; background-image: linear-gradient(160deg, var(--bg-grad-mid-1) 0%, var(--bg-grad-mid-2) 30%, var(--bg-grad-mid-3) 70%, var(--bg-grad-end) 100%) !important; -webkit-print-color-adjust: exact !important; print-color-adjust: exact !important; }
+            .slide:first-child { page-break-before: auto !important; }
+            .slide h1 { font-size: 18pt !important; }
+            .slide h2 { font-size: 14pt !important; }
+            .slide p, .slide ul, .slide ol, .slide li { font-size: 11pt !important; line-height: 1.4 !important; }
+            .slide code.inline, .slide pre code { font-size: 10pt !important; }
+            .slide pre { padding: 0.5rem !important; }
+            .info-card, .comparison-card, .process-step, .ai-assist-prompt { background-color: #fff !important; border-color: #ccc !important; box-shadow: none !important; }
+            .step-number { background-color: #ccc !important; color: #000 !important; }
+            .comparison-grid { grid-template-columns: 1fr !important; }
+            .mermaid { background-color: #f8fafc !important; -webkit-print-color-adjust: exact !important; print-color-adjust: exact !important; }
+            .mermaid svg { max-width: 100%; height: auto; }
+        }
+        @page { size: landscape; margin: 0.5in; }
+    </style>
+</head>
+<body>
+    <div class="presentation-container">
+
+        <!-- Slide 1: Title Slide -->
+        <div id="slide-1" class="slide active session-title-slide">
+            <div class="slide-content-wrapper">
+                <h1>Gaining Competitive Advantage</h1>
+                <h2>Through Information Systems</h2>
+                <p class="instructor-info" style="margin-top: 2rem;">Chapter 2</p>
+                <p class="instructor-info" style="margin-top: 2rem;">Instructor: N. Long Ha (PhD)</p>
+                <p class="instructor-info" style="margin-top: 2rem;">University of Economics, Hue University</p>
+            </div>
+        </div>
+
+        <!-- Slide 2: Learning Objectives -->
+        <div id="slide-2" class="slide">
+            <h1>Learning Objectives</h1>
+            <ol>
+                <li>Discuss how information systems can be used for automation, organizational learning, and strategic advantage.</li>
+                <li>Describe how information systems support business models used by companies operating in the digital world.</li>
+                <li>Explain why and how companies are continually looking for innovative ways to use information systems for competitive advantage.</li>
+            </ol>
+        </div>
+
+        <!-- Slide 3: Chapter Preview -->
+        <div id="slide-3" class="slide">
+            <h1>Chapter Preview</h1>
+            <p>This chapter explores how organizations use Information Systems (IS) to gain a strategic edge over rivals.</p>
+            <div class="info-card">
+                <p>A firm has a <code class="inline">competitive advantage</code> when it can do something better, faster, more economically, or uniquely.</p>
+            </div>
+            <h2>We will cover:</h2>
+            <ul>
+                <li>The role of IS at different organizational levels.</li>
+                <li>How IS enables innovative business models.</li>
+                <li>The continuous need for innovation to succeed with IS.</li>
+            </ul>
+        </div>
+
+        <!-- Slide 4: The Rise of New Business Models -->
+        <div id="slide-4" class="slide">
+            <h1>Startups and New Business Models</h1>
+            <p>Advances in information technology have enabled entirely new, and often disruptive, business models.</p>
+            <p>These models leverage technology to create, deliver, and capture value in novel ways.</p>
+            <div class="info-card">
+                <p>Just because a business model is enabled by technology, however, does not guarantee it will be successful.</p>
+            </div>
+        </div>
+
+        <!-- Slide 5: Examples of Tech-Enabled Business Models -->
+        <div id="slide-5" class="slide">
+            <h1>Examples of Tech-Enabled Business Models</h1>
+            <div class="comparison-grid">
+                <div class="comparison-card">
+                    <h3>Platform</h3>
+                    <p>Enable others to co-create value. (e.g., Airbnb, Uber)</p>
+                </div>
+                <div class="comparison-card">
+                    <h3>Disintermediation</h3>
+                    <p>Bypass traditional channels to connect directly with customers. (e.g., Warby Parker, Casper)</p>
+                </div>
+                <div class="comparison-card">
+                    <h3>Subscription</h3>
+                    <p>Offer services for a recurring fee, removing transaction friction. (e.g., Netflix, Spotify)</p>
+                </div>
+                <div class="comparison-card">
+                    <h3>On-Demand</h3>
+                    <p>Use mobile and location-based tech to provide immediate services. (e.g., Uber)</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 6: Knowledge Check 1 -->
+        <div id="slide-6" class="slide">
+            <h1>Knowledge Check</h1>
+            <h2>A company like Warby Parker, which sells eyeglasses directly to consumers online, is an example of which business model?</h2>
+            <ul>
+                <li>A) Platform</li>
+                <li>B) Subscription</li>
+                <li>C) On-Demand</li>
+                <li>D) Disintermediation</li>
+            </ul>
+            <button class="reveal-answer-btn">Reveal Answer</button>
+            <div class="answer-explanation">
+                <div class="info-card">
+                    <h3>Correct Answer: D</h3>
+                    <p>Disintermediation means cutting out the middleman. Warby Parker bypasses traditional optical shops and sells directly to the customer, which is a classic example of this model.</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 7: Part 2 Title -->
+        <div id="slide-7" class="slide session-title-slide">
+            <div class="slide-content-wrapper">
+                <h1>Part 2: IS and Organizational Strategy</h1>
+                <h2>Aligning Systems with Goals</h2>
+            </div>
+        </div>
+
+        <!-- Slide 8: Organizational Decision-Making Levels -->
+        <div id="slide-8" class="slide">
+            <h1>Organizational Decision-Making Levels</h1>
+            <p>Every organization has different levels, each with unique responsibilities and information needs. Understanding this structure helps illustrate how different types of IS can provide value.</p>
+            <div class="mermaid">
+                graph TD
+                    A[Executive Level] --> B[Managerial Level];
+                    B --> C[Operational Level];
+                    style A fill:#dbeafe,stroke:#4f46e5,stroke-width:2px
+                    style B fill:#e0e7ff,stroke:#4338ca,stroke-width:2px
+                    style C fill:#eef2ff,stroke:#312e81,stroke-width:2px
+            </div>
+        </div>
+
+        <!-- Slide 9: The Operational Level -->
+        <div id="slide-9" class="slide">
+            <h1>1. The Operational Level</h1>
+            <p>This is where the routine, day-to-day business processes and customer interactions occur.</p>
+            <ul>
+                <li><strong>Who:</strong> Foremen, Supervisors, front-line employees.</li>
+                <li><strong>Decisions:</strong> Highly structured and recurring (e.g., reordering inventory, processing sales). These are <code class="inline">structured decisions</code> where procedures can be specified in advance.</li>
+                <li><strong>IS Goal:</strong> To increase <span class="highlight-green">efficiency</span> by automating repetitive tasks.</li>
+                <li><strong>Example:</strong> An inventory management system that automatically places an order when stock is low.</li>
+            </ul>
+        </div>
+
+        <!-- Slide 10: The Managerial (Tactical) Level -->
+        <div id="slide-10" class="slide">
+            <h1>2. The Managerial (Tactical) Level</h1>
+            <p>Functional managers monitor and control operational activities and provide information to higher-ups.</p>
+            <ul>
+                <li><strong>Who:</strong> Midlevel managers (e.g., marketing, finance, HR managers).</li>
+                <li><strong>Decisions:</strong> Moderately complex, with a time horizon of a few days to months. These are <code class="inline">semistructured decisions</code> that require judgment and expertise.</li>
+                <li><strong>IS Goal:</strong> To increase <span class="highlight-green">effectiveness</span> by helping managers make better decisions.</li>
+                <li><strong>Example:</strong> A business intelligence dashboard showing KPIs to help a manager allocate an advertising budget.</li>
+            </ul>
+        </div>
+
+        <!-- Slide 11: The Executive (Strategic) Level -->
+        <div id="slide-11" class="slide">
+            <h1>3. The Executive (Strategic) Level</h1>
+            <p>Managers focus on long-term strategic questions facing the entire organization.</p>
+            <ul>
+                <li><strong>Who:</strong> President, CEO, CIO, Vice Presidents, Board of Directors.</li>
+                <li><strong>Decisions:</strong> Complex, non-routine, with long-term ramifications. These are <code class="inline">unstructured decisions</code> with no predefined procedures.</li>
+                <li><strong>IS Goal:</strong> To improve strategy and planning with summaries of past data and future projections.</li>
+                <li><strong>Example:</strong> An executive dashboard showing industry trends and competitor performance to decide whether to enter a new market.</li>
+            </ul>
+        </div>
+
+        <!-- Slide 12: Two-Panel: Decision Levels Summary -->
+        <div id="slide-12" class="slide">
+            <div class="two-panel-wrapper image-right">
+                <div class="image-panel">
+                    <img src="img-information-system-today-chapter-2/slide-12.png" alt="Pyramid of organizational decision levels">
+                </div>
+                <div class="text-panel">
+                    <h1>Decision Levels at a Glance</h1>
+                    <div class="process-step">
+                        <div class="step-number">E</div>
+                        <div><strong>Executive:</strong> Unstructured, long-term, strategic decisions. Focus on "Why?"</div>
+                    </div>
+                    <div class="process-step">
+                        <div class="step-number">M</div>
+                        <div><strong>Managerial:</strong> Semistructured, tactical decisions. Focus on "How?"</div>
+                    </div>
+                    <div class="process-step">
+                        <div class="step-number">O</div>
+                        <div><strong>Operational:</strong> Structured, day-to-day decisions. Focus on "What?"</div>
+                    </div>
+                    <p class="conclusion">Each level requires different information systems to support its unique decision-making needs.</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 13: Knowledge Check 2 -->
+        <div id="slide-13" class="slide">
+            <h1>Knowledge Check</h1>
+            <h2>A marketing manager deciding on the advertising budget for the next quarter is operating at which level?</h2>
+            <ul>
+                <li>A) Operational Level</li>
+                <li>B) Managerial Level</li>
+                <li>C) Executive Level</li>
+                <li>D) Strategic Level</li>
+            </ul>
+            <button class="reveal-answer-btn">Reveal Answer</button>
+            <div class="answer-explanation">
+                <div class="info-card">
+                    <h3>Correct Answer: B</h3>
+                    <p>This is a semistructured, tactical decision focused on effectively deploying resources within a specific business function (marketing) to achieve strategic objectives. This is characteristic of the managerial or tactical level.</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 14: The Value of Information Systems -->
+        <div id="slide-14" class="slide">
+            <h1>How IS Provides Value</h1>
+            <p>Information systems can add value to a business in three progressive ways. Each builds upon the last, offering greater benefits to the firm.</p>
+            <div class="mermaid">
+                graph LR
+                    A[Automating] --> B[Learning];
+                    B --> C[Strategizing];
+                style A fill:#eef2ff,stroke:#4338ca,stroke-width:2px
+                style B fill:#e0e7ff,stroke:#4338ca,stroke-width:2px
+                style C fill:#dbeafe,stroke:#4338ca,stroke-width:2px
+            </div>
+            <p>Let's explore each of these stages.</p>
+        </div>
+
+        <!-- Slide 15: IS for Automating -->
+        <div id="slide-15" class="slide">
+            <h1>1. IS for Automating: Doing Things Faster</h1>
+            <p>The first and most basic use of IS is to automate tasks to make them faster, cheaper, and more accurate.</p>
+            <div class="info-card">
+                <h3>Automating Mentality</h3>
+                <p>Focuses on using technology to increase <span class="highlight-green">efficiency</span>. For example, automating a manual loan application process to reduce processing time and errors.</p>
+            </div>
+            <p>This is often the focus of IS at the <code class="inline">operational level</code>, where quick returns on investment can be realized by optimizing repetitive activities.</p>
+        </div>
+
+        <!-- Slide 16: IS for Organizational Learning -->
+        <div id="slide-16" class="slide">
+            <h1>2. IS for Learning: Doing Things Better</h1>
+            <p>This goes beyond simple automation. It involves using the data generated by automated processes to improve the processes themselves.</p>
+            <div class="info-card">
+                <h3>Learning Mentality</h3>
+                <p>Recognizes that IS can be a vehicle for <code class="inline">organizational learning</code>—the ability to use past behavior and data to improve business processes and increase <span class="highlight-green">effectiveness</span>.</p>
+            </div>
+            <p>For example, analyzing loan application data to identify trends, plan staffing, and refine the criteria for loan approval.</p>
+        </div>
+
+        <!-- Slide 17: Two-Panel: The Danger of Automating a Bad Process -->
+        <div id="slide-17" class="slide">
+            <div class="two-panel-wrapper">
+                <div class="image-panel">
+                    <img src="img-information-system-today-chapter-2/slide-17.png" alt="Magnifying glass over a flawed process">
+                </div>
+                <div class="text-panel">
+                    <h1>The Danger of Automating a Bad Process</h1>
+                    <p>Automating without learning can be dangerous. If the underlying business process is flawed, technology will only magnify the problem.</p>
+                    <ul>
+                        <li><strong>Manual Flawed Process:</strong> A loan officer manually approves 2 "bad" loans per week.</li>
+                        <li><strong>Automated Flawed Process:</strong> The same faulty logic is automated, and the system now helps the officer approve 6 "bad" loans per week.</li>
+                    </ul>
+                    <p class="conclusion">Without a learning component to analyze outcomes and identify the flawed criteria, the organization is simply making mistakes faster.</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 18: IS for Supporting Strategy -->
+        <div id="slide-18" class="slide">
+            <h1>3. IS for Strategy: Doing Things Smarter</h1>
+            <p>The highest level of value comes from using IS to support the organization's core strategy and gain a competitive advantage.</p>
+            <div class="info-card">
+                <h3>Strategic Mentality</h3>
+                <p>Goes beyond automating and learning to find ways to use IS to achieve the organization's chosen strategy—by innovating, streamlining operations, or better understanding customers.</p>
+            </div>
+            <p>Today, if a proposed IS doesn't deliver clear <code class="inline">strategic value</code>, it's unlikely to be funded. This is known as maximizing <strong>business/IT alignment</strong>.</p>
+        </div>
+
+        <!-- Slide 19: Knowledge Check 3 -->
+        <div id="slide-19" class="slide">
+            <h1>Knowledge Check</h1>
+            <h2>An organization that analyzes sales data to identify its most profitable customers and then tailors marketing campaigns to them is primarily using IS for:</h2>
+            <ul>
+                <li>A) Automating</li>
+                <li>B) Organizational Learning</li>
+                <li>C) Supporting Strategy</li>
+                <li>D) Both B and C</li>
+            </ul>
+            <button class="reveal-answer-btn">Reveal Answer</button>
+            <div class="answer-explanation">
+                <div class="info-card">
+                    <h3>Correct Answer: D</h3>
+                    <p>The company is using past data to improve its processes (Learning), and it is doing so to achieve a specific goal of targeting profitable customers, which supports its overall business strategy (Strategy). This demonstrates both learning and strategic use of IS.</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 20: Part 3 Title -->
+        <div id="slide-20" class="slide session-title-slide">
+            <div class="slide-content-wrapper">
+                <h1>Part 3: Frameworks for Competitive Advantage</h1>
+                <h2>Identifying How and Where to Compete</h2>
+            </div>
+        </div>
+
+        <!-- Slide 21: Porter's Five Forces Model -->
+        <div id="slide-21" class="slide">
+            <h1>Where to Compete: Porter's Five Forces</h1>
+            <p>To understand where to focus resources, organizations analyze the competitive forces within their industry. Porter's Five Forces model is a classic framework for this analysis.</p>
+            <ol>
+                <li>Rivalry among existing competitors</li>
+                <li>Threat of new entrants</li>
+                <li>Bargaining power of customers</li>
+                <li>Bargaining power of suppliers</li>
+                <li>Threat of substitute products/services</li>
+            </ol>
+        </div>
+
+        <!-- Slide 22: Two-Panel: Visualizing the Five Forces -->
+        <div id="slide-22" class="slide">
+            <div class="two-panel-wrapper image-right">
+                <div class="image-panel">
+                    <img src="img-information-system-today-chapter-2/slide-22.png" alt="Diagram of Porter's Five Forces">
+                </div>
+                <div class="text-panel">
+                    <h1>The Five Forces Model</h1>
+                    <p>This model helps a company understand the structure of its industry and its profit potential.</p>
+                    <div class="info-card">
+                        <p>For example, the internet has increased the <code class="inline">bargaining power of customers</code> by giving them wider choices and lower switching costs, while also reducing barriers to entry for <code class="inline">new entrants</code>.</p>
+                    </div>
+                    <p class="conclusion">By understanding these forces, a company can identify opportunities to use IS to counter their effects.</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 23: Choosing a Generic Strategy -->
+        <div id="slide-23" class="slide">
+            <h1>How to Compete: Choosing a Generic Strategy</h1>
+            <p>Once a company understands its industry, it must choose a strategy to position itself. Porter identified several generic strategies:</p>
+            <div class="comparison-grid">
+                <div class="comparison-card">
+                    <h3>Low-Cost Leadership</h3>
+                    <p>Offer the best prices in the industry (e.g., Walmart).</p>
+                </div>
+                <div class="comparison-card">
+                    <h3>Differentiation</h3>
+                    <p>Provide better products or services than competitors (e.g., Porsche, Apple).</p>
+                </div>
+                <div class="comparison-card">
+                    <h3>Best-Cost Provider</h3>
+                    <p>Offer products of reasonably good quality at competitive prices (e.g., Dell).</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 24: Two-Panel: Generic Strategy Matrix -->
+        <div id="slide-24" class="slide">
+            <div class="two-panel-wrapper">
+                <div class="image-panel">
+                    <img src="img-information-system-today-chapter-2/slide-24.png" alt="Porter's Generic Strategies Matrix">
+                </div>
+                <div class="text-panel">
+                    <h1>Generic Strategy Matrix</h1>
+                    <p>Strategies can also be <code class="inline">focused</code> on a narrow market segment (a niche) or applied broadly across the industry.</p>
+                    <ul>
+                        <li><strong>Focused Low-Cost:</strong> Targeting a specific niche with the lowest prices.</li>
+                        <li><strong>Focused Differentiation:</strong> Offering unique products to a specific niche.</li>
+                    </ul>
+                    <p class="conclusion">The chosen strategy dictates where IS investments should be focused to create the most value.</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 25: Value Chain Analysis -->
+        <div id="slide-25" class="slide">
+            <h1>How to Compete: Value Chain Analysis</h1>
+            <p>This process helps identify opportunities where IS can be used to gain a competitive advantage.</p>
+            <div class="info-card">
+                <h3>Value Chain</h3>
+                <p>The set of activities an organization performs to create, deliver, and support its products or services. Each step should add value.</p>
+            </div>
+            <p>Value chain analysis involves drawing the chain, determining the costs and drivers for each activity, and identifying which activities to optimize.</p>
+        </div>
+
+        <!-- Slide 26: Two-Panel: The Value Chain Diagram -->
+        <div id="slide-26" class="slide">
+            <div class="two-panel-wrapper image-right">
+                <div class="image-panel">
+                    <img src="img-information-system-today-chapter-2/slide-26.png" alt="Diagram of the Value Chain">
+                </div>
+                <div class="text-panel">
+                    <h1>The Value Chain</h1>
+                    <h2>Primary Activities</h2>
+                    <ul>
+                        <li>Inbound Logistics</li>
+                        <li>Operations</li>
+                        <li>Outbound Logistics</li>
+                        <li>Marketing and Sales</li>
+                        <li>Service</li>
+                    </ul>
+                    <h2>Support Activities</h2>
+                    <ul>
+                        <li>Firm Infrastructure, HR, Technology Development, Procurement</li>
+                    </ul>
+                    <p class="conclusion">IS can be used to automate and optimize activities all along the value chain.</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 27: Knowledge Check 4 -->
+        <div id="slide-27" class="slide">
+            <h1>Knowledge Check</h1>
+            <h2>A company like Walmart, which uses massive-scale IS to optimize its supply chain and offer the lowest prices, is executing which generic strategy?</h2>
+            <ul>
+                <li>A) Differentiation</li>
+                <li>B) Low-Cost Leadership</li>
+                <li>C) Focused Differentiation</li>
+                <li>D) Best-Cost Provider</li>
+            </ul>
+            <button class="reveal-answer-btn">Reveal Answer</button>
+            <div class="answer-explanation">
+                <div class="info-card">
+                    <h3>Correct Answer: B</h3>
+                    <p>Walmart's entire business model is built around operational efficiency to drive down costs and offer the lowest prices to a broad market, which is the definition of a low-cost leadership strategy.</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 28: Part 4 Title -->
+        <div id="slide-28" class="slide session-title-slide">
+            <div class="slide-content-wrapper">
+                <h1>Part 4: Business Models in the Digital World</h1>
+                <h2>Creating and Capturing Value</h2>
+            </div>
+        </div>
+
+        <!-- Slide 29: What is a Business Model? -->
+        <div id="slide-29" class="slide">
+            <h1>What is a Business Model?</h1>
+            <p>A business model is a summary of a business's strategic direction that outlines how objectives will be achieved.</p>
+            <div class="info-card">
+                <p>It specifies the value proposition and how the company will <strong>create, deliver, and capture value</strong>.</p>
+            </div>
+            <h2>It answers key questions:</h2>
+            <ul>
+                <li>What does the company do?</li>
+                <li>How does it uniquely do it?</li>
+                <li>How does it get paid?</li>
+                <li>What are the key resources, activities, and costs?</li>
+            </ul>
+        </div>
+
+        <!-- Slide 30: Digital World Revenue Models -->
+        <div id="slide-30" class="slide">
+            <h1>Revenue Models in the Digital World</h1>
+            <p>A <code class="inline">revenue model</code> describes how the firm will earn revenue and generate profits. The internet has enabled several innovative models:</p>
+            <div class="comparison-grid">
+                <div class="comparison-card">
+                    <h3>Affiliate Marketing</h3>
+                    <p>Paying businesses that refer customers to you (e.g., Amazon's Associates Program).</p>
+                </div>
+                <div class="comparison-card">
+                    <h3>Advertising</h3>
+                    <p>Free services paid for by a third party (e.g., Google, Facebook).</p>
+                </div>
+                <div class="comparison-card">
+                    <h3>Transaction Fees</h3>
+                    <p>Taking a commission for aiding in a transaction (e.g., PayPal, eBay, Airbnb).</p>
+                </div>
+                <div class="comparison-card">
+                    <h3>Freemium</h3>
+                    <p>Basic services are free; premium features cost money (e.g., Dropbox, Spotify).</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 31: The Freemium Model -->
+        <div id="slide-31" class="slide">
+            <h1>Focus on: The Freemium Model</h1>
+            <p>The term combines "free" and "premium." It's a popular model for digital products where the marginal cost of an additional user is near zero.</p>
+            <div class="info-card">
+                <h3>How it Works</h3>
+                <p>An organization gives away limited versions of a product for free to build a large customer base, then charges a premium for unrestricted versions.</p>
+            </div>
+            <p>The challenge is balancing the free offering: it must be compelling enough to attract users, but not so feature-rich that no one pays for the premium version.</p>
+        </div>
+
+        <!-- Slide 32: Two-Panel: Freemium in Action -->
+        <div id="slide-32" class="slide">
+            <div class="two-panel-wrapper image-right">
+                <div class="image-panel">
+                    <img src="img-information-system-today-chapter-2/slide-32.png" alt="Illustration of the Freemium model">
+                </div>
+                <div class="text-panel">
+                    <h1>Freemium in Action: Dropbox</h1>
+                    <ul>
+                        <li><strong>Free Tier:</strong> Offers a small amount of cloud storage (e.g., 2GB) for free. This attracts a massive user base.</li>
+                        <li><strong>Premium Tier:</strong> Users who need more storage can subscribe to a paid plan with significantly more space and additional features.</li>
+                        <li><strong>Benefit:</strong> The large base of free users acts as a powerful marketing engine through word-of-mouth referrals.</li>
+                    </ul>
+                    <p class="conclusion">This model is extremely popular for mobile apps, games (with in-app purchases), and software-as-a-service (SaaS) products.</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 33: Platform-Based Business Models -->
+        <div id="slide-33" class="slide">
+            <h1>Platform-Based Business Models</h1>
+            <p>Traditionally, businesses operated like <code class="inline">pipes</code>, where products were produced and pushed to customers.</p>
+            <p>Increasing digital density has enabled <code class="inline">platforms</code>, which are digital ecosystems where some users create value and other users consume it.</p>
+            <div class="info-card">
+                <h3>Platform</h3>
+                <p>A business model that coordinates other businesses and users to co-create value. The platform owner doesn't create the service, but facilitates the connection.</p>
+            </div>
+            <p>Examples: YouTube (content), eBay (products), Uber (services), Kickstarter (funding).</p>
+        </div>
+
+        <!-- Slide 34: Mermaid: The Two-Sided Market -->
+        <div id="slide-34" class="slide">
+            <h1>The Two-Sided Market & Network Effects</h1>
+            <p>Platforms create a two-sided market, and their success depends on the <code class="inline">network effect</code>: the value of the platform increases as more users join.</p>
+            <div class="mermaid">
+                graph TD
+                    A[Producers] --> C{Platform};
+                    C --> B[Consumers];
+                    B --> C;
+                    subgraph Network
+                        A
+                        B
+                    end
+                    style C fill:#dbeafe,stroke:#4f46e5,stroke-width:2px
+            </div>
+            <p>A platform is only valuable if it attracts both producers (e.g., Uber drivers, Airbnb hosts) and consumers (riders, guests).</p>
+        </div>
+
+        <!-- Slide 35: Service-Based Business Models -->
+        <div id="slide-35" class="slide">
+            <h1>Service-Based Business Models (XaaS)</h1>
+            <p>This model, often called "X as a Service," involves selling the *outcome* or *use* of a product, rather than the product itself.</p>
+            <ul>
+                <li><strong>Traditional Model:</strong> GE sells a jet engine to an airline. The airline owns it and pays for maintenance.</li>
+                <li><strong>Service Model:</strong> GE provides "thrust as a service." The airline pays for hours of usage, and GE guarantees uptime, using IoT sensors to predict and perform maintenance.</li>
+            </ul>
+            <div class="info-card">
+                <p>This transforms a customer's fixed costs (buying an asset) into variable costs (paying for usage) and aligns the incentives of the manufacturer and customer.</p>
+            </div>
+        </div>
+
+        <!-- Slide 36: Knowledge Check 5 -->
+        <div id="slide-36" class="slide">
+            <h1>Knowledge Check</h1>
+            <h2>YouTube does not create its own videos, but provides a space for creators to upload content and for viewers to watch it. This is an example of a:</h2>
+            <ul>
+                <li>A) Pipe-based model</li>
+                <li>B) Freemium model</li>
+                <li>C) Platform-based model</li>
+                <li>D) Service-based model</li>
+            </ul>
+            <button class="reveal-answer-btn">Reveal Answer</button>
+            <div class="answer-explanation">
+                <div class="info-card">
+                    <h3>Correct Answer: C</h3>
+                    <p>YouTube is a classic platform. It creates a digital ecosystem that connects two distinct groups of users—content creators (producers) and viewers (consumers)—to co-create value.</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 37: In-Class Assignment -->
+        <div id="slide-37" class="slide">
+            <h1>In-Class Assignment (30 Mins)</h1>
+            <h2>Analyze a Digital Disruptor</h2>
+            <p>Choose a modern digital company (e.g., Spotify, Airbnb, Netflix, Shein). Your task is to analyze its business and revenue models.</p>
+            <div class="ai-assist-prompt">
+                <p><strong>Use AI to help you research and structure your analysis.</strong></p>
+                <p><strong>Example Prompts for ChatGPT/Gemini:</strong></p>
+                <ul>
+                    <li>"Analyze Spotify's business model. Is it a platform, pipe, or hybrid? What are its primary revenue streams, and how does it use the freemium model?"</li>
+                    <li>"Describe Airbnb's value proposition for both hosts and guests. How does it use IS to create a competitive advantage over traditional hotels?"</li>
+                    <li>"What are the key resources and activities in Netflix's value chain? How has its business model evolved from physical DVDs to streaming and content production?"</li>
+                </ul>
+            </div>
+            <p>Prepare a 3-slide summary of your findings to share with the class.</p>
+        </div>
+
+        <!-- Slide 38: Part 5 Title -->
+        <div id="slide-38" class="slide session-title-slide">
+            <div class="slide-content-wrapper">
+                <h1>Part 5: The Innovation Imperative</h1>
+                <h2>Staying Ahead in the Digital World</h2>
+            </div>
+        </div>
+
+        <!-- Slide 39: Valuing Innovations -->
+        <div id="slide-39" class="slide">
+            <h1>Valuing Innovations</h1>
+            <p>Innovation is key for gaining or sustaining a competitive advantage. It involves creating new products, processes, or services that return value to the organization.</p>
+            <div class="comparison-grid">
+                <div class="comparison-card">
+                    <h3>Incremental Innovation</h3>
+                    <p>Enhancing or upgrading existing products, services, or processes. (e.g., a new iPhone model with a better camera).</p>
+                </div>
+                <div class="comparison-card">
+                    <h3>Radical (Disruptive) Innovation</h3>
+                    <p>Uses a new technology to access new customers or provide greater benefits, eventually replacing existing products (e.g., digital photography replacing film).</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 40: Two-Panel: Disruptive Innovation -->
+        <div id="slide-40" class="slide">
+            <div class="two-panel-wrapper">
+                <div class="image-panel">
+                    <img src="img-information-system-today-chapter-2/slide-40.png" alt="Streaming replacing physical media">
+                </div>
+                <div class="text-panel">
+                    <h1>Example of Radical Innovation</h1>
+                    <p>The rise of music streaming services like Spotify completely disrupted the music industry.</p>
+                    <ul>
+                        <li><strong>Displaced Technology:</strong> CDs, cassettes, and even MP3 players and music stores.</li>
+                        <li><strong>New Business Model:</strong> Shifted from owning music (product) to accessing a vast library of music (service) via a subscription model.</li>
+                    </ul>
+                    <p class="conclusion">Radical innovations often create new markets and value networks, displacing established market leaders.</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 41: The Need for Constant Innovation -->
+        <div id="slide-41" class="slide">
+            <h1>The Need for Constant Innovation</h1>
+            <p>Gaining a competitive advantage through IS is difficult and often short-lived.</p>
+            <ul>
+                <li><strong>Innovation is Fleeting:</strong> Rivals can copy innovative systems, products, and processes. An advantage gained today may be gone tomorrow.</li>
+                <li><strong>Innovation is Risky:</strong> Choosing the wrong technology can be a costly mistake (e.g., the Betamax vs. VHS format war).</li>
+                <li><strong>Innovation is Difficult:</strong> The pace of technological change is so fast that it's nearly impossible to predict the "next big thing."</li>
+            </ul>
+        </div>
+
+        <!-- Slide 42: Open Innovation -->
+        <div id="slide-42" class="slide">
+            <h1>Harnessing External Ideas: Open Innovation</h1>
+            <p>Given the difficulties of innovating internally, organizations are increasingly looking outside their own walls for new ideas.</p>
+            <div class="info-card">
+                <h3>Open Innovation</h3>
+                <p>The process of integrating external stakeholders (customers, suppliers, universities, the public) into the innovation process.</p>
+            </div>
+            <p>Platforms like Lego Ideas (customer-submitted designs) and InnoCentive (scientific problem-solving marketplace) allow companies to harness the creativity of the crowd.</p>
+        </div>
+
+        <!-- Slide 43: The Lean Startup Methodology -->
+        <div id="slide-43" class="slide">
+            <h1>A Framework for Innovation: The Lean Startup</h1>
+            <p>Pioneered by Eric Ries, this methodology provides a framework for navigating uncertainty and developing new products and business models.</p>
+            <p>Instead of writing a detailed business plan and then executing it, the lean startup approach focuses on a continuous cycle of experimentation and learning.</p>
+            <div class="info-card">
+                <p>The core idea is to first <code class="inline">search</code> for a viable product and business model, and only <code class="inline">execute</code> once a fit between the product and the market has been found.</p>
+            </div>
+        </div>
+
+        <!-- Slide 44: The Build-Measure-Learn Cycle -->
+        <div id="slide-44" class="slide">
+            <h1>The Build-Measure-Learn Cycle</h1>
+            <p>The lean startup methodology is powered by a feedback loop called the Build-Measure-Learn cycle.</p>
+            <div class="mermaid">
+                graph TD
+                    A(Build) --> B(Measure);
+                    B --> C(Learn);
+                    C --> A;
+                    style A fill:#eef2ff,stroke:#4338ca,stroke-width:2px
+                    style B fill:#e0e7ff,stroke:#4338ca,stroke-width:2px
+                    style C fill:#dbeafe,stroke:#4338ca,stroke-width:2px
+            </div>
+            <p>This cycle enables <code class="inline">validated learning</code>—empirically testing assumptions through customer feedback to improve future iterations.</p>
+        </div>
+
+        <!-- Slide 45: Minimum Viable Product (MVP) -->
+        <div id="slide-45" class="slide">
+            <h1>The Minimum Viable Product (MVP)</h1>
+            <p>A key concept in the "Build" phase is the MVP.</p>
+            <div class="info-card">
+                <h3>Minimum Viable Product (MVP)</h3>
+                <p>A version of a product with just enough features to be usable by early customers who can then provide feedback for future product development.</p>
+            </div>
+            <p>The goal of an MVP is not to be a perfect, feature-complete product. Its purpose is to start the learning process as quickly and cheaply as possible.</p>
+        </div>
+
+        <!-- Slide 46: Two-Panel: The MVP Concept -->
+        <div id="slide-46" class="slide">
+            <div class="two-panel-wrapper image-right">
+                <div class="image-panel">
+                    <img src="img-information-system-today-chapter-2/slide-46.png" alt="Illustration of the MVP concept">
+                </div>
+                <div class="text-panel">
+                    <h1>Visualizing the MVP</h1>
+                    <p>Instead of building a product piece by piece (which delivers no value until the end), the MVP approach focuses on delivering a functional, albeit basic, version at each stage.</p>
+                    <p>You don't build a wheel, then an axle, then a chassis. You build a skateboard, then a scooter, then a bicycle, then a car.</p>
+                    <p class="conclusion">Each iteration is a usable product that solves the core problem and allows you to learn from real users.</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 47: Pivoting -->
+        <div id="slide-47" class="slide">
+            <h1>Pivoting: Changing Direction</h1>
+            <p>If the Build-Measure-Learn cycle reveals that your initial hypotheses are wrong, it's time to pivot.</p>
+            <div class="info-card">
+                <h3>Pivot</h3>
+                <p>A structured course correction designed to test a new fundamental hypothesis about the product, strategy, or engine of growth.</p>
+            </div>
+            <p><strong>Example:</strong> Instagram started as "Burbn," a complex app with check-ins and gaming. After realizing users only valued the photo-sharing feature, the founders pivoted, stripping the app down to its core. This pivot led to massive success.</p>
+        </div>
+
+        <!-- Slide 48: Knowledge Check 6 -->
+        <div id="slide-48" class="slide">
+            <h1>Knowledge Check</h1>
+            <h2>In the lean startup methodology, what is the primary purpose of a Minimum Viable Product (MVP)?</h2>
+            <ul>
+                <li>A) To generate maximum revenue from early adopters.</li>
+                <li>B) To be the final, polished version of the product.</li>
+                <li>C) To begin the learning process with minimal effort and resources.</li>
+                <li>D) To secure a patent for the product idea.</li>
+            </ul>
+            <button class="reveal-answer-btn">Reveal Answer</button>
+            <div class="answer-explanation">
+                <div class="info-card">
+                    <h3>Correct Answer: C</h3>
+                    <p>The goal of an MVP is not to be a perfect product, but to be a tool for learning. It's the fastest way to get through the Build-Measure-Learn feedback loop with the least amount of effort, allowing you to test your core assumptions with real users.</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 49: Organizational Requirements for Innovation -->
+        <div id="slide-49" class="slide">
+            <h1>Organizational Requirements for Innovation</h1>
+            <p>For established organizations to innovate like a startup, they need the right culture and structure.</p>
+            <ul>
+                <li><strong>Process Requirements:</strong> Must allow for cross-functional teams and startup-like budgeting. Incentives should be at the team level, not individual.</li>
+                <li><strong>Resource Requirements:</strong> Must have people with the skills, time, and resources to build MVPs quickly.</li>
+                <li><strong>Risk Tolerance Requirements:</strong> Must have an appropriate tolerance for risk, uncertainty, and the willingness to "fail fast."</li>
+            </ul>
+        </div>
+
+        <!-- Slide 50: Crowdfunding -->
+        <div id="slide-50" class="slide">
+            <h1>Funding Innovation: Crowdfunding</h1>
+            <p>A novel way for startups to get funding has been through crowdfunding platforms.</p>
+            <div class="info-card">
+                <h3>Crowdfunding</h3>
+                <p>The securing of business financing from individuals in the marketplace—the "crowd"—to fund an initiative, typically in exchange for the product or equity.</p>
+            </div>
+            <p>Platforms like <code class="inline">Kickstarter</code> and <code class="inline">Indiegogo</code> allow inventors and startups to pitch ideas directly to potential customers and raise capital without traditional investors.</p>
+        </div>
+
+        <!-- Slide 51: Key Takeaways -->
+        <div id="slide-51" class="slide">
+            <h1>Session Recap: Key Takeaways</h1>
+            <ul class="summary-list-check">
+                <li>IS can be used for automating (faster), learning (better), and strategy (smarter).</li>
+                <li>Frameworks like Porter's Five Forces and Value Chain Analysis help identify where and how to compete.</li>
+                <li>The digital world has enabled new business models like platforms, freemium, and XaaS.</li>
+                <li>Continuous innovation is essential for survival, but it is often risky and difficult.</li>
+                <li>The Lean Startup methodology (Build-Measure-Learn, MVP, Pivot) provides a framework for navigating the uncertainty of innovation.</li>
+            </ul>
+        </div>
+
+        <!-- Slide 52: Final Slide -->
+        <div id="slide-52" class="slide session-title-slide">
+            <div class="slide-content-wrapper">
+                <h1>Questions?</h1>
+                <h2>Open Discussion</h2>
+            </div>
+        </div>
+
+        <!-- FOOTER AND CONTROLS -->
+        <div class="slide-footer">
+            <button id="optionsBtn" class="options-button" title="Settings">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor">
+                    <path d="M10 3a1.5 1.5 0 110 3 1.5 1.5 0 010-3zM10 8.5a1.5 1.5 0 110 3 1.5 1.5 0 010-3zM11.5 14a1.5 1.5 0 10-3 0 1.5 1.5 0 003 0z" />
+                </svg>
+            </button>
+            <div class="footer-controls">
+                <button id="prevBtn" class="nav-button">Previous</button>
+                <span id="slideCounter" class="slide-counter">Slide 1 / 52</span>
+                <button id="nextBtn" class="nav-button">Next</button>
+            </div>
+            <div style="width: 40px;"></div> 
+        </div>
+
+        <!-- SETTINGS DRAWER -->
+        <div id="settingsDrawer">
+            <div class="drawer-section">
+                <h3>Theme</h3>
+                <div id="themeSwitcher" class="drawer-buttons-container"></div>
+            </div>
+            <div class="drawer-section">
+                <h3>Export</h3>
+                <div class="drawer-buttons-container">
+                    <button id="exportPdfBtn" class="drawer-button">Current Slide (PDF)</button>
+                    <button id="printAllBtn" class="drawer-button">All Slides (PDF)</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            // --- DOM Element References ---
+            const slides = document.querySelectorAll('.slide');
+            const prevBtn = document.getElementById('prevBtn');
+            const nextBtn = document.getElementById('nextBtn');
+            const slideCounter = document.getElementById('slideCounter');
+            const optionsBtn = document.getElementById('optionsBtn');
+            const settingsDrawer = document.getElementById('settingsDrawer');
+            const exportPdfBtn = document.getElementById('exportPdfBtn');
+            const printAllBtn = document.getElementById('printAllBtn');
+            const themeSwitcherContainer = document.getElementById('themeSwitcher');
+            const presentationContainer = document.querySelector('.presentation-container');
+            const slideFooter = document.querySelector('.slide-footer');
+
+            // --- State Variables ---
+            let currentSlideIndex = 0;
+            const totalSlides = 52; // *** IMPORTANT: Updated slide count ***
+            let footerTimeoutId = null;
+            
+            // --- Constants ---
+            const FOOTER_HIDE_DELAY = 3000;
+            const PDF_PAGE_WIDTH_IN = 11;
+            const PDF_PAGE_HEIGHT_IN = PDF_PAGE_WIDTH_IN * 9 / 16;
+
+            // --- THEME DATA ---
+            const themes = {
+                'Leaf Green': {
+                    '--bg-grad-start': '#f0fdf4', '--bg-grad-end': '#dcfce7', '--bg-grad-mid-1': '#f0fdf4', '--bg-grad-mid-2': '#dcfce7', '--bg-grad-mid-3': '#bbf7d0',
+                    '--text-primary': '#334155', '--header-main': '#166534', '--header-sub': '#15803d', '--border-header': '#86efac',
+                    '--nav-button-bg': '#16a34a', '--nav-button-hover-bg': '#15803d', '--info-card-border': '#22c55e', '--conclusion-border': '#22c55e',
+                    '--conclusion-text': '#166534', '--process-step-bg': '#f0fdf4', '--process-step-border': '#bbf7d0', '--step-number-bg': '#16a34a',
+                    '--inline-code-bg': '#dcfce7', '--inline-code-text': '#14532d', '--layer-box-bg': '#dcfce7', '--layer-box-border': '#86efac',
+                    '--flow-arrow-color': '#22c55e', '--scrollbar-thumb': '#4ade80', '--scrollbar-track': '#dcfce7'
+                },
+                'Original Purple': {
+                    '--bg-grad-start': '#f5f3ff', '--bg-grad-end': '#ddd6fe', '--bg-grad-mid-1': '#f5f3ff', '--bg-grad-mid-2': '#ede9fe', '--bg-grad-mid-3': '#ddd6fe',
+                    '--text-primary': '#334155', '--header-main': '#4338ca', '--header-sub': '#4f46e5', '--border-header': '#a5b4fc',
+                    '--nav-button-bg': '#4f46e5', '--nav-button-hover-bg': '#4338ca', '--info-card-border': '#6366f1', '--conclusion-border': '#6366f1',
+                    '--conclusion-text': '#4338ca', '--process-step-bg': '#eef2ff', '--process-step-border': '#c7d2fe', '--step-number-bg': '#4f46e5',
+                    '--inline-code-bg': '#eef2ff', '--inline-code-text': '#312e81', '--layer-box-bg': '#e0e7ff', '--layer-box-border': '#c7d2fe',
+                    '--flow-arrow-color': '#6366f1', '--scrollbar-thumb': '#a78bfa', '--scrollbar-track': '#ddd6fe'
+                },
+                'Ocean Blue': {
+                    '--bg-grad-start': '#f0f9ff', '--bg-grad-end': '#dbeafe', '--bg-grad-mid-1': '#f0f9ff', '--bg-grad-mid-2': '#e0f2fe', '--bg-grad-mid-3': '#bae6fd',
+                    '--text-primary': '#334155', '--header-main': '#0c4a6e', '--header-sub': '#0369a1', '--border-header': '#7dd3fc',
+                    '--nav-button-bg': '#0ea5e9', '--nav-button-hover-bg': '#0284c7', '--info-card-border': '#38bdf8', '--conclusion-border': '#38bdf8',
+                    '--conclusion-text': '#0c4a6e', '--process-step-bg': '#f0f9ff', '--process-step-border': '#bae6fd', '--step-number-bg': '#0ea5e9',
+                    '--inline-code-bg': '#e0f2fe', '--inline-code-text': '#075985', '--layer-box-bg': '#e0f2fe', '--layer-box-border': '#7dd3fc',
+                    '--flow-arrow-color': '#38bdf8', '--scrollbar-thumb': '#38bdf8', '--scrollbar-track': '#dbeafe'
+                },
+                'Slate Gray': {
+                    '--bg-grad-start': '#f8fafc', '--bg-grad-end': '#e2e8f0', '--bg-grad-mid-1': '#f8fafc', '--bg-grad-mid-2': '#f1f5f9', '--bg-grad-mid-3': '#e2e8f0',
+                    '--text-primary': '#334155', '--header-main': '#1e293b', '--header-sub': '#334155', '--border-header': '#94a3b8',
+                    '--nav-button-bg': '#475569', '--nav-button-hover-bg': '#334155', '--info-card-border': '#64748b', '--conclusion-border': '#64748b',
+                    '--conclusion-text': '#1e293b', '--process-step-bg': '#f8fafc', '--process-step-border': '#e2e8f0', '--step-number-bg': '#475569',
+                    '--inline-code-bg': '#f1f5f9', '--inline-code-text': '#1e293b', '--layer-box-bg': '#f1f5f9', '--layer-box-border': '#cbd5e1',
+                    '--flow-arrow-color': '#64748b', '--scrollbar-thumb': '#94a3b8', '--scrollbar-track': '#e2e8f0'
+                }
+            };
+
+            // --- Core Functions ---
+            function applyTheme(themeName) {
+                const theme = themes[themeName];
+                if (!theme) return;
+                for (const [key, value] of Object.entries(theme)) {
+                    document.documentElement.style.setProperty(key, value);
+                }
+                localStorage.setItem('presentationTheme', themeName);
+                document.querySelectorAll('.theme-button').forEach(btn => {
+                    btn.classList.toggle('active', btn.dataset.theme === themeName);
+                });
+            }
+
+            function populateThemeSwitcher() {
+                Object.keys(themes).forEach(themeName => {
+                    const button = document.createElement('button');
+                    button.className = 'drawer-button theme-button';
+                    button.textContent = themeName;
+                    button.dataset.theme = themeName;
+                    button.style.backgroundColor = themes[themeName]['--nav-button-bg'];
+                    button.addEventListener('click', () => applyTheme(themeName));
+                    themeSwitcherContainer.appendChild(button);
+                });
+            }
+            
+            function initializeMermaidDiagrams() {
+                document.querySelectorAll('.mermaid').forEach(el => {
+                    el.setAttribute('data-mermaid', el.innerHTML.trim());
+                });
+            }
+
+            function showSlide(index) {
+                if (index < 0 || index >= totalSlides) return;
+                slides.forEach((slide, i) => slide.classList.toggle('active', i === index));
+                const activeSlide = slides[index];
+                if (activeSlide) {
+                    activeSlide.scrollTop = 0;
+                    setTimeout(() => {
+                        if (window.mermaid) {
+                          try {
+                            activeSlide.querySelectorAll('.mermaid').forEach(el => {
+                                const code = el.getAttribute('data-mermaid');
+                                if (code) {
+                                    el.innerHTML = code;
+                                    el.removeAttribute('data-processed');
+                                }
+                            });
+                            mermaid.run({ nodes: activeSlide.querySelectorAll('.mermaid') });
+                          } catch (e) {
+                            console.error("Mermaid rendering error:", e);
+                            activeSlide.querySelectorAll('.mermaid').forEach(el => el.innerHTML = 'Error rendering diagram.');
+                          }
+                        }
+                    }, 50);
+                }
+                slideCounter.textContent = `Slide ${index + 1} / ${totalSlides}`;
+                prevBtn.disabled = index === 0;
+                nextBtn.disabled = index === totalSlides - 1;
+                settingsDrawer.classList.remove('active');
+                currentSlideIndex = index;
+            }
+
+            function nextSlide() { showSlide(currentSlideIndex + 1); }
+            function prevSlide() { showSlide(currentSlideIndex - 1); }
+            function toggleSettingsDrawer() { settingsDrawer.classList.toggle('active'); }
+            
+            // --- PDF and Print Functions (FIXED) ---
+            function exportCurrentSlideToPdf() {
+                const activeSlide = document.querySelector('.slide.active');
+                if (!activeSlide) return;
+
+                const drawer = document.getElementById('settingsDrawer');
+                const originalStyles = {
+                    footerClassList: Array.from(slideFooter.classList), footerInlineDisplay: slideFooter.style.display,
+                    drawerDisplay: drawer.style.display, drawerTransform: drawer.style.transform,
+                    slideOverflow: activeSlide.style.overflowY, slideHeight: activeSlide.style.height, slideAspectRatio: activeSlide.style.aspectRatio
+                };
+                
+                exportPdfBtn.disabled = true; printAllBtn.disabled = true; exportPdfBtn.textContent = 'Exporting...'; optionsBtn.disabled = true;
+                if (footerTimeoutId) { clearTimeout(footerTimeoutId); footerTimeoutId = null; }
+                slideFooter.style.display = 'none'; drawer.style.display = 'none'; drawer.classList.remove('active');
+
+                activeSlide.style.overflowY = 'visible'; activeSlide.style.height = 'auto'; activeSlide.style.aspectRatio = 'auto';
+
+                const slideNumber = currentSlideIndex + 1;
+                const filename = `IS_Today_Ch2_Slide_${slideNumber}.pdf`;
+                const opt = {
+                    margin: [0.1, 0.1, 0.1, 0.1],
+                    filename: filename,
+                    image: { type: 'jpeg', quality: 0.98 },
+                    html2canvas: { scale: 2.5, useCORS: true, logging: false, scrollY: 0 },
+                    jsPDF: { unit: 'in', format: [PDF_PAGE_WIDTH_IN, PDF_PAGE_HEIGHT_IN], orientation: 'landscape' }
+                };
+                
+                html2pdf().set(opt).from(activeSlide).save().catch(err => {
+                    console.error('PDF export error:', err);
+                }).finally(() => {
+                    slideFooter.style.display = originalStyles.footerInlineDisplay;
+                    slideFooter.className = '';
+                    originalStyles.footerClassList.forEach(cls => slideFooter.classList.add(cls));
+                    drawer.style.display = originalStyles.drawerDisplay;
+                    drawer.style.transform = originalStyles.drawerTransform;
+                    activeSlide.style.overflowY = originalStyles.slideOverflow;
+                    activeSlide.style.height = originalStyles.slideHeight;
+                    activeSlide.style.aspectRatio = originalStyles.slideAspectRatio;
+                    exportPdfBtn.disabled = false;
+                    printAllBtn.disabled = false;
+                    exportPdfBtn.textContent = 'Current Slide (PDF)';
+                    optionsBtn.disabled = false;
+                });
+            }
+
+            async function triggerPrintAllSlides() {
+                settingsDrawer.classList.remove('active');
+                if (footerTimeoutId) { clearTimeout(footerTimeoutId); footerTimeoutId = null; }
+                slideFooter.classList.remove('show-footer');
+                
+                if(window.mermaid) {
+                    try {
+                        await mermaid.run({ nodes: document.querySelectorAll('.mermaid') });
+                    } catch(e) {
+                        console.error("Mermaid printing error:", e);
+                    }
+                }
+                
+                window.print();
+            }
+
+            // --- Event Listeners ---
+            prevBtn.addEventListener('click', prevSlide);
+            nextBtn.addEventListener('click', nextSlide);
+            optionsBtn.addEventListener('click', toggleSettingsDrawer);
+            exportPdfBtn.addEventListener('click', exportCurrentSlideToPdf);
+            printAllBtn.addEventListener('click', triggerPrintAllSlides);
+
+            document.querySelectorAll('.reveal-answer-btn').forEach(button => {
+                button.addEventListener('click', () => {
+                    const explanation = button.nextElementSibling;
+                    if (explanation && explanation.classList.contains('answer-explanation')) {
+                        explanation.style.display = 'block';
+                        button.style.display = 'none';
+                    }
+                });
+            });
+            
+            // --- Initial Setup ---
+            mermaid.initialize({ startOnLoad: false, theme: 'base', themeVariables: {
+                'primaryColor': '#f8fafc', 'primaryTextColor': '#334155', 'lineColor': '#475569',
+                'textColor': '#334155', 'fontSize': '16px',
+            }});
+            
+            initializeMermaidDiagrams();
+            populateThemeSwitcher();
+            const savedTheme = localStorage.getItem('presentationTheme') || 'Original Purple';
+            applyTheme(savedTheme);
+            showSlide(currentSlideIndex);
+
+            // --- Keyboard and Mouse Listeners ---
+            document.addEventListener('keydown', (e) => {
+                if (e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA') return;
+                if (e.key === 'ArrowRight' || e.key === ' ' || e.key === 'PageDown') nextSlide();
+                if (e.key === 'ArrowLeft' || e.key === 'PageUp') prevSlide();
+                if (e.key === 'Escape') settingsDrawer.classList.remove('active');
+            });
+            presentationContainer.addEventListener('mousemove', () => {
+                 if (footerTimeoutId) clearTimeout(footerTimeoutId);
+                 slideFooter.classList.add('show-footer');
+                 footerTimeoutId = setTimeout(() => slideFooter.classList.remove('show-footer'), FOOTER_HIDE_DELAY);
+            });
+            presentationContainer.addEventListener('mouseleave', () => { if (footerTimeoutId) clearTimeout(footerTimeoutId); slideFooter.classList.remove('show-footer'); });
+            document.addEventListener('click', (e) => {
+                if (settingsDrawer.classList.contains('active') && !settingsDrawer.contains(e.target) && !optionsBtn.contains(e.target)) {
+                    settingsDrawer.classList.remove('active');
+                }
+            });
+        });
+    </script>
+</body>
+</html>

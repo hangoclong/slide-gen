@@ -1,0 +1,1313 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Chapter 1: Managing in the Digital World</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Roboto+Mono&display=swap" rel="stylesheet">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js" integrity="sha512-GsLlZN/3F2ErC5ifS5QtgpiJtWd43JWSuIgh7mbzZ8zBps+dvLusV+eNQATqgA/HdeKFVgA5v3S/cIrLF7QnIg==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    <script src="https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.min.js"></script>
+    <style>
+        :root {
+            --bg-grad-start: #f5f3ff;
+            --bg-grad-end: #ddd6fe;
+            --bg-grad-mid-1: #f5f3ff;
+            --bg-grad-mid-2: #ede9fe;
+            --bg-grad-mid-3: #ddd6fe;
+            --text-primary: #334155;
+            --header-main: #4338ca;
+            --header-sub: #4f46e5;
+            --border-header: #a5b4fc;
+            --nav-button-bg: #4f46e5;
+            --nav-button-hover-bg: #4338ca;
+            --info-card-border: #6366f1;
+            --conclusion-border: #6366f1;
+            --conclusion-text: #4338ca;
+            --process-step-bg: #eef2ff;
+            --process-step-border: #c7d2fe;
+            --step-number-bg: #4f46e5;
+            --inline-code-bg: #eef2ff;
+            --inline-code-text: #312e81;
+            --layer-box-bg: #e0e7ff;
+            --layer-box-border: #c7d2fe;
+            --flow-arrow-color: #6366f1;
+            --scrollbar-thumb: #a78bfa;
+            --scrollbar-track: #ddd6fe;
+        }
+
+        /* --- Base and Layout --- */
+        html, body { height: 100%; margin: 0; padding: 0; overflow: hidden; }
+        body { display: flex; justify-content: center; align-items: center; background: linear-gradient(135deg, var(--bg-grad-start) 0%, var(--bg-grad-end) 100%); font-family: 'Poppins', sans-serif; color: var(--text-primary); transition: background 0.3s ease; }
+        .presentation-container { position: relative; aspect-ratio: 16 / 9; width: 100%; height: auto; max-width: 100vw; max-height: 100vh; background-color: var(--bg-grad-start); box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1), 0 4px 10px rgba(0, 0, 0, 0.05); border-radius: 8px; display: flex; flex-direction: column; overflow: hidden; }
+        @media (min-aspect-ratio: 16/9) { .presentation-container { width: auto; height: 100%; } }
+
+        /* --- Slide Styling --- */
+        .slide { flex-grow: 1; padding: clamp(1.8rem, 3.5vh, 2.8rem) clamp(2.2rem, 4.5vw, 4.0rem); padding-bottom: calc(clamp(1.8rem, 3.5vh, 2.8rem) + 55px); overflow-y: auto; display: none; flex-direction: column; line-height: 1.7; scrollbar-width: thin; scrollbar-color: var(--scrollbar-thumb) var(--scrollbar-track); position: relative; background-color: var(--bg-grad-start); background-image: linear-gradient(160deg, var(--bg-grad-mid-1) 0%, var(--bg-grad-mid-2) 30%, var(--bg-grad-mid-3) 70%, var(--bg-grad-end) 100%); aspect-ratio: 16 / 9; height: 100%; box-sizing: border-box; transition: background-image 0.3s ease; }
+        .slide::-webkit-scrollbar { width: 8px; }
+        .slide::-webkit-scrollbar-track { background: var(--scrollbar-track); border-radius: 4px; }
+        .slide::-webkit-scrollbar-thumb { background-color: var(--scrollbar-thumb); border-radius: 4px; border: 2px solid var(--scrollbar-track); }
+        .slide.active { display: flex; }
+
+        /* --- Footer and Controls --- */
+        .slide-footer { position: absolute; bottom: 0; left: 0; width: 100%; z-index: 15; background-color: rgba(248, 250, 252, 0.85); backdrop-filter: blur(4px); border-top: 1px solid rgba(209, 213, 219, 0.5); padding: clamp(0.2rem, 0.4vh, 0.3rem) clamp(1rem, 2vw, 2rem); display: flex; justify-content: space-between; align-items: center; opacity: 0; visibility: hidden; transition: opacity 0.3s ease-in-out, visibility 0.3s ease-in-out; pointer-events: none; }
+        .slide-footer.show-footer { opacity: 1; visibility: visible; pointer-events: auto; }
+        .footer-controls { display: flex; align-items: center; gap: clamp(0.6rem, 1.1vw, 1.1rem); }
+        .nav-button, .options-button, .reveal-answer-btn { padding: clamp(0.25rem, 0.5vh, 0.4rem) clamp(0.9rem, 1.3vw, 1.3rem); background-color: var(--nav-button-bg); color: white; border-radius: 4px; text-decoration: none; font-size: clamp(0.8rem, 1.3vh, 0.9rem); font-weight: 500; transition: background-color 0.2s ease-in-out, opacity 0.2s ease-in-out, box-shadow 0.2s ease-in-out; border: none; cursor: pointer; line-height: 1.4; }
+        .nav-button:hover:not(:disabled), .options-button:hover, .reveal-answer-btn:hover { background-color: var(--nav-button-hover-bg); box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1); }
+        .nav-button:disabled { background-color: #d1d5db; color: #6b7280; cursor: not-allowed; opacity: 0.8; box-shadow: none; }
+        .options-button { background-color: #64748b; padding: clamp(0.25rem, 0.5vh, 0.4rem); line-height: 0; }
+        .options-button:hover { background-color: #475569; }
+        .options-button svg { width: clamp(1.0rem, 1.6vh, 1.2rem); height: clamp(1.0rem, 1.6vh, 1.2rem); fill: white; }
+
+        /* --- Settings/Export Drawer Menu --- */
+        #settingsDrawer { position: absolute; bottom: 0; left: 0; width: 100%; background-color: #ffffff; border-top: 1px solid #e2e8f0; box-shadow: 0 -4px 12px rgba(0, 0, 0, 0.1); padding: clamp(1rem, 2vh, 1.5rem) clamp(1.5rem, 3vw, 2rem); transform: translateY(100%); transition: transform 0.3s ease-in-out; z-index: 25; }
+        #settingsDrawer.active { transform: translateY(0); }
+        .drawer-section { margin-bottom: 1rem; }
+        .drawer-section:last-child { margin-bottom: 0; }
+        .drawer-section h3 { font-size: 1rem; font-weight: 600; color: #475569; margin-bottom: 0.75rem; text-align: center; }
+        .drawer-buttons-container { display: flex; justify-content: center; align-items: center; gap: clamp(0.6rem, 1.1vw, 1.1rem); flex-wrap: wrap; }
+        .drawer-button { padding: clamp(0.6rem, 1.1vh, 0.8rem) clamp(1.1rem, 1.6vw, 1.6rem); background-color: #16a34a; color: white; border: none; border-radius: 4px; font-size: clamp(0.95rem, 1.6vh, 1.05rem); font-weight: 500; cursor: pointer; transition: background-color 0.2s ease, opacity 0.2s ease; }
+        .drawer-button:hover:not(:disabled) { background-color: #15803d; }
+        .drawer-button:disabled { background-color: #9ca3af; cursor: not-allowed; opacity: 0.7; }
+        .theme-button { border: 2px solid transparent; }
+        .theme-button.active { border-color: var(--header-main); box-shadow: 0 0 0 2px var(--header-main); }
+
+        /* --- Content Styling --- */
+
+        .two-panel-wrapper {
+            display: flex;
+            width: 100%;
+            height: 100%;
+            align-items: stretch;
+        }
+        .two-panel-wrapper.image-right {
+            flex-direction: row-reverse;
+        }
+        .image-panel {
+            flex: 0 0 33%;
+            position: relative;
+        }
+        .image-panel img {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            border-radius: 20px;
+        }
+        .text-panel {
+            flex: 1 1 67%;
+            padding: clamp(1.8rem, 3.5vh, 2.8rem) clamp(2.2rem, 4.5vw, 4.0rem);
+            box-sizing: border-box;
+            overflow-y: auto;
+        }
+
+        .slide h1 { color: var(--header-main); font-size: clamp(2.5em, 4.0vw, 3.5em); font-weight: 700; margin-bottom: 1.4rem; padding-bottom: 0.6rem; line-height: 1.35; border-bottom: 3px solid var(--border-header); }
+        .slide.session-title-slide h1 { font-size: clamp(3.2em, 4.8vw, 4.5em); border-bottom: none; margin-bottom: 1.2rem; color: var(--header-main); }
+        .slide.session-title-slide h2 { font-size: clamp(1.7em, 2.8vw, 2.5em); font-weight: 400; margin-bottom: 1.0rem; color: var(--header-sub); }
+        .slide.session-title-slide .slide-content-wrapper { display: flex; flex-direction: column; justify-content: center; align-items: center; text-align: center; height: 100%; }
+        .slide h2 { color: var(--header-sub); font-size: clamp(1.6em, 2.4vw, 2.2em); font-weight: 600; margin-top: 1.8rem; margin-bottom: 1rem; }
+        .slide p, .slide ul, .slide ol { color: var(--text-primary); margin-bottom: 1rem; font-size: clamp(1.0em, 1.5vw, 1.3em); line-height: 1.8; }
+        .slide ul, .slide ol { margin-left: 1.8rem; margin-bottom: 1rem; }
+        .slide ul { list-style-type: disc; }
+        .slide ol { list-style-type: decimal; }
+        .slide li { margin-bottom: 0.8rem; }
+        .slide pre { background-color: #1e293b; color: #f8fafc; border: 1px solid #334155; padding: 0.9rem; border-radius: 6px; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word; font-family: 'Roboto Mono', 'Courier New', Courier, monospace; font-size: clamp(0.85em, 1.1vw, 1.0em); margin-top: 0.6rem; margin-bottom: 1.1rem; line-height: 1.5; }
+        .slide code { font-family: 'Roboto Mono', 'Courier New', Courier, monospace; }
+        .slide code.inline { background-color: var(--inline-code-bg); color: var(--inline-code-text); padding: 0.2em 0.5em; border-radius: 4px; font-size: 0.95em; white-space: normal; }
+        .slide .conclusion { font-weight: 600; margin-top: 1.4rem; border-left: 4px solid var(--conclusion-border); padding-left: 0.9rem; color: var(--conclusion-text); font-size: clamp(1.0em, 1.5vw, 1.3em); }
+        .info-card { background-color: #fff; border-radius: 8px; padding: clamp(0.9rem, 1.6vh, 1.3rem); box-shadow: 0 2px 4px rgba(0,0,0,0.05); border-left: 4px solid var(--info-card-border); margin-bottom: 0.9rem; }
+        .comparison-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: clamp(1rem, 2vw, 1.5rem); margin-top: 1.2rem; }
+        .comparison-card { background-color: #f8fafc; border: 1px solid #e2e8f0; border-radius: 8px; padding: clamp(0.9rem, 1.6vh, 1.3rem); }
+        .comparison-card h3 { font-weight: 600; color: var(--header-main); margin-bottom: 0.6rem; text-align: center; border-bottom: 2px solid var(--border-header); padding-bottom: 0.4rem; font-size: clamp(1.15em, 1.75vw, 1.55em); }
+        .process-step { display: flex; align-items: center; margin-bottom: 0.9rem; background-color: var(--process-step-bg); padding: 0.7rem; border-radius: 6px; border: 1px solid var(--process-step-border); }
+        .step-number { background-color: var(--step-number-bg); color: white; border-radius: 50%; width: clamp(26px, 3.2vh, 32px); height: clamp(26px, 3.2vh, 32px); display: inline-flex; justify-content: center; align-items: center; font-weight: 600; margin-right: 0.9rem; flex-shrink: 0; font-size: clamp(0.85em, 1.25vh, 0.95em); }
+        .slide .highlight { color: #dc2626; font-weight: 700; }
+        .slide .highlight-green { color: #16a34a; font-weight: 600; }
+        .summary-list-check li::before { content: '✔'; margin-right: 0.8rem; color: #16a34a; }
+        .ai-assist-prompt { background-color: #ecfdf5; border-left: 4px solid #10b981; padding: 0.8rem; margin-top: 1rem; border-radius: 4px; }
+        .ai-assist-prompt strong { color: #047857; }
+        .mermaid { background-color: #f8fafc; border: 1px solid #e2e8f0; border-radius: 8px; padding: 1rem; margin-top: 1rem; display: flex; justify-content: center; align-items: center; min-height: 150px; }
+        .answer-explanation { display: none; margin-top: 1rem; }
+
+        /* --- STYLES FOR PRINTING (FIXED) --- */
+        @media print {
+            .slide-footer, #settingsDrawer, .options-button, .nav-button, .slide-counter, .reveal-answer-btn { display: none !important; }
+            body { background: none !important; display: block !important; height: auto !important; overflow: visible !important; font-size: 10pt; }
+            .presentation-container { width: 100% !important; height: auto !important; max-width: none !important; max-height: none !important; box-shadow: none !important; border-radius: 0 !important; overflow: visible !important; aspect-ratio: auto !important; background-color: transparent !important; }
+            .slide { display: flex !important; flex-direction: column !important; width: 100% !important; height: 100vh !important; overflow: hidden !important; page-break-before: always !important; page-break-inside: avoid !important; padding: 0.5in !important; margin: 0 !important; border: none !important; box-shadow: none !important; aspect-ratio: auto !important; background-color: var(--bg-grad-start) !important; background-image: linear-gradient(160deg, var(--bg-grad-mid-1) 0%, var(--bg-grad-mid-2) 30%, var(--bg-grad-mid-3) 70%, var(--bg-grad-end) 100%) !important; -webkit-print-color-adjust: exact !important; print-color-adjust: exact !important; }
+            .slide:first-child { page-break-before: auto !important; }
+            .slide h1 { font-size: 18pt !important; }
+            .slide h2 { font-size: 14pt !important; }
+            .slide p, .slide ul, .slide ol, .slide li { font-size: 11pt !important; line-height: 1.4 !important; }
+            .slide code.inline, .slide pre code { font-size: 10pt !important; }
+            .slide pre { padding: 0.5rem !important; }
+            .info-card, .comparison-card, .process-step, .ai-assist-prompt { background-color: #fff !important; border-color: #ccc !important; box-shadow: none !important; }
+            .step-number { background-color: #ccc !important; color: #000 !important; }
+            .comparison-grid { grid-template-columns: 1fr !important; }
+            .mermaid { background-color: #f8fafc !important; -webkit-print-color-adjust: exact !important; print-color-adjust: exact !important; }
+            .mermaid svg { max-width: 100%; height: auto; }
+        }
+        @page { size: landscape; margin: 0.5in; }
+    </style>
+</head>
+<body>
+    <div class="presentation-container">
+
+        <!-- Slide 1: Title Slide -->
+        <div id="slide-1" class="slide active session-title-slide">
+            <div class="slide-content-wrapper">
+                <h1>Information Systems Today</h1>
+                <h2>Managing in the Digital World</h2>
+                <p class="instructor-info" style="margin-top: 2rem;">Chapter 1</p>
+                <p class="instructor-info" style="margin-top: 2rem;">Instructor: N. Long Ha (PhD)</p>
+                <p class="instructor-info" style="margin-top: 2rem;">University of Economics, Hue University</p>
+            </div>
+        </div>
+
+        <!-- Slide 2: Learning Objectives -->
+        <div id="slide-2" class="slide">
+            <h1>Learning Objectives</h1>
+            <ol>
+                <li>Describe the characteristics of the digital world and contemporary societal issues.</li>
+                <li>Explain what an information system is and its core components.</li>
+                <li>Understand the dual nature of information systems in organizational success and failure.</li>
+                <li>Discuss computer ethics, including information privacy and intellectual property.</li>
+                <li>Explore the concepts of globalization, digital density, and the future of work.</li>
+            </ol>
+        </div>
+
+        <!-- Slide 3: Preview -->
+        <div id="slide-3" class="slide">
+            <h1>Chapter Preview: Our Digital World</h1>
+            <p>Technology's progress has been tremendous, leading to an exponential acceleration in the digital connection of people, things, and organizations. This is known as increasing <strong>digital density</strong>.</p>
+            <div class="info-card">
+                <p>This chapter's objective is to help you understand the profound role of information systems (IS) in this new landscape, including their impact on societal issues, the future of innovation, and the ethical dilemmas that arise.</p>
+            </div>
+            <p>We will explore what information systems are, how they have become vital to modern organizations, and why this knowledge is essential for you as a future manager.</p>
+        </div>
+
+        <!-- Slide 4: The Shifting Landscape of Innovation -->
+        <div id="slide-4" class="slide">
+            <h1>The Old Model of Innovation</h1>
+            <h2>Where did good ideas used to come from?</h2>
+            <p>For decades, the stereotype of innovation was an eccentric inventor or a secretive corporate lab. This "closed" model had significant drawbacks:</p>
+            <ul>
+                <li><strong>High Cost & Slow Pace:</strong> Corporations funded their own expensive R&D operations, which took years to set up and were highly constrained.</li>
+                <li><strong>Bureaucratic Hurdles:</strong> Research plans were evaluated by multiple layers of management, making the process slow and complex.</li>
+                <li><strong>Market Disconnect:</strong> This bureaucracy often left research out of date and out of touch with actual customer wants and needs.</li>
+            </ul>
+            <p class="conclusion">The result? A high risk of spending millions on products that were years late or no longer relevant, leading to market failure.</p>
+        </div>
+
+        <!-- Slide 5: What is Open Innovation? -->
+        <div id="slide-5" class="slide">
+            <div class="two-panel-wrapper">
+                <div class="image-panel">
+                    <img src="img-information-system-today-chapter-1/slide-5.png" alt="Open Innovation concept visualization">
+                </div>
+                <div class="text-panel">
+                    <h1>A New Approach: Open Innovation</h1>
+                    <p>Instead of relying on tightly controlled internal projects, companies are opening up their research and development efforts to a broad audience.</p>
+                    <div class="info-card">
+                        <h3>Open Innovation</h3>
+                        <p>This approach invites customers, suppliers, other companies, and universities to participate more directly in different phases of the innovation process. It's a shift from "we must invent it ourselves" to "let's find the best ideas, wherever they are."</p>
+                    </div>
+                    <p>This collaborative model is made possible by modern information systems that facilitate communication and idea sharing on a global scale.</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 6: Mermaid: Traditional vs. Open Innovation -->
+        <div id="slide-6" class="slide">
+            <h1>Visualizing Innovation Models</h1>
+            <div class="mermaid">
+            graph TD
+                A[Traditional Innovation] --> B{Internal R&D};
+                B --> C[Internal Product];
+
+                D[Open Innovation] --> E{Internal & External Ideas};
+                E --> F[Internal Product];
+                E --> G[External Spin-off];
+
+                style A fill:#e0f2fe,stroke:#0ea5e9,stroke-width:1px
+                style B fill:#e0f2fe,stroke:#0ea5e9,stroke-width:1px
+                style C fill:#e0f2fe,stroke:#0ea5e9,stroke-width:1px
+                style D fill:#dbeafe,stroke:#4f46e5,stroke-width:1px
+                style E fill:#dbeafe,stroke:#4f46e5,stroke-width:1px
+                style F fill:#dbeafe,stroke:#4f46e5,stroke-width:1px
+                style G fill:#dbeafe,stroke:#4f46e5,stroke-width:1px
+            </div>
+            <p class="conclusion">Open innovation expands the sources of ideas and the pathways to market.</p>
+        </div>
+
+        <!-- Slide 7: Examples of Open Innovation -->
+        <div id="slide-7" class="slide">
+            <h1>Open Innovation in Action</h1>
+            <div class="comparison-grid">
+                <div class="comparison-card">
+                    <h3>My Starbucks Idea</h3>
+                    <p>Customers post ideas and suggestions, vote on them, and discuss them. Hundreds of customer-generated ideas have been implemented.</p>
+                </div>
+                <div class="comparison-card">
+                    <h3>Heineken's Innovators Brewhouse</h3>
+                    <p>Uses open innovation to generate ideas on topics from counterfeit detection to new product packaging and market strategies.</p>
+                </div>
+            </div>
+            <p>Open innovation is also used to tackle major challenges, like fighting COVID-19, by linking experts across industries.</p>
+        </div>
+
+        <!-- Slide 8: Knowledge Check 1 -->
+        <div id="slide-8" class="slide">
+            <h1>Knowledge Check</h1>
+            <h2>Which of the following best describes "Open Innovation"?</h2>
+            <ul>
+                <li>A) A company's process for keeping its research and development completely secret.</li>
+                <li>B) The practice of using both internal and external ideas and paths to market.</li>
+                <li>C) A marketing strategy focused on social media engagement.</li>
+                <li>D) The act of giving away intellectual property for free.</li>
+            </ul>
+            <button class="reveal-answer-btn">Reveal Answer</button>
+            <div class="answer-explanation">
+                <div class="info-card">
+                    <h3>Correct Answer: B</h3>
+                    <p>Open innovation is about breaking down the traditional walls of a company's R&D department. It involves actively seeking ideas from outside the organization (like customers, suppliers, or universities) and also allowing internal ideas to be developed externally (e.g., through spin-offs or licensing).</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 9: The Ubiquity of Information Systems -->
+        <div id="slide-9" class="slide">
+            <h1>Information Systems Are Everywhere</h1>
+            <p>Information systems (IS) are ubiquitous, woven into the fabric of modern business and society. We interact with them constantly, often without realizing the complexity behind the scenes.</p>
+            <div class="comparison-grid">
+                <div class="comparison-card">
+                    <h3>Business Operations</h3>
+                    <p>Companies like FedEx and UPS use IS to route their entire fleet and track millions of packages in real-time. Retailers like Walmart use it to optimize global supply chains and analyze customer preferences.</p>
+                </div>
+                <div class="comparison-card">
+                    <h3>Public Infrastructure</h3>
+                    <p>Cities use IS for adaptive traffic control to ease congestion. Modern cars are filled with information systems, controlling everything from the engine and airbags to park-assist and navigation features.</p>
+                </div>
+            </div>
+            <p class="conclusion">Innovative business models, from Airbnb to Uber, are built entirely on information systems.</p>
+        </div>
+
+        <!-- Slide 10: IS in Your Daily Life -->
+        <div id="slide-10" class="slide">
+            <h1>IS in Your Daily Life</h1>
+            <p>Your personal life is also powered by a vast array of information systems:</p>
+            <ul>
+                <li><strong>Education:</strong> You register for classes online, communicate with instructors via email, access e-books from the library, and submit assignments on platforms like Canvas or Blackboard.</li>
+                <li><strong>Finance:</strong> Your paycheck is likely generated by a computer and automatically deposited into your bank account via high-speed networks.</li>
+                <li><strong>Leisure:</strong> You use social networks like Facebook or TikTok to connect with friends, watch videos on YouTube, listen to music on Spotify, and use smartphone apps for everything from gaming to navigation.</li>
+            </ul>
+        </div>
+
+        <!-- Slide 11: Part 2 Title -->
+        <div id="slide-11" class="slide session-title-slide">
+            <div class="slide-content-wrapper">
+                <h1>Part 2: The Knowledge Society</h1>
+                <h2>From Industrial to Digital</h2>
+            </div>
+        </div>
+
+        <!-- Slide 12: The Emergence of the Digital World -->
+        <div id="slide-12" class="slide">
+            <h1>The Emergence of the Digital World</h1>
+            <p>Powerful, inexpensive, and easy-to-use computers have had a major impact on business and society.</p>
+            <p>We are now in the <code class="inline">post-PC era</code>, where connected mobile devices like tablets and smartphones are replacing traditional desktops for many tasks.</p>
+            <div class="info-card">
+                <p>In the last quarter of 2011, Apple sold more iPads than HP sold PCs. This marked a significant shift in computing.</p>
+            </div>
+        </div>
+
+        <!-- Slide 13: Changes in Work and Socializing -->
+        <div id="slide-13" class="slide">
+            <h1>New Ways of Working and Socializing</h1>
+            <p>Technology has untethered us from our desks. Work is no longer confined to a 9-to-5 schedule at a specific location.</p>
+            <ul>
+                <li>Tasks like sending emails can be done anytime, anywhere.</li>
+                <li>The boundaries between work and leisure are blurring.</li>
+                <li>Cloud computing (Gmail, Dropbox) allows access to files and data from any device.</li>
+            </ul>
+        </div>
+
+        <!-- Slide 14: The Virtuous Cycle -->
+        <div id="slide-14" class="slide">
+            <h1>The Cycle of Change</h1>
+            <p>We are in a virtuous cycle where technological changes lead to social changes, and social changes shape new technology.</p>
+            <div class="mermaid">
+                graph LR
+                    A[Tech Changes] --> B[Social Changes];
+                    B --> A;
+                    style A fill:#e0f2fe,stroke:#0ea5e9,stroke-width:2px
+                    style B fill:#dbeafe,stroke:#4f46e5,stroke-width:2px
+            </div>
+            <p>For example, the demand for mobility and constant connectivity (a social change) drives the development of better smartphones and faster mobile networks (a technological change).</p>
+        </div>
+
+        <!-- Slide 15: Who is a Knowledge Worker? -->
+        <div id="slide-15" class="slide">
+            <h1>The Rise of the Knowledge Worker</h1>
+            <p>In 1959, long before the internet as we know it, management guru Peter Drucker predicted that information and the people who worked with it would become increasingly important.</p>
+            <div class="info-card">
+                <h3>Knowledge Worker</h3>
+                <p>Drucker coined this term to describe professionals who are relatively well educated and who <strong>create, modify, and/or synthesize knowledge</strong> as a fundamental part of their jobs.</p>
+            </div>
+            <p>His predictions were remarkably accurate, and knowledge workers are now a cornerstone of the modern economy.</p>
+        </div>
+
+        <!-- Slide 16: Characteristics of Knowledge Workers -->
+        <div id="slide-16" class="slide">
+            <div class="two-panel-wrapper image-right">
+                <div class="image-panel">
+                    <img src="img-information-system-today-chapter-1/slide-16.png" alt="Illustration of a knowledge worker with icons for skills">
+                </div>
+                <div class="text-panel">
+                    <h1>Characteristics of Knowledge Workers</h1>
+                    <p>Drucker's predictions outlined a new type of employee with distinct traits:</p>
+                    <ul>
+                        <li><strong>Better Compensation:</strong> They are generally paid better than their prior agricultural and industrial counterparts.</li>
+                        <li><strong>Empowered by Education:</strong> They rely on formal education but also possess valuable real-world skills.</li>
+                        <li><strong>Continuous Learners:</strong> They are constantly learning how to do their jobs better and adapt to new challenges.</li>
+                        <li><strong>Greater Bargaining Power:</strong> Their skills and knowledge give them far more career opportunities and influence than workers of the past.</li>
+                    </ul>
+                    <p class="conclusion">Knowledge workers now make up about a quarter of the workforce in developed nations, and their numbers are rising quickly.</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 17: The Knowledge Society -->
+        <div id="slide-17" class="slide">
+            <h1>The Knowledge Society</h1>
+            <p>Drucker also predicted that the rise of knowledge workers would lead to a <code class="inline">knowledge society</code>.</p>
+            <p>He reasoned that education would become its cornerstone, and that possessing <strong>knowledge</strong> would be as important as possessing land, labor, or capital were in previous eras.</p>
+             <div class="info-card">
+                <p>This concept is also known by other names, such as the <strong>knowledge economy</strong>, the <strong>new economy</strong>, the <strong>digital society</strong>, or the <strong>internet era</strong>. All these terms share the premise that information, technology, and knowledge workers are now vital to success.</p>
+            </div>
+        </div>
+
+        <!-- Slide 18: Mermaid: Importance of Knowledge -->
+        <div id="slide-18" class="slide">
+            <h1>The Pillars of Economic Value</h1>
+            <div class="mermaid">
+                graph TD
+                    A[Land]
+                    B[Labor]
+                    C[Capital]
+                    D[Knowledge]
+
+                    subgraph OldEconomy
+                        A
+                        B
+                        C
+                    end
+
+                    subgraph NewEconomy
+                        D
+                    end
+                style A fill:#e0f2fe,stroke:#0ea5e9,stroke-width:1px
+                style B fill:#e0f2fe,stroke:#0ea5e9,stroke-width:1px
+                style C fill:#e0f2fe,stroke:#0ea5e9,stroke-width:1px
+                style D fill:#dbeafe,stroke:#4f46e5,stroke-width:2px
+            </div>
+            <p>In the knowledge society, knowledge has become the most critical resource.</p>
+        </div>
+
+        <!-- Slide 19: The Value of a College Education -->
+        <div id="slide-19" class="slide">
+            <h1>The Economic Value of Education</h1>
+            <p>Data from the U.S. Census Bureau shows a clear link between education and earnings.</p>
+            <div class="info-card">
+                <p>Median annual earnings for workers 25 and over:</p>
+                <ul>
+                    <li>Graduate/Professional Degree: <strong>$66,944</strong></li>
+                    <li>Bachelor's Degree: <strong>$50,515</strong></li>
+                    <li>High School Diploma: <strong>$27,868</strong></li>
+                    <li>No High School Diploma: <strong>$19,954</strong></li>
+                </ul>
+                <p>A bachelor's degree is worth about <strong>$1 million</strong> in additional lifetime earnings compared to a high school diploma.</p>
+            </div>
+        </div>
+
+        <!-- Slide 20: From Knowledge Worker to Learning Worker -->
+        <div id="slide-20" class="slide">
+            <h1>The Next Evolution: The Learning Worker</h1>
+            <p>Today, almost every worker can be considered a knowledge worker. The lines between "knowledge" and "manual" work are blurring.</p>
+            <div class="info-card">
+                <p>The worker of the future needs to be a <code class="inline">learning worker</code>.</p>
+                <p class="conclusion">It's not just about what you know, but your ability to learn new things that will be of primary importance.</p>
+            </div>
+        </div>
+
+        <!-- Slide 21: Knowledge Check 2 -->
+        <div id="slide-21" class="slide">
+            <h1>Knowledge Check</h1>
+            <h2>According to Peter Drucker, what is the cornerstone of the knowledge society?</h2>
+            <ul>
+                <li>A) Capital</li>
+                <li>B) Labor</li>
+                <li>C) Education</li>
+                <li>D) Technology</li>
+            </ul>
+            <button class="reveal-answer-btn">Reveal Answer</button>
+            <div class="answer-explanation">
+                <div class="info-card">
+                    <h3>Correct Answer: C</h3>
+                    <p>Drucker reasoned that given the importance of learning to knowledge workers, education would become the cornerstone of the knowledge society. Possessing knowledge would be as important as possessing land, labor, or capital.</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 22: Part 3 Title -->
+        <div id="slide-22" class="slide session-title-slide">
+            <div class="slide-content-wrapper">
+                <h1>Part 3: Challenges in the Digital World</h1>
+                <h2>The Other Side of the Coin</h2>
+            </div>
+        </div>
+
+        <!-- Slide 23: The Digital Divide -->
+        <div id="slide-23" class="slide">
+            <div class="two-panel-wrapper">
+                <div class="image-panel">
+                    <img src="img-information-system-today-chapter-1/slide-23.png" alt="Visual metaphor for the Digital Divide">
+                </div>
+                <div class="text-panel">
+                    <h1>The Digital Divide</h1>
+                    <p>While the digital world offers immense opportunity, it also creates significant challenges. One of the most critical is the <code class="inline">digital divide</code>.</p>
+                    <div class="info-card">
+                        <h3>Digital Divide</h3>
+                        <p>The gap between those who have access to information systems and the skills to use them, and those who do not. This creates a new class structure where power comes from knowledge, not just money or land.</p>
+                    </div>
+                    <p>This divide is a major ethical challenge, as it is strongly linked to a person's ability to compete and participate in the modern world.</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 24: Who is Affected by the Digital Divide? -->
+        <div id="slide-24" class="slide">
+            <h1>Who is Affected by the Digital Divide?</h1>
+            <p>While the gap is shrinking in some developed nations, major challenges remain. Groups that often lag behind national averages for internet access and computer literacy include:</p>
+            <ul>
+                <li>People in rural communities.</li>
+                <li>The elderly.</li>
+                <li>People with disabilities.</li>
+                <li>Minority groups.</li>
+            </ul>
+            <p class="conclusion">Outside of developed countries, the gap gets even wider. Many developing nations lack the modern infrastructure, financial resources, and affordable internet access needed to close the divide.</p>
+        </div>
+
+        <!-- Slide 25: In-Class Assignment -->
+        <div id="slide-25" class="slide">
+            <h1>In-Class Assignment (30 Mins)</h1>
+            <h2>Bridging the Digital Divide</h2>
+            <p>Your task is to develop a proposal for a program to help bridge the digital divide in a specific community (e.g., rural areas, low-income urban neighborhoods, or for the elderly).</p>
+            <div class="ai-assist-prompt">
+                <p><strong>Use AI to help you brainstorm and structure your proposal.</strong></p>
+                <p><strong>Example Prompts for ChatGPT/Gemini:</strong></p>
+                <ul>
+                    <li>"I need to create a proposal to bridge the digital divide for elderly citizens in my city. What are the key components of such a program? Give me ideas for training, device access, and funding."</li>
+                    <li>"Generate a 3-point action plan to provide affordable internet access and digital literacy training to a rural community. What are potential partners we could work with?"</li>
+                    <li>"What are some innovative, low-cost solutions for providing internet access in developing countries? List pros and cons for each."</li>
+                </ul>
+            </div>
+            <p>Prepare a 3-slide summary of your proposal to share with the class.</p>
+        </div>
+
+        <!-- Slide 26: Part 4 Title -->
+        <div id="slide-26" class="slide session-title-slide">
+            <div class="slide-content-wrapper">
+                <h1>Part 4: Globalization & Societal Issues</h1>
+                <h2>A Connected Planet</h2>
+            </div>
+        </div>
+
+        <!-- Slide 27: What is Globalization? -->
+        <div id="slide-27" class="slide">
+            <h1>What is Globalization?</h1>
+            <p>Globalization refers to the integration of economies throughout the world, a trend enabled by innovation and technological progress. We can see its effects in many ways:</p>
+            <ul>
+                <li>Greater international movement of commodities, money, information, and labor.</li>
+                <li>The development of global technologies, standards, and processes.</li>
+                <li>Falling transportation and telecommunication costs that connect the world.</li>
+            </ul>
+            <div class="info-card">
+                <p>The rapid rise of a new middle class in many developing countries has enabled companies to reach millions of new customers, dramatically expanding their markets.</p>
+            </div>
+        </div>
+
+        <!-- Slide 28: Opportunities of Globalization -->
+        <div id="slide-28" class="slide">
+            <h1>Opportunities of Globalization</h1>
+            <div class="comparison-grid">
+                <div class="comparison-card">
+                    <h3>Access to New Markets</h3>
+                    <p>Companies can sell their products and services to literally millions of new customers in emerging economies.</p>
+                </div>
+                <div class="comparison-card">
+                    <h3>Access to Global Talent</h3>
+                    <p>Decreasing communication costs allow companies to draw on a large pool of skilled professionals from all over the globe, from software developers in India to call centers in Ireland.</p>
+                </div>
+            </div>
+            <p style="margin-top: 1.5rem;">This has also led to the rise of <strong>outsourcing</strong>, where business processes are moved to other companies or countries to reduce costs and increase efficiency.</p>
+        </div>
+
+        <!-- Slide 29: What is Outsourcing? -->
+        <div id="slide-29" class="slide">
+            <h1>Focus on: Outsourcing</h1>
+            <p>Outsourcing is the moving of business processes or tasks (such as accounting, manufacturing, or security) to another company or another country. Key reasons include:</p>
+            <ul>
+                <li>To reduce or control costs.</li>
+                <li>To free up internal resources for core activities.</li>
+                <li>To gain access to world-class capabilities or skills.</li>
+                <li>To increase process efficiencies and reduce time to market.</li>
+            </ul>
+            <p class="conclusion">However, outsourcing is not without its challenges. Cost savings can sometimes be negligible due to added overhead like customs, shipping, and training.</p>
+        </div>
+
+        <!-- Slide 30: Challenges of Globalization -->
+        <div id="slide-30" class="slide">
+            <div class="two-panel-wrapper image-right">
+                <div class="image-panel">
+                    <img src="img-information-system-today-chapter-1/slide-30.png" alt="Graphic illustrating the challenges of globalization">
+                </div>
+                <div class="text-panel">
+                    <h1>Challenges of Globalization</h1>
+                    <p>Operating on a global scale introduces significant operational and cultural hurdles:</p>
+                    <div class="comparison-grid">
+                        <div class="comparison-card">
+                            <h3>Governmental</h3>
+                            <p>Dealing with differences in political systems, regulatory environments, laws, and standards across nations.</p>
+                        </div>
+                        <div class="comparison-card">
+                            <h3>Geoeconomic</h3>
+                            <p>Navigating differences in infrastructure, demographics, welfare levels, and the expertise of the local workforce.</p>
+                        </div>
+                        <div class="comparison-card">
+                            <h3>Cultural</h3>
+                            <p>Managing differences in languages, beliefs, attitudes, religions, and especially different viewpoints regarding intellectual property.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 31: Knowledge Check 3 -->
+        <div id="slide-31" class="slide">
+            <h1>Knowledge Check</h1>
+            <h2>A company in the US hiring a firm in India to handle its customer service calls is an example of:</h2>
+            <ul>
+                <li>A) The digital divide</li>
+                <li>B) Outsourcing</li>
+                <li>C) Knowledge work</li>
+                <li>D) The post-PC era</li>
+            </ul>
+            <button class="reveal-answer-btn">Reveal Answer</button>
+            <div class="answer-explanation">
+                <div class="info-card">
+                    <h3>Correct Answer: B</h3>
+                    <p>Outsourcing is the practice of moving business processes or tasks to another company, which can be located in another country to take advantage of lower labor costs or specialized skills. This is a key feature of globalization.</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 32: Major Societal Issues -->
+        <div id="slide-32" class="slide">
+            <h1>Major Societal Issues in the Digital World</h1>
+            <p>The same forces driving globalization and technological progress have also created pressing societal issues that will shape our future.</p>
+            <p>These are often called "megatrends."</p>
+        </div>
+
+        <!-- Slide 33: Issue 1: Demographic Changes -->
+        <div id="slide-33" class="slide">
+            <h1>Societal Issue 1: Demographic Changes</h1>
+            <p>This refers to changes in the structure of populations.</p>
+            <ul>
+                <li><strong>Aging Populations:</strong> Many developed countries have rapidly aging populations.</li>
+                <li><strong>Population Growth:</strong> Developing regions like Africa are expected to see rapid population growth.</li>
+                <li><strong>Migration:</strong> Mass migrations are affecting both developed and developing nations.</li>
+            </ul>
+            <p class="conclusion">These shifts impact the supply and demand of labor and can increase disparities in welfare.</p>
+        </div>
+
+        <!-- Slide 34: Issue 2: Rapid Urbanization -->
+        <div id="slide-34" class="slide">
+            <h1>Societal Issue 2: Rapid Urbanization</h1>
+            <p>Urbanization is the movement of rural populations to urban areas.</p>
+            <div class="info-card">
+                <p>Over 50% of the world's population now lives in cities.</p>
+            </div>
+            <p>The major challenge is sustaining this growth while providing livable, safe, and sustainable environments for all inhabitants.</p>
+        </div>
+
+        <!-- Slide 35: Issue 3: Shifts in Economic Power -->
+        <div id="slide-35" class="slide">
+            <h1>Societal Issue 3: Shifts in Economic Power</h1>
+            <p>Established economies are losing their dominant positions in the world's economy.</p>
+            <ul>
+                <li>The rise of new economic powers (e.g., China, India) is changing global dynamics.</li>
+                <li>This can lead to political struggles over resources and influence.</li>
+            </ul>
+        </div>
+
+        <!-- Slide 36: Issue 4: Resource Scarcity & Climate Change -->
+        <div id="slide-36" class="slide">
+            <h1>Societal Issue 4: Resource Scarcity & Climate Change</h1>
+            <p>Population growth, global trade, and consumerism contribute to:</p>
+            <ul>
+                <li>Increased waste and pollution.</li>
+                <li>A growing need for finite natural resources.</li>
+                <li><strong>Climate Change:</strong> Large-scale changes in temperatures and weather patterns, leading to rising sea levels and more severe storms.</li>
+            </ul>
+        </div>
+
+        <!-- Slide 37: Sustainable Development -->
+        <div id="slide-37" class="slide">
+            <h1>The Goal: Sustainable Development</h1>
+            <p>In response to these challenges, sustainable development has become a critical goal.</p>
+            <div class="info-card">
+                <h3>Sustainable Development</h3>
+                <p>"Development that meets the needs of the present without compromising the ability of future generations to meet their own needs."</p>
+                <p style="text-align: right;">- World Commission on Environment and Development, 1987</p>
+            </div>
+        </div>
+
+        <!-- Slide 38: Part 5 Title -->
+        <div id="slide-38" class="slide session-title-slide">
+            <div class="slide-content-wrapper">
+                <h1>Part 5: The Future is Digital</h1>
+                <h2>Understanding Digital Density</h2>
+            </div>
+        </div>
+
+        <!-- Slide 39: Digital Density -->
+        <div id="slide-39" class="slide">
+            <div class="two-panel-wrapper">
+                <div class="image-panel">
+                    <img src="img-information-system-today-chapter-1/slide-39.png" alt="Abstract visualization of Digital Density">
+                </div>
+                <div class="text-panel">
+                    <h1>Digital Density: The Engine of the Future</h1>
+                    <p>In most developed societies, information technologies have become pervasive, and the speed of innovation is increasing. This has led to an exponential increase in <code class="inline">digital density</code>.</p>
+                    <div class="info-card">
+                        <h3>Digital Density</h3>
+                        <p>The amount of connected data generated per unit of activity. As every action, from a purchase to a social media post, generates more connected data, it enables new value-added interactions and disruptive business models.</p>
+                    </div>
+                    <p>Understanding this concept is critical, as it impacts our private and work lives, and businesses must adapt their strategies to survive in the digital future.</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 40: Mermaid: Drivers of Digital Density -->
+        <div id="slide-40" class="slide">
+            <h1>The Drivers of Digital Density</h1>
+            <div class="mermaid">
+                graph TD
+                    A[Connections] --> C[Digital Density];
+                    B[Data] --> C;
+                    C --> D[New Interactions & Business Models];
+                    style A fill:#e0f2fe,stroke:#0ea5e9,stroke-width:2px
+                    style B fill:#e0f2fe,stroke:#0ea5e9,stroke-width:2px
+                    style C fill:#dbeafe,stroke:#4f46e5,stroke-width:2px
+                    style D fill:#eef2ff,stroke:#4338ca,stroke-width:2px
+            </div>
+            <p>The two essential drivers of digital density are the massive increase in <strong>Connections</strong> (through mobile devices and the IoT) and the explosion of <strong>Data</strong> (Big Data) they generate.</p>
+        </div>
+
+        <!-- Slide 41: Driver 1: Connections -->
+        <div id="slide-41" class="slide">
+            <h1>Driver 1: Connections</h1>
+            <p>In the past, connections were between people or computers. Today, it is possible to connect almost any element of the physical world—people, organizations, or things—to the digital realm.</p>
+            <h2>Key Enablers:</h2>
+            <ul>
+                <li><strong>Mobile Devices:</strong> Smartphones and tablets provide constant, "instant-on" connectivity, blurring the lines between work and leisure and creating "micro-moments" for customer interaction.</li>
+                <li><strong>The Internet of Things (IoT):</strong> A network of a broad range of physical objects that can automatically share data over the internet, from smart meters to wearable technology.</li>
+            </ul>
+        </div>
+
+        <!-- Slide 42: The Internet of Things (IoT) -->
+        <div id="slide-42" class="slide">
+            <div class="two-panel-wrapper image-right">
+                <div class="image-panel">
+                    <img src="img-information-system-today-chapter-1/slide-42.png" alt="Icons representing the Internet of Things">
+                </div>
+                <div class="text-panel">
+                    <h1>The Internet of Things (IoT) Explained</h1>
+                    <p>The IoT connects physical objects by embedding them with sensors, software, and wireless radios. Already in 2008, more devices were connected to the internet than people on Earth.</p>
+                    <div class="comparison-grid">
+                        <div class="comparison-card">
+                            <h3>Smart Home</h3>
+                            <p>Technologies like the Nest Learning Thermostat enable remote monitoring and control of lighting, heating, and home appliances.</p>
+                        </div>
+                        <div class="comparison-card">
+                            <h3>Wearable Technologies</h3>
+                            <p>Accessories like the Apple Watch or Fitbit incorporate sensors to record physiological and environmental data, from heart rate to altitude.</p>
+                        </div>
+                        <div class="comparison-card">
+                            <h3>Industrial IoT (IIoT)</h3>
+                            <p>The use of IoT in manufacturing to improve efficiency, monitor supply chains, and enable mass customization of products.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 43: Driver 2: Data -->
+        <div id="slide-43" class="slide">
+            <h1>Driver 2: Data (Big Data)</h1>
+            <p>The ability to connect everything has generated tremendous amounts of <code class="inline">Big Data</code>.</p>
+            <div class="info-card">
+                <h3>Big Data</h3>
+                <p>Extremely large and complex datasets, characterized by the "3 Vs": high <strong>Volume</strong> (amount), <strong>Variety</strong> (types), and <strong>Velocity</strong> (speed of collection and analysis).</p>
+            </div>
+            <p>By 2025, the world's data is estimated to grow to 175 zettabytes. That's 175 trillion gigabytes, or the equivalent of 350 billion 512GB iPads.</p>
+        </div>
+
+        <!-- Slide 44: Driver 3: Interactions -->
+        <div id="slide-44" class="slide">
+            <h1>Driver 3: New Interactions & Business Models</h1>
+            <p>Together, increasing connections and data enable new value-added interactions. For many modern organizations, value is created from data, not just a large workforce.</p>
+            <div class="comparison-grid">
+                <div class="comparison-card">
+                    <h3>Old Economy (e.g., Ford)</h3>
+                    <p>~300,000 employees</p>
+                    <p>Value from physical assets and manufacturing.</p>
+                </div>
+                <div class="comparison-card">
+                    <h3>Digital World (e.g., Airbnb)</h3>
+                    <p>~5,000 employees</p>
+                    <p>Value created from data and network effects.</p>
+                </div>
+            </div>
+            <p class="conclusion">Connected data allows companies to anticipate changes, coordinate resources, and personalize offerings in ways never before possible.</p>
+        </div>
+
+        <!-- Slide 45: The API Economy -->
+        <div id="slide-45" class="slide">
+            <h1>The API Economy</h1>
+            <p>A key driver of continuous innovation and new business models has been the rise of <code class="inline">APIs (Application Programming Interfaces)</code>.</p>
+            <div class="info-card">
+                <h3>What is an API?</h3>
+                <p>An intermediary that provides a way for different components of software to interact and exchange data or functionality using common web protocols. They allow a service provider to make parts of its functionality or data available for others to use.</p>
+            </div>
+            <p>In 2018, API traffic accounted for <strong>83% of all web traffic</strong>, fueling what is now called the "API Economy."</p>
+        </div>
+
+        <!-- Slide 46: How APIs Work: An Analogy -->
+        <div id="slide-46" class="slide">
+            <div class="two-panel-wrapper image-right">
+                <div class="image-panel">
+                    <img src="img-information-system-today-chapter-1/slide-46.png" alt="Analogy for how APIs work">
+                </div>
+                <div class="text-panel">
+                    <h1>How APIs Work: An Analogy</h1>
+                    <p>Think of an API just like a power socket in your home.</p>
+                    <ul>
+                        <li>The power socket is a standardized <strong>interface</strong>.</li>
+                        <li>It allows you to receive a <strong>service</strong> (electricity) from a provider (the utility company).</li>
+                        <li>You don't need to know how the electricity is generated or delivered; you just plug in your device and it works.</li>
+                    </ul>
+                    <p>Similarly, a company like Lyft uses Google Maps' API to get mapping functionality without having to build it themselves, allowing them to focus on their core business.</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 47: Knowledge Check 4 -->
+        <div id="slide-47" class="slide">
+            <h1>Knowledge Check</h1>
+            <h2>A network of physical objects that can automatically share data over the internet is known as:</h2>
+            <ul>
+                <li>A) The API Economy</li>
+                <li>B) The Internet of Things (IoT)</li>
+                <li>C) Big Data</li>
+                <li>D) The Digital Divide</li>
+            </ul>
+            <button class="reveal-answer-btn">Reveal Answer</button>
+            <div class="answer-explanation">
+                <div class="info-card">
+                    <h3>Correct Answer: B</h3>
+                    <p>The Internet of Things (IoT) refers to the vast network of physical devices—from smart home appliances to industrial sensors—that are embedded with technology to connect and exchange data with other devices and systems over the internet.</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 48: Part 6 Title -->
+        <div id="slide-48" class="slide session-title-slide">
+            <div class="slide-content-wrapper">
+                <h1>Part 6: Understanding Information Systems</h1>
+                <h2>The Core Components</h2>
+            </div>
+        </div>
+
+        <!-- Slide 49: Information Systems Defined -->
+        <div id="slide-49" class="slide">
+            <h1>Information Systems Defined</h1>
+            <div class="info-card">
+                <h3>Information System (IS)</h3>
+                <p>The combination of <strong>people</strong> and <strong>information technology</strong> that create, collect, process, store, and distribute useful <strong>data</strong>.</p>
+            </div>
+            <h2>Information Technology (IT) includes:</h2>
+            <ul>
+                <li><strong>Hardware:</strong> Physical computer equipment, such as a computer, tablet, or printer, as well as components like a monitor or keyboard.</li>
+                <li><strong>Software:</strong> A program or set of programs that tell the computer to perform certain tasks.</li>
+                <li><strong>Telecommunications Networks:</strong> A group of two or more computer systems linked together with communications equipment.</li>
+            </ul>
+        </div>
+
+        <!-- Slide 50: Data vs. Information vs. Knowledge -->
+        <div id="slide-50" class="slide">
+            <div class="two-panel-wrapper image-right">
+                <div class="image-panel">
+                    <img src="img-information-system-today-chapter-1/slide-50.png" alt="Diagram showing the relationship between data, information, and knowledge">
+                </div>
+                <div class="text-panel">
+                    <h1>Data, Information, and Knowledge</h1>
+                    <div class="comparison-grid">
+                        <div class="comparison-card">
+                            <h3>Data</h3>
+                            <p>Raw, unformatted symbols, such as characters and numbers (e.g., 465889727). Data has no meaning in and of themselves and are of little value until processed.</p>
+                        </div>
+                        <div class="comparison-card">
+                            <h3>Information</h3>
+                            <p>Data that has been formatted, organized, or processed to make them useful. It is a representation of reality that helps answer questions (e.g., SSN: 465-88-9727).</p>
+                        </div>
+                        <div class="comparison-card">
+                            <h3>Knowledge</h3>
+                            <p>The ability to understand information, form opinions, and make decisions or predictions. It is a body of rules or guidelines used to organize data for a task.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 51: Mermaid: Data to Knowledge Pyramid -->
+        <div id="slide-51" class="slide">
+            <h1>The Path from Data to Knowledge</h1>
+            <div class="mermaid">
+                graph LR
+                    A[Data] --> B[Information];
+                    B --> C[Knowledge];
+                    style A fill:#e0f2fe,stroke:#0ea5e9,stroke-width:2px
+                    style B fill:#dbeafe,stroke:#4f46e5,stroke-width:2px
+                    style C fill:#eef2ff,stroke:#4338ca,stroke-width:2px
+            </div>
+            <p>Information systems are essential for transforming raw data into useful information. People then apply their knowledge to understand this information and make decisions.</p>
+        </div>
+
+        <!-- Slide 52: The People Component -->
+        <div id="slide-52" class="slide">
+            <h1>The People Component: Builders, Managers, and Users</h1>
+            <p>An information system is of little use without people. The IS field includes a vast collection of roles, all of which are in high demand:</p>
+            <ul>
+                <li><strong>Developers:</strong> Systems analysts who analyze business requirements, and software developers who code, test, and debug programs.</li>
+                <li><strong>Maintainers:</strong> Database administrators who manage data, and IT auditors who ensure compliance with standards.</li>
+                <li><strong>Managers:</strong> IT managers who oversee existing systems, and Chief Information Officers (CIOs) who guide strategic planning.</li>
+                <li><strong>Users:</strong> That's you! Every employee, manager, and customer who interacts with the system is a crucial part of it.</li>
+            </ul>
+        </div>
+
+        <!-- Slide 53: The Organization Component -->
+        <div id="slide-53" class="slide">
+            <h1>The Organization: The Context of Information Systems</h1>
+            <p>Information systems do not exist in a vacuum; they are built and used within the context of an organization to achieve specific goals.</p>
+            <h2>Organizations use IS to:</h2>
+            <ul>
+                <li>Become more productive and profitable.</li>
+                <li>Gain a sustainable competitive advantage.</li>
+                <li>Reach more customers and expand into new markets.</li>
+                <li>Improve the quality of customer service.</li>
+            </ul>
+            <p>This is true for all types of organizations—professional, social, religious, educational, and governmental.</p>
+        </div>
+
+        <!-- Slide 54: The Dual Nature of IS -->
+        <div id="slide-54" class="slide">
+            <div class="two-panel-wrapper image-right">
+                <div class="image-panel">
+                    <img src="img-information-system-today-chapter-1/slide54.png" alt="Images representing business success and failure">
+                </div>
+                <div class="text-panel">
+                    <h1>The Dual Nature of Information Systems</h1>
+                    <p>Information systems are like a double-edged sword: they can be a powerful weapon for competitive advantage, but they also carry immense risk.</p>
+                    <div class="comparison-grid">
+                        <div class="comparison-card">
+                            <h3>IS That Works: FedEx</h3>
+                            <p>FedEx uses extensive, interconnected information systems to coordinate its global delivery network of 490,000 employees and 180,000 vehicles. This allows them to process millions of packages with millisecond-level decisions, positioning them as a global leader.</p>
+                        </div>
+                        <div class="comparison-card">
+                            <h3>IS Gone Awry: Zoom Outage</h3>
+                            <p>During the COVID-19 pandemic, a massive, unforeseen surge in users caused a Zoom outage. This single point of failure disrupted work, school, and even church services for millions, highlighting the risks of over-reliance on a single provider.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 55: Part 7 Title -->
+        <div id="slide-55" class="slide session-title-slide">
+            <div class="slide-content-wrapper">
+                <h1>Part 7: Ethics in the Digital Age</h1>
+                <h2>Navigating the Moral Landscape</h2>
+            </div>
+        </div>
+
+        <!-- Slide 56: Introduction to IS Ethics -->
+        <div id="slide-56" class="slide">
+            <div class="two-panel-wrapper image-right">
+                <div class="image-panel">
+                    <img src="img-information-system-today-chapter-1/slide-56.png" alt="Graphic representing the PAPA framework for IS ethics">
+                </div>
+                <div class="text-panel">
+                    <h1>IS Ethics: The PAPA Framework</h1>
+                    <p><code class="inline">Computer ethics</code> is used to describe the moral issues and standards of conduct as they pertain to the use of information systems. With the rise of companies like Google and Facebook, ethical concerns have moved to the forefront.</p>
+                    <p>In 1986, Richard O. Mason identified four key ethical issues of the information age, known as the <strong>PAPA</strong> framework:</p>
+                    <ul>
+                        <li><strong>Privacy:</strong> What information must an individual reveal to others?</li>
+                        <li><strong>Accuracy:</strong> Who is responsible for the authenticity and fidelity of information?</li>
+                        <li><strong>Property:</strong> Who owns information and how can it be sold or exchanged?</li>
+                        <li><strong>Accessibility:</strong> What information does a person or organization have the right to obtain about others?</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 57: Information Privacy -->
+        <div id="slide-57" class="slide">
+            <h1>Information Privacy</h1>
+            <p>Information privacy is concerned with what information an individual should have to reveal to others in the workplace or through transactions like online shopping.</p>
+            <p>The downside of the Information Age is that others may now have access to personal information you would prefer to keep private (e.g., SSNs, credit card numbers, medical histories).</p>
+            <div class="info-card">
+                <h3>The "Database of Intentions"</h3>
+                <p>Using demographic and psychographic data, companies can piece together highly accurate profiles of their users. This aggregation of data about what you want, purchase, and like creates a holistic and valuable picture, raising concerns about manipulation and data breaches.</p>
+            </div>
+        </div>
+
+        <!-- Slide 58: Intellectual Property -->
+        <div id="slide-58" class="slide">
+            <h1>Intellectual Property</h1>
+            <p>Intellectual property (IP) refers to creations of the mind that have commercial value. Digital technology makes it effortless to copy and distribute IP, often without permission or compensation.</p>
+            <h2>Examples of IP Violations:</h2>
+            <ul>
+                <li>Downloading pirated movies or music from peer-to-peer networks.</li>
+                <li>Sharing software licensed to your school or workplace with friends or family.</li>
+                <li>Using a copyrighted photograph on your blog without permission from the creator.</li>
+                <li>Using 3D printers to create counterfeit physical goods from digital models.</li>
+            </ul>
+        </div>
+
+        <!-- Slide 59: Knowledge Check 5 -->
+        <div id="slide-59" class="slide">
+            <h1>Knowledge Check</h1>
+            <h2>The ethical framework that deals with Privacy, Accuracy, Property, and Accessibility is known as:</h2>
+            <ul>
+                <li>A) The Digital Divide</li>
+                <li>B) The Code of Conduct</li>
+                <li>C) The PAPA Framework</li>
+                <li>D) Globalization Ethics</li>
+            </ul>
+            <button class="reveal-answer-btn">Reveal Answer</button>
+            <div class="answer-explanation">
+                <div class="info-card">
+                    <h3>Correct Answer: C</h3>
+                    <p>The PAPA framework, introduced by Richard O. Mason, is a classic model for understanding the core ethical issues of the information age. It stands for Privacy, Accuracy, Property, and Accessibility.</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 60: Key Takeaways -->
+        <div id="slide-60" class="slide">
+            <h1>Session Recap: Key Takeaways</h1>
+            <ul class="summary-list-check">
+                <li>We live in a digital world characterized by increasing digital density, globalization, and major societal challenges.</li>
+                <li>An Information System combines people, technology, and data to create value.</li>
+                <li>The future belongs to "learning workers" who can adapt to new technologies.</li>
+                <li>IS can be a powerful tool for competitive advantage, but it also carries significant risks.</li>
+                <li>Ethical issues, especially around privacy (PAPA), are critical to consider in the digital age.</li>
+            </ul>
+        </div>
+
+        <!-- Slide 61: Final Slide -->
+        <div id="slide-61" class="slide session-title-slide">
+            <div class="slide-content-wrapper">
+                <h1>Questions?</h1>
+                <h2>Open Discussion</h2>
+            </div>
+        </div>
+
+        <!-- FOOTER AND CONTROLS -->
+        <div class="slide-footer">
+            <button id="optionsBtn" class="options-button" title="Settings">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor">
+                    <path d="M10 3a1.5 1.5 0 110 3 1.5 1.5 0 010-3zM10 8.5a1.5 1.5 0 110 3 1.5 1.5 0 010-3zM11.5 14a1.5 1.5 0 10-3 0 1.5 1.5 0 003 0z" />
+                </svg>
+            </button>
+            <div class="footer-controls">
+                <button id="prevBtn" class="nav-button">Previous</button>
+                <span id="slideCounter" class="slide-counter">Slide 1 / 61</span>
+                <button id="nextBtn" class="nav-button">Next</button>
+            </div>
+            <div style="width: 40px;"></div> 
+        </div>
+
+        <!-- SETTINGS DRAWER -->
+        <div id="settingsDrawer">
+            <div class="drawer-section">
+                <h3>Theme</h3>
+                <div id="themeSwitcher" class="drawer-buttons-container"></div>
+            </div>
+            <div class="drawer-section">
+                <h3>Export</h3>
+                <div class="drawer-buttons-container">
+                    <button id="exportPdfBtn" class="drawer-button">Current Slide (PDF)</button>
+                    <button id="printAllBtn" class="drawer-button">All Slides (PDF)</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            // --- DOM Element References ---
+            const slides = document.querySelectorAll('.slide');
+            const prevBtn = document.getElementById('prevBtn');
+            const nextBtn = document.getElementById('nextBtn');
+            const slideCounter = document.getElementById('slideCounter');
+            const optionsBtn = document.getElementById('optionsBtn');
+            const settingsDrawer = document.getElementById('settingsDrawer');
+            const exportPdfBtn = document.getElementById('exportPdfBtn');
+            const printAllBtn = document.getElementById('printAllBtn');
+            const themeSwitcherContainer = document.getElementById('themeSwitcher');
+            const presentationContainer = document.querySelector('.presentation-container');
+            const slideFooter = document.querySelector('.slide-footer');
+
+            // --- State Variables ---
+            let currentSlideIndex = 0;
+            const totalSlides = 61; // *** IMPORTANT: Updated slide count ***
+            let footerTimeoutId = null;
+            
+            // --- Constants ---
+            const FOOTER_HIDE_DELAY = 3000;
+            const PDF_PAGE_WIDTH_IN = 11;
+            const PDF_PAGE_HEIGHT_IN = PDF_PAGE_WIDTH_IN * 9 / 16;
+
+            // --- THEME DATA ---
+            const themes = {
+                'Leaf Green': {
+                    '--bg-grad-start': '#f0fdf4', '--bg-grad-end': '#dcfce7', '--bg-grad-mid-1': '#f0fdf4', '--bg-grad-mid-2': '#dcfce7', '--bg-grad-mid-3': '#bbf7d0',
+                    '--text-primary': '#334155', '--header-main': '#166534', '--header-sub': '#15803d', '--border-header': '#86efac',
+                    '--nav-button-bg': '#16a34a', '--nav-button-hover-bg': '#15803d', '--info-card-border': '#22c55e', '--conclusion-border': '#22c55e',
+                    '--conclusion-text': '#166534', '--process-step-bg': '#f0fdf4', '--process-step-border': '#bbf7d0', '--step-number-bg': '#16a34a',
+                    '--inline-code-bg': '#dcfce7', '--inline-code-text': '#14532d', '--layer-box-bg': '#dcfce7', '--layer-box-border': '#86efac',
+                    '--flow-arrow-color': '#22c55e', '--scrollbar-thumb': '#4ade80', '--scrollbar-track': '#dcfce7'
+                },
+                'Original Purple': {
+                    '--bg-grad-start': '#f5f3ff', '--bg-grad-end': '#ddd6fe', '--bg-grad-mid-1': '#f5f3ff', '--bg-grad-mid-2': '#ede9fe', '--bg-grad-mid-3': '#ddd6fe',
+                    '--text-primary': '#334155', '--header-main': '#4338ca', '--header-sub': '#4f46e5', '--border-header': '#a5b4fc',
+                    '--nav-button-bg': '#4f46e5', '--nav-button-hover-bg': '#4338ca', '--info-card-border': '#6366f1', '--conclusion-border': '#6366f1',
+                    '--conclusion-text': '#4338ca', '--process-step-bg': '#eef2ff', '--process-step-border': '#c7d2fe', '--step-number-bg': '#4f46e5',
+                    '--inline-code-bg': '#eef2ff', '--inline-code-text': '#312e81', '--layer-box-bg': '#e0e7ff', '--layer-box-border': '#c7d2fe',
+                    '--flow-arrow-color': '#6366f1', '--scrollbar-thumb': '#a78bfa', '--scrollbar-track': '#ddd6fe'
+                },
+                'Ocean Blue': {
+                    '--bg-grad-start': '#f0f9ff', '--bg-grad-end': '#dbeafe', '--bg-grad-mid-1': '#f0f9ff', '--bg-grad-mid-2': '#e0f2fe', '--bg-grad-mid-3': '#bae6fd',
+                    '--text-primary': '#334155', '--header-main': '#0c4a6e', '--header-sub': '#0369a1', '--border-header': '#7dd3fc',
+                    '--nav-button-bg': '#0ea5e9', '--nav-button-hover-bg': '#0284c7', '--info-card-border': '#38bdf8', '--conclusion-border': '#38bdf8',
+                    '--conclusion-text': '#0c4a6e', '--process-step-bg': '#f0f9ff', '--process-step-border': '#bae6fd', '--step-number-bg': '#0ea5e9',
+                    '--inline-code-bg': '#e0f2fe', '--inline-code-text': '#075985', '--layer-box-bg': '#e0f2fe', '--layer-box-border': '#7dd3fc',
+                    '--flow-arrow-color': '#38bdf8', '--scrollbar-thumb': '#38bdf8', '--scrollbar-track': '#dbeafe'
+                },
+                'Slate Gray': {
+                    '--bg-grad-start': '#f8fafc', '--bg-grad-end': '#e2e8f0', '--bg-grad-mid-1': '#f8fafc', '--bg-grad-mid-2': '#f1f5f9', '--bg-grad-mid-3': '#e2e8f0',
+                    '--text-primary': '#334155', '--header-main': '#1e293b', '--header-sub': '#334155', '--border-header': '#94a3b8',
+                    '--nav-button-bg': '#475569', '--nav-button-hover-bg': '#334155', '--info-card-border': '#64748b', '--conclusion-border': '#64748b',
+                    '--conclusion-text': '#1e293b', '--process-step-bg': '#f8fafc', '--process-step-border': '#e2e8f0', '--step-number-bg': '#475569',
+                    '--inline-code-bg': '#f1f5f9', '--inline-code-text': '#1e293b', '--layer-box-bg': '#f1f5f9', '--layer-box-border': '#cbd5e1',
+                    '--flow-arrow-color': '#64748b', '--scrollbar-thumb': '#94a3b8', '--scrollbar-track': '#e2e8f0'
+                }
+            };
+
+            // --- Core Functions ---
+            function applyTheme(themeName) {
+                const theme = themes[themeName];
+                if (!theme) return;
+                for (const [key, value] of Object.entries(theme)) {
+                    document.documentElement.style.setProperty(key, value);
+                }
+                localStorage.setItem('presentationTheme', themeName);
+                document.querySelectorAll('.theme-button').forEach(btn => {
+                    btn.classList.toggle('active', btn.dataset.theme === themeName);
+                });
+            }
+
+            function populateThemeSwitcher() {
+                Object.keys(themes).forEach(themeName => {
+                    const button = document.createElement('button');
+                    button.className = 'drawer-button theme-button';
+                    button.textContent = themeName;
+                    button.dataset.theme = themeName;
+                    button.style.backgroundColor = themes[themeName]['--nav-button-bg'];
+                    button.addEventListener('click', () => applyTheme(themeName));
+                    themeSwitcherContainer.appendChild(button);
+                });
+            }
+            
+            function initializeMermaidDiagrams() {
+                document.querySelectorAll('.mermaid').forEach(el => {
+                    el.setAttribute('data-mermaid', el.innerHTML.trim());
+                });
+            }
+
+            function showSlide(index) {
+                if (index < 0 || index >= totalSlides) return;
+                slides.forEach((slide, i) => slide.classList.toggle('active', i === index));
+                const activeSlide = slides[index];
+                if (activeSlide) {
+                    activeSlide.scrollTop = 0;
+                    setTimeout(() => {
+                        if (window.mermaid) {
+                          try {
+                            activeSlide.querySelectorAll('.mermaid').forEach(el => {
+                                const code = el.getAttribute('data-mermaid');
+                                if (code) {
+                                    el.innerHTML = code;
+                                    el.removeAttribute('data-processed');
+                                }
+                            });
+                            mermaid.run({ nodes: activeSlide.querySelectorAll('.mermaid') });
+                          } catch (e) {
+                            console.error("Mermaid rendering error:", e);
+                            activeSlide.querySelectorAll('.mermaid').forEach(el => el.innerHTML = 'Error rendering diagram.');
+                          }
+                        }
+                    }, 50);
+                }
+                slideCounter.textContent = `Slide ${index + 1} / ${totalSlides}`;
+                prevBtn.disabled = index === 0;
+                nextBtn.disabled = index === totalSlides - 1;
+                settingsDrawer.classList.remove('active');
+                currentSlideIndex = index;
+            }
+
+            function nextSlide() { showSlide(currentSlideIndex + 1); }
+            function prevSlide() { showSlide(currentSlideIndex - 1); }
+            function toggleSettingsDrawer() { settingsDrawer.classList.toggle('active'); }
+            
+            // --- PDF and Print Functions (FIXED) ---
+            function exportCurrentSlideToPdf() {
+                const activeSlide = document.querySelector('.slide.active');
+                if (!activeSlide) return;
+
+                const drawer = document.getElementById('settingsDrawer');
+                const originalStyles = {
+                    footerClassList: Array.from(slideFooter.classList), footerInlineDisplay: slideFooter.style.display,
+                    drawerDisplay: drawer.style.display, drawerTransform: drawer.style.transform,
+                    slideOverflow: activeSlide.style.overflowY, slideHeight: activeSlide.style.height, slideAspectRatio: activeSlide.style.aspectRatio
+                };
+                
+                exportPdfBtn.disabled = true; printAllBtn.disabled = true; exportPdfBtn.textContent = 'Exporting...'; optionsBtn.disabled = true;
+                if (footerTimeoutId) { clearTimeout(footerTimeoutId); footerTimeoutId = null; }
+                slideFooter.style.display = 'none'; drawer.style.display = 'none'; drawer.classList.remove('active');
+
+                activeSlide.style.overflowY = 'visible'; activeSlide.style.height = 'auto'; activeSlide.style.aspectRatio = 'auto';
+
+                const slideNumber = currentSlideIndex + 1;
+                const filename = `IS_Today_Ch1_Slide_${slideNumber}.pdf`;
+                const opt = {
+                    margin: [0.1, 0.1, 0.1, 0.1],
+                    filename: filename,
+                    image: { type: 'jpeg', quality: 0.98 },
+                    html2canvas: { scale: 2.5, useCORS: true, logging: false, scrollY: 0 },
+                    jsPDF: { unit: 'in', format: [PDF_PAGE_WIDTH_IN, PDF_PAGE_HEIGHT_IN], orientation: 'landscape' }
+                };
+                
+                html2pdf().set(opt).from(activeSlide).save().catch(err => {
+                    console.error('PDF export error:', err);
+                }).finally(() => {
+                    slideFooter.style.display = originalStyles.footerInlineDisplay;
+                    slideFooter.className = '';
+                    originalStyles.footerClassList.forEach(cls => slideFooter.classList.add(cls));
+                    drawer.style.display = originalStyles.drawerDisplay;
+                    drawer.style.transform = originalStyles.drawerTransform;
+                    activeSlide.style.overflowY = originalStyles.slideOverflow;
+                    activeSlide.style.height = originalStyles.slideHeight;
+                    activeSlide.style.aspectRatio = originalStyles.slideAspectRatio;
+                    exportPdfBtn.disabled = false;
+                    printAllBtn.disabled = false;
+                    exportPdfBtn.textContent = 'Current Slide (PDF)';
+                    optionsBtn.disabled = false;
+                });
+            }
+
+            async function triggerPrintAllSlides() {
+                settingsDrawer.classList.remove('active');
+                if (footerTimeoutId) { clearTimeout(footerTimeoutId); footerTimeoutId = null; }
+                slideFooter.classList.remove('show-footer');
+                
+                if(window.mermaid) {
+                    try {
+                        await mermaid.run({ nodes: document.querySelectorAll('.mermaid') });
+                    } catch(e) {
+                        console.error("Mermaid printing error:", e);
+                    }
+                }
+                
+                window.print();
+            }
+
+            // --- Event Listeners ---
+            prevBtn.addEventListener('click', prevSlide);
+            nextBtn.addEventListener('click', nextSlide);
+            optionsBtn.addEventListener('click', toggleSettingsDrawer);
+            exportPdfBtn.addEventListener('click', exportCurrentSlideToPdf);
+            printAllBtn.addEventListener('click', triggerPrintAllSlides);
+
+            document.querySelectorAll('.reveal-answer-btn').forEach(button => {
+                button.addEventListener('click', () => {
+                    const explanation = button.nextElementSibling;
+                    if (explanation && explanation.classList.contains('answer-explanation')) {
+                        explanation.style.display = 'block';
+                        button.style.display = 'none';
+                    }
+                });
+            });
+            
+            // --- Initial Setup ---
+            mermaid.initialize({ startOnLoad: false, theme: 'base', themeVariables: {
+                'primaryColor': '#f8fafc', 'primaryTextColor': '#334155', 'lineColor': '#475569',
+                'textColor': '#334155', 'fontSize': '16px',
+            }});
+            
+            initializeMermaidDiagrams();
+            populateThemeSwitcher();
+            const savedTheme = localStorage.getItem('presentationTheme') || 'Original Purple';
+            applyTheme(savedTheme);
+            showSlide(currentSlideIndex);
+
+            // --- Keyboard and Mouse Listeners ---
+            document.addEventListener('keydown', (e) => {
+                if (e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA') return;
+                if (e.key === 'ArrowRight' || e.key === ' ' || e.key === 'PageDown') nextSlide();
+                if (e.key === 'ArrowLeft' || e.key === 'PageUp') prevSlide();
+                if (e.key === 'Escape') settingsDrawer.classList.remove('active');
+            });
+            presentationContainer.addEventListener('mousemove', () => {
+                 if (footerTimeoutId) clearTimeout(footerTimeoutId);
+                 slideFooter.classList.add('show-footer');
+                 footerTimeoutId = setTimeout(() => slideFooter.classList.remove('show-footer'), FOOTER_HIDE_DELAY);
+            });
+            presentationContainer.addEventListener('mouseleave', () => { if (footerTimeoutId) clearTimeout(footerTimeoutId); slideFooter.classList.remove('show-footer'); });
+            document.addEventListener('click', (e) => {
+                if (settingsDrawer.classList.contains('active') && !settingsDrawer.contains(e.target) && !optionsBtn.contains(e.target)) {
+                    settingsDrawer.classList.remove('active');
+                }
+            });
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,301 @@
+name: Bug Fix Workflow (TDD)
+description: Isolates, reproduces, and fixes a bug using a TDD approach, ensuring regression prevention.
+triggers:
+  - bug_report
+  - production_issue
+variables:
+  BUG_ID: required
+  BUG_DESCRIPTION: required
+  AFFECTED_COMPONENT: required
+  SEVERITY: required # "critical" | "high" | "medium" | "low"
+  REPRODUCTION_STEPS: optional
+context_files:
+  - claude.md
+  - .claude/agents/code-tester-agent.md
+  - .claude/agents/code-debugger-agent.md
+  - .claude/agents/code-reviewer-agent.md
+  - .claude/agents/doc-manager-agent.md
+
+# =============================================================================
+# STEP 1: REPRODUCE - Create Failing Test
+# =============================================================================
+steps:
+  - name: reproduce_bug
+    agent: code-tester-agent
+    prompt: |
+      **OBJECTIVE**: Write a single, minimal test that reproduces the bug.
+      
+      **BUG**:
+      - ID: {{BUG_ID}}
+      - Description: {{BUG_DESCRIPTION}}
+      - Component: {{AFFECTED_COMPONENT}}
+      - Steps: {{REPRODUCTION_STEPS}}
+      
+      **READ FIRST**:
+      1. `claude.md`: For testing conventions.
+      2. `.claude/agents/code-tester-agent.md`: Testing standards and patterns.
+      3. Bug report: Understand the exact conditions.
+      4. Existing tests for `{{AFFECTED_COMPONENT}}`.
+      
+      ---
+      
+      ## Test Strategy
+      
+      1.  **Isolate**: Determine the smallest unit that causes the bug.
+          - Is it a single function? → **Unit Test**
+          - Is it an interaction between two components? → **Integration Test**
+          - Is it a user interaction in the UI? → **Component Test**
+      2.  **Replicate**: Write a test that follows the reproduction steps.
+      3.  **Assert**: Assert the *expected* (correct) behavior, not the buggy behavior.
+      
+      ---
+      
+      ## Test Requirements
+      
+      - **Minimal**: The test must be the simplest possible case that triggers the bug.
+      - **Specific**: The test name must clearly reference the bug ID and description.
+      - **Documentation**: Include a comment linking to the bug report.
+      
+      ---
+      
+      ## CONSTRAINTS (CRITICAL)
+      
+      1.  **NO production code changes**.
+      2.  The test **MUST FAIL** when run. This is the definition of success for this step.
+      
+      ---
+      
+      ## Validation Command
+      
+      Run the new test:
+      ```bash
+      [Insert command to run specific test file]
+      ```
+      **Expected Output**: TEST FAILS ❌
+      
+      ---
+      
+      **OUTPUT**:
+      - Path to the new (failing) test file.
+      - Confirmation that the test fails as expected.
+    output: |
+      Reproduction test created:
+      - File: [path to test file]
+    validation:
+      - test_exists: true
+      - test_fails: true
+      - bug_reproduced: true
+      - no_production_changes: true
+    checkpoint: |
+      ⚠️ **MANUAL REVIEW REQUIRED**
+      
+      1. Run the test. Does it fail?
+      2. Does it accurately represent the bug report?
+      
+      Type "approve" to proceed to analysis.
+
+# =============================================================================
+# STEP 2: ANALYZE - Root Cause Analysis
+# =============================================================================
+  - name: root_cause_analysis
+    agent: code-debugger-agent
+    depends_on: reproduce_bug
+    prompt: |
+      **OBJECTIVE**: Identify the exact root cause of the bug.
+      
+      **CONTEXT**:
+      - Bug: {{BUG_DESCRIPTION}}
+      - Failing Test: [Reference output from reproduce_bug]
+      
+      **READ FIRST**:
+      1. `claude.md`: For architecture rules.
+      2. `.claude/agents/code-debugger-agent.md`: Debugging patterns and techniques.
+      3. The code for `{{AFFECTED_COMPONENT}}`.
+      4. The failing test.
+      
+      ---
+      
+      ## Analysis Process
+      
+      1.  **Trace**: Follow the execution path from the failing test.
+      2.  **Identify**: Pinpoint the *exact* line(s) or file(s) causing the failure.
+      3.  **Find Root Cause (5 Whys)**:
+          - Why did the code fail? (e.g., "Variable was null")
+          - Why was it null? (e.g., "Function returned early")
+          - Why did it return early? (e.g., "A check for 'user.isAdmin' was missing")
+          - **Root Cause**: "Missing authorization check."
+      4.  **Architecture Check**:
+          - Does this bug represent a Clean Architecture violation?
+          - Is logic in the wrong layer?
+          - Is a dependency rule being broken?
+      
+      ---
+      
+      **OUTPUT**:
+      - A concise summary of the root cause.
+      - The file(s) and line(s) that need to be fixed.
+      - Any architectural violations identified.
+    output: |
+      Root Cause Analysis:
+      - Cause: [Concise summary]
+      - Location: [File(s) to be fixed]
+      - Architecture Violation: [Yes/No, details]
+    validation:
+      - root_cause_identified: true
+
+# =============================================================================
+# STEP 3: IMPLEMENT FIX - Make Test Pass
+# =============================================================================
+  - name: implement_fix
+    agent: primary_ai
+    depends_on: root_cause_analysis
+    prompt: |
+      **OBJECTIVE**: Write the **MINIMAL** code change to fix the bug.
+      
+      **CONTEXT**:
+      - Root Cause: [Reference output from root_cause_analysis]
+      - Failing Test: [Reference output from reproduce_bug]
+      
+      ---
+      
+      ## Fix Strategy
+      
+      1.  Navigate to the file(s) identified in the analysis.
+      2.  Apply the smallest possible change to correct the logic.
+      3.  Run the failing test.
+      4.  If it passes, run the *entire* test suite for the component (to check for regressions).
+      
+      ---
+      
+      ## CONSTRAINTS (CRITICAL)
+      
+      1.  **FIX ONLY THE BUG**. Do not refactor unrelated code.
+      2.  Do not introduce new features.
+      3.  The fix must not break any *other* existing tests.
+      
+      ---
+      
+      ## Validation Command
+      
+      Run the reproduction test:
+      ```bash
+      [Insert command to run specific test file]
+      ```
+      **Expected Output**: TEST PASSES ✅
+      
+      Run the full test suite:
+      ```bash
+      [Insert full test command from claude.md]
+      ```
+      **Expected Output**: ALL TESTS PASS ✅
+      
+      ---
+      
+      **OUTPUT**:
+      - A diff of the code changes.
+      - Confirmation that all tests now pass.
+    output: |
+      Code changes:
+      - [Diff of the fix]
+    validation:
+      - bug_test_passes: true
+      - all_tests_pass: true # No regressions
+      - fix_is_minimal: true
+    checkpoint: |
+      ⚠️ **MANUAL REVIEW REQUIRED**
+      
+      1. Review the fix. Is it minimal and correct?
+      2. Do all tests pass?
+      
+      Type "approve" to add regression tests.
+
+# =============================================================================
+# STEP 4: PREVENT & DOCUMENT - Regression Prevention
+# =============================================================================
+  - name: prevent_and_document
+    agent: code-tester-agent
+    depends_on: implement_fix
+    prompt: |
+      **OBJECTIVE**: Add tests for related scenarios and document the fix.
+      
+      **CONTEXT**:
+      - Bug: {{BUG_DESCRIPTION}}
+      - Fix: [Reference output from implement_fix]
+      
+      ---
+      
+      ## 1. Add Regression Tests
+      
+      The original test fixed the bug. Now, add tests for related scenarios:
+      - [ ] Test with slightly different (but related) invalid inputs.
+      - [ ] Test related boundary conditions (null, empty, zero).
+      - [ ] If the bug was about permissions, test other roles.
+      
+      The goal is to prevent this *class* of bug from happening again.
+      
+      ## 2. Documentation
+      
+      - **Update CHANGELOG.md**: Add an entry for the fix, linking to the `{{BUG_ID}}`.
+      - **Update Code Docs**: Add comments (if necessary) explaining *why* the fix is in place (especially if non-obvious).
+      - **Capture Learning**: Use `doc-manager-agent` to update documentation and capture learned patterns.
+      
+      ---
+      
+      ## Validation Command
+      
+      Run the full test suite again:
+      ```bash
+      [Insert full test command from claude.md]
+      ```
+      **Expected Output**: ALL TESTS PASS ✅
+      
+      ---
+      
+      **OUTPUT**:
+      - List of new regression test files/descriptions.
+      - Updated CHANGELOG.md.
+      - Updated .claude/memory/learned-patterns.md.
+    output: |
+      Regression tests added:
+      - [List of new tests]
+      Documentation updated:
+      - CHANGELOG.md
+      - .claude/memory/learned-patterns.md
+    # Add explicit documentation step
+  - name: document_fix
+    agent: doc-manager-agent
+    depends_on: implement_fix
+    prompt: |
+      **OBJECTIVE**: Update documentation to reflect the bug fix and lessons learned
+
+      **CONTEXT**:
+      - Bug: {{BUG_ID}} - {{BUG_DESCRIPTION}}
+      - Fix: [Reference output from implement_fix]
+      - Root Cause: [Reference output from root_cause_analysis]
+
+      **DOCUMENTATION TASKS**:
+      1. Update CHANGELOG.md with fix details
+      2. Add lessons learned to .claude/memory/learned-patterns.md
+      3. Update any relevant API documentation
+      4. Document any new patterns or best practices
+
+    output: |
+      Documentation completed:
+      - CHANGELOG.md updated: [yes/no]
+      - Learning patterns captured: [yes/no]
+      - Additional docs updated: [list]
+
+    validation:
+      - changelog_updated: true
+      - patterns_captured: true
+      - docs_accurate: true
+
+final_checklist: |
+  Bug fix complete when:
+  - [ ] Root cause identified and documented
+  - [ ] Minimal fix implemented
+  - [ ] Original test case passes
+  - [ ] All tests pass (no regressions)
+  - [ ] Regression tests added
+  - [ ] Documentation updated
+  - [ ] Lessons learned captured
