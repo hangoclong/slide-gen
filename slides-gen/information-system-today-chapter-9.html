@@ -1,0 +1,1213 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Chapter 9: Developing and Acquiring Information Systems</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Roboto+Mono&display=swap" rel="stylesheet">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js" integrity="sha512-GsLlZN/3F2ErC5ifS5QtgpiJtWd43JWSuIgh7mbzZ8zBps+dvLusV+eNQATqgA/HdeKFVgA5v3S/cIrLF7QnIg==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    <script src="https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.min.js"></script>
+    <style>
+        :root {
+            --bg-grad-start: #f5f3ff;
+            --bg-grad-end: #ddd6fe;
+            --bg-grad-mid-1: #f5f3ff;
+            --bg-grad-mid-2: #ede9fe;
+            --bg-grad-mid-3: #ddd6fe;
+            --text-primary: #334155;
+            --header-main: #4338ca;
+            --header-sub: #4f46e5;
+            --border-header: #a5b4fc;
+            --nav-button-bg: #4f46e5;
+            --nav-button-hover-bg: #4338ca;
+            --info-card-border: #6366f1;
+            --conclusion-border: #6366f1;
+            --conclusion-text: #4338ca;
+            --process-step-bg: #eef2ff;
+            --process-step-border: #c7d2fe;
+            --step-number-bg: #4f46e5;
+            --inline-code-bg: #eef2ff;
+            --inline-code-text: #312e81;
+            --layer-box-bg: #e0e7ff;
+            --layer-box-border: #c7d2fe;
+            --flow-arrow-color: #6366f1;
+            --scrollbar-thumb: #a78bfa;
+            --scrollbar-track: #ddd6fe;
+        }
+
+        /* --- Base and Layout --- */
+        html, body { height: 100%; margin: 0; padding: 0; overflow: hidden; }
+        body { display: flex; justify-content: center; align-items: center; background: linear-gradient(135deg, var(--bg-grad-start) 0%, var(--bg-grad-end) 100%); font-family: 'Poppins', sans-serif; color: var(--text-primary); transition: background 0.3s ease; }
+        .presentation-container { position: relative; aspect-ratio: 16 / 9; width: 100%; height: auto; max-width: 100vw; max-height: 100vh; background-color: var(--bg-grad-start); box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1), 0 4px 10px rgba(0, 0, 0, 0.05); border-radius: 8px; display: flex; flex-direction: column; overflow: hidden; }
+        @media (min-aspect-ratio: 16/9) { .presentation-container { width: auto; height: 100%; } }
+
+        /* --- Slide Styling --- */
+        .slide { flex-grow: 1; padding: clamp(1.8rem, 3.5vh, 2.8rem) clamp(2.2rem, 4.5vw, 4.0rem); padding-bottom: calc(clamp(1.8rem, 3.5vh, 2.8rem) + 55px); overflow-y: auto; display: none; flex-direction: column; line-height: 1.7; scrollbar-width: thin; scrollbar-color: var(--scrollbar-thumb) var(--scrollbar-track); position: relative; background-color: var(--bg-grad-start); background-image: linear-gradient(160deg, var(--bg-grad-mid-1) 0%, var(--bg-grad-mid-2) 30%, var(--bg-grad-mid-3) 70%, var(--bg-grad-end) 100%); aspect-ratio: 16 / 9; height: 100%; box-sizing: border-box; transition: background-image 0.3s ease; }
+        .slide::-webkit-scrollbar { width: 8px; }
+        .slide::-webkit-scrollbar-track { background: var(--scrollbar-track); border-radius: 4px; }
+        .slide::-webkit-scrollbar-thumb { background-color: var(--scrollbar-thumb); border-radius: 4px; border: 2px solid var(--scrollbar-track); }
+        .slide.active { display: flex; }
+
+        /* --- Footer and Controls --- */
+        .slide-footer { position: absolute; bottom: 0; left: 0; width: 100%; z-index: 15; background-color: rgba(248, 250, 252, 0.85); backdrop-filter: blur(4px); border-top: 1px solid rgba(209, 213, 219, 0.5); padding: clamp(0.2rem, 0.4vh, 0.3rem) clamp(1rem, 2vw, 2rem); display: flex; justify-content: space-between; align-items: center; opacity: 0; visibility: hidden; transition: opacity 0.3s ease-in-out, visibility 0.3s ease-in-out; pointer-events: none; }
+        .slide-footer.show-footer { opacity: 1; visibility: visible; pointer-events: auto; }
+        .footer-controls { display: flex; align-items: center; gap: clamp(0.6rem, 1.1vw, 1.1rem); }
+        .nav-button, .options-button, .reveal-answer-btn { padding: clamp(0.25rem, 0.5vh, 0.4rem) clamp(0.9rem, 1.3vw, 1.3rem); background-color: var(--nav-button-bg); color: white; border-radius: 4px; text-decoration: none; font-size: clamp(0.8rem, 1.3vh, 0.9rem); font-weight: 500; transition: background-color 0.2s ease-in-out, opacity 0.2s ease-in-out, box-shadow 0.2s ease-in-out; border: none; cursor: pointer; line-height: 1.4; }
+        .nav-button:hover:not(:disabled), .options-button:hover, .reveal-answer-btn:hover { background-color: var(--nav-button-hover-bg); box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1); }
+        .nav-button:disabled { background-color: #d1d5db; color: #6b7280; cursor: not-allowed; opacity: 0.8; box-shadow: none; }
+        .options-button { background-color: #64748b; padding: clamp(0.25rem, 0.5vh, 0.4rem); line-height: 0; }
+        .options-button:hover { background-color: #475569; }
+        .options-button svg { width: clamp(1.0rem, 1.6vh, 1.2rem); height: clamp(1.0rem, 1.6vh, 1.2rem); fill: white; }
+
+        /* --- Settings/Export Drawer Menu --- */
+        #settingsDrawer { position: absolute; bottom: 0; left: 0; width: 100%; background-color: #ffffff; border-top: 1px solid #e2e8f0; box-shadow: 0 -4px 12px rgba(0, 0, 0, 0.1); padding: clamp(1rem, 2vh, 1.5rem) clamp(1.5rem, 3vw, 2rem); transform: translateY(100%); transition: transform 0.3s ease-in-out; z-index: 25; }
+        #settingsDrawer.active { transform: translateY(0); }
+        .drawer-section { margin-bottom: 1rem; }
+        .drawer-section:last-child { margin-bottom: 0; }
+        .drawer-section h3 { font-size: 1rem; font-weight: 600; color: #475569; margin-bottom: 0.75rem; text-align: center; }
+        .drawer-buttons-container { display: flex; justify-content: center; align-items: center; gap: clamp(0.6rem, 1.1vw, 1.1rem); flex-wrap: wrap; }
+        .drawer-button { padding: clamp(0.6rem, 1.1vh, 0.8rem) clamp(1.1rem, 1.6vw, 1.6rem); background-color: #16a34a; color: white; border: none; border-radius: 4px; font-size: clamp(0.95rem, 1.6vh, 1.05rem); font-weight: 500; cursor: pointer; transition: background-color 0.2s ease, opacity 0.2s ease; }
+        .drawer-button:hover:not(:disabled) { background-color: #15803d; }
+        .drawer-button:disabled { background-color: #9ca3af; cursor: not-allowed; opacity: 0.7; }
+        .theme-button { border: 2px solid transparent; }
+        .theme-button.active { border-color: var(--header-main); box-shadow: 0 0 0 2px var(--header-main); }
+
+        /* --- Content Styling --- */
+
+        .two-panel-wrapper {
+            display: flex;
+            width: 100%;
+            height: 100%;
+            align-items: stretch;
+        }
+        .two-panel-wrapper.image-right {
+            flex-direction: row-reverse;
+        }
+        .image-panel {
+            flex: 0 0 33%;
+            position: relative;
+        }
+        /* Mermaid Fallback for Image Panel if needed, though we use real mermaid divs mostly */
+        .image-panel .mermaid {
+             position: absolute;
+             top: 0;
+             left: 0;
+             width: 100%;
+             height: 100%;
+             display: flex;
+             justify-content: center;
+             align-items: center;
+             background: #f0f9ff;
+             border-radius: 20px;
+        }
+
+        .image-panel img {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            border-radius: 20px;
+        }
+        .text-panel {
+            flex: 1 1 67%;
+            padding: clamp(1.8rem, 3.5vh, 2.8rem) clamp(2.2rem, 4.5vw, 4.0rem);
+            box-sizing: border-box;
+            overflow-y: auto;
+        }
+
+        .slide h1 { color: var(--header-main); font-size: clamp(2.5em, 4.0vw, 3.5em); font-weight: 700; margin-bottom: 1.4rem; padding-bottom: 0.6rem; line-height: 1.35; border-bottom: 3px solid var(--border-header); }
+        .slide.session-title-slide h1 { font-size: clamp(3.2em, 4.8vw, 4.5em); border-bottom: none; margin-bottom: 1.2rem; color: var(--header-main); }
+        .slide.session-title-slide h2 { font-size: clamp(1.7em, 2.8vw, 2.5em); font-weight: 400; margin-bottom: 1.0rem; color: var(--header-sub); }
+        .slide.session-title-slide .slide-content-wrapper { display: flex; flex-direction: column; justify-content: center; align-items: center; text-align: center; height: 100%; }
+        .slide h2 { color: var(--header-sub); font-size: clamp(1.6em, 2.4vw, 2.2em); font-weight: 600; margin-top: 1.8rem; margin-bottom: 1rem; }
+        .slide p, .slide ul, .slide ol { color: var(--text-primary); margin-bottom: 1rem; font-size: clamp(1.0em, 1.5vw, 1.3em); line-height: 1.8; }
+        .slide ul, .slide ol { margin-left: 1.8rem; margin-bottom: 1rem; }
+        .slide ul { list-style-type: disc; }
+        .slide ol { list-style-type: decimal; }
+        .slide li { margin-bottom: 0.8rem; }
+        .slide pre { background-color: #1e293b; color: #f8fafc; border: 1px solid #334155; padding: 0.9rem; border-radius: 6px; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word; font-family: 'Roboto Mono', 'Courier New', Courier, monospace; font-size: clamp(0.85em, 1.1vw, 1.0em); margin-top: 0.6rem; margin-bottom: 1.1rem; line-height: 1.5; }
+        .slide code { font-family: 'Roboto Mono', 'Courier New', Courier, monospace; }
+        .slide code.inline { background-color: var(--inline-code-bg); color: var(--inline-code-text); padding: 0.2em 0.5em; border-radius: 4px; font-size: 0.95em; white-space: normal; }
+        .slide .conclusion { font-weight: 600; margin-top: 1.4rem; border-left: 4px solid var(--conclusion-border); padding-left: 0.9rem; color: var(--conclusion-text); font-size: clamp(1.0em, 1.5vw, 1.3em); }
+        .info-card { background-color: #fff; border-radius: 8px; padding: clamp(0.9rem, 1.6vh, 1.3rem); box-shadow: 0 2px 4px rgba(0,0,0,0.05); border-left: 4px solid var(--info-card-border); margin-bottom: 0.9rem; }
+        .comparison-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: clamp(1rem, 2vw, 1.5rem); margin-top: 1.2rem; }
+        .comparison-card { background-color: #f8fafc; border: 1px solid #e2e8f0; border-radius: 8px; padding: clamp(0.9rem, 1.6vh, 1.3rem); }
+        .comparison-card h3 { font-weight: 600; color: var(--header-main); margin-bottom: 0.6rem; text-align: center; border-bottom: 2px solid var(--border-header); padding-bottom: 0.4rem; font-size: clamp(1.15em, 1.75vw, 1.55em); }
+        .process-step { display: flex; align-items: center; margin-bottom: 0.9rem; background-color: var(--process-step-bg); padding: 0.7rem; border-radius: 6px; border: 1px solid var(--process-step-border); }
+        .step-number { background-color: var(--step-number-bg); color: white; border-radius: 50%; width: clamp(26px, 3.2vh, 32px); height: clamp(26px, 3.2vh, 32px); display: inline-flex; justify-content: center; align-items: center; font-weight: 600; margin-right: 0.9rem; flex-shrink: 0; font-size: clamp(0.85em, 1.25vh, 0.95em); }
+        .slide .highlight { color: #dc2626; font-weight: 700; }
+        .slide .highlight-green { color: #16a34a; font-weight: 600; }
+        .summary-list-check li::before { content: '✔'; margin-right: 0.8rem; color: #16a34a; }
+        .ai-assist-prompt { background-color: #ecfdf5; border-left: 4px solid #10b981; padding: 0.8rem; margin-top: 1rem; border-radius: 4px; }
+        .ai-assist-prompt strong { color: #047857; }
+        .mermaid { background-color: #f8fafc; border: 1px solid #e2e8f0; border-radius: 8px; padding: 1rem; margin-top: 1rem; display: flex; justify-content: center; align-items: center; min-height: 150px; }
+        .answer-explanation { display: none; margin-top: 1rem; }
+
+        /* --- STYLES FOR PRINTING (FIXED) --- */
+        @media print {
+            .slide-footer, #settingsDrawer, .options-button, .nav-button, .slide-counter, .reveal-answer-btn { display: none !important; }
+            body { background: none !important; display: block !important; height: auto !important; overflow: visible !important; font-size: 10pt; }
+            .presentation-container { width: 100% !important; height: auto !important; max-width: none !important; max-height: none !important; box-shadow: none !important; border-radius: 0 !important; overflow: visible !important; aspect-ratio: auto !important; background-color: transparent !important; }
+            .slide { display: flex !important; flex-direction: column !important; width: 100% !important; height: 100vh !important; overflow: hidden !important; page-break-before: always !important; page-break-inside: avoid !important; padding: 0.5in !important; margin: 0 !important; border: none !important; box-shadow: none !important; aspect-ratio: auto !important; background-color: var(--bg-grad-start) !important; background-image: linear-gradient(160deg, var(--bg-grad-mid-1) 0%, var(--bg-grad-mid-2) 30%, var(--bg-grad-mid-3) 70%, var(--bg-grad-end) 100%) !important; -webkit-print-color-adjust: exact !important; print-color-adjust: exact !important; }
+            .slide:first-child { page-break-before: auto !important; }
+            .slide h1 { font-size: 18pt !important; }
+            .slide h2 { font-size: 14pt !important; }
+            .slide p, .slide ul, .slide ol, .slide li { font-size: 11pt !important; line-height: 1.4 !important; }
+            .slide code.inline, .slide pre code { font-size: 10pt !important; }
+            .slide pre { padding: 0.5rem !important; }
+            .info-card, .comparison-card, .process-step, .ai-assist-prompt { background-color: #fff !important; border-color: #ccc !important; box-shadow: none !important; }
+            .step-number { background-color: #ccc !important; color: #000 !important; }
+            .comparison-grid { grid-template-columns: 1fr !important; }
+            .mermaid { background-color: #f8fafc !important; -webkit-print-color-adjust: exact !important; print-color-adjust: exact !important; }
+            .mermaid svg { max-width: 100%; height: auto; }
+        }
+        @page { size: landscape; margin: 0.5in; }
+    </style>
+</head>
+<body>
+    <div class="presentation-container">
+
+        <!-- Slide 1: Title Slide -->
+        <div id="slide-1" class="slide active session-title-slide">
+            <div class="slide-content-wrapper">
+                <h1>Information Systems Today</h1>
+                <h2>Chapter 9: Developing and Acquiring Information Systems</h2>
+                <p class="instructor-info" style="margin-top: 2rem;">Instructor: N. Long Ha (PhD)</p>
+                <p class="instructor-info" style="margin-top: 2rem;">University of Economics, Hue University</p>
+            </div>
+        </div>
+
+        <!-- Slide 2: Learning Objectives -->
+        <div id="slide-2" class="slide">
+            <h1>Learning Objectives</h1>
+            <ol>
+                <li>Describe how to formulate and present the business case for technology investments.</li>
+                <li>Describe the systems development life cycle (SDLC) and its various phases.</li>
+                <li>Understand alternative development methodologies, including prototyping and agile.</li>
+                <li>Explain how organizations acquire systems via external acquisition and outsourcing.</li>
+                <li>Understand the importance of system maintenance and security in development.</li>
+            </ol>
+        </div>
+
+        <!-- Slide 3: Preview: The Breadth of Systems -->
+        <div id="slide-3" class="slide">
+            <h1>Preview: The Breadth of Systems</h1>
+            <p>Information systems are not just software. When we refer to "systems," we are talking about a broad range of technologies:</p>
+            <ul>
+                <li><strong>Hardware:</strong> Servers, computers, mobile devices.</li>
+                <li><strong>Software:</strong> Operating systems, business applications, mobile apps.</li>
+                <li><strong>Services:</strong> Cloud computing, consulting, support.</li>
+            </ul>
+            <div class="info-card">
+                <p>Regardless of your major (Marketing, Finance, Management), you will be involved in systems development or acquisition. Understanding these processes is critical for your future success.</p>
+            </div>
+        </div>
+
+        <!-- Slide 4: The Maker Movement -->
+        <div id="slide-4" class="slide">
+            <h1>Context: The Maker Movement</h1>
+            <p>Innovation is no longer limited to large corporations. The "Maker Movement" represents a shift towards do-it-yourself (DIY) and do-it-with-others (DIWO) innovation.</p>
+            <div class="comparison-grid">
+                <div class="comparison-card">
+                    <h3>Cheap Computing</h3>
+                    <p>Devices like the Raspberry Pi Zero ($5) make processing power accessible to everyone.</p>
+                </div>
+                <div class="comparison-card">
+                    <h3>Rapid Prototyping</h3>
+                    <p>3D printers allow individuals to manufacture physical parts from digital designs.</p>
+                </div>
+                <div class="comparison-card">
+                    <h3>Open Source</h3>
+                    <p>Shared software and hardware designs accelerate learning and development.</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 5: Part 1 Title -->
+        <div id="slide-5" class="slide session-title-slide">
+            <div class="slide-content-wrapper">
+                <h1>Part 1: Making the Business Case</h1>
+                <h2>Justifying Technology Investments</h2>
+            </div>
+        </div>
+
+        <!-- Slide 6: Making the Business Case -->
+        <div id="slide-6" class="slide">
+            <h1>Making the Business Case</h1>
+            <div class="info-card">
+                <h3>Definition</h3>
+                <p>The process of identifying, quantifying, and presenting the value provided by a system.</p>
+            </div>
+            <p>Just as a lawyer builds a case to prove innocence, a manager must build a case to prove that an IT investment adds value.</p>
+            <ul>
+                <li><strong>Proposed Systems:</strong> Used to determine a "go" or "no-go" decision.</li>
+                <li><strong>Existing Systems:</strong> Used to determine whether to continue funding or decommission.</li>
+            </ul>
+        </div>
+
+        <!-- Slide 7: The Productivity Paradox -->
+        <div id="slide-7" class="slide">
+            <h1>The Productivity Paradox</h1>
+            <p>Despite massive investments in IT (trillions of dollars worldwide), productivity gains are not always easy to see. This phenomenon is known as the <code class="inline">Productivity Paradox</code>.</p>
+            <p>Why has it been difficult to show that these vast expenditures have led to productivity gains?</p>
+            <div class="mermaid">
+                graph LR
+                    A[IT Investment] -->|?| B[Productivity Gains];
+                    style A fill:#e0f2fe,stroke:#0ea5e9,stroke-width:2px
+                    style B fill:#dbeafe,stroke:#4f46e5,stroke-width:2px
+            </div>
+        </div>
+
+        <!-- Slide 8: Paradox Factor 1: Measurement Problems -->
+        <div id="slide-8" class="slide">
+            <h1>Factor 1: Measurement Problems</h1>
+            <p>Organizations often measure the wrong things.</p>
+            <div class="comparison-grid">
+                <div class="comparison-card">
+                    <h3>Efficiency</h3>
+                    <p>Doing things faster or cheaper. (Easier to measure, but not always the goal).</p>
+                </div>
+                <div class="comparison-card">
+                    <h3>Effectiveness</h3>
+                    <p>Doing the right things well. (Harder to measure, but often where the real value lies).</p>
+                </div>
+            </div>
+            <p><strong>Example:</strong> Online banking might reduce branch visits (efficiency) but its real value is customer retention (effectiveness), which is harder to quantify directly.</p>
+        </div>
+
+        <!-- Slide 9: Paradox Factors 2 & 3 -->
+        <div id="slide-9" class="slide">
+            <h1>Factors 2 & 3: Time Lags & Redistribution</h1>
+            <h2>Time Lags</h2>
+            <p>There can be a significant gap between when an investment is made and when the benefits are felt. It may take years for a new system to pay off.</p>
+            <h2>Redistribution</h2>
+            <p>New innovations may simply redistribute the "pie" rather than making it bigger. If everyone adopts a technology, market share might simply shift between competitors without increasing total industry output.</p>
+        </div>
+
+        <!-- Slide 10: Paradox Factor 4: Mismanagement -->
+        <div id="slide-10" class="slide">
+            <h1>Factor 4: Mismanagement</h1>
+            <p>The new system may simply have been implemented or managed poorly.</p>
+            <ul>
+                <li><strong>Bad Business Models:</strong> A good information system cannot save a bad business model.</li>
+                <li><strong>Process Issues:</strong> Automating a broken process just results in a faster broken process.</li>
+            </ul>
+            <p class="conclusion">Success requires a joint technology/process solution, not just a technology fix.</p>
+        </div>
+
+        <!-- Slide 11: Arguments for the Business Case -->
+        <div id="slide-11" class="slide">
+            <h1>Three Types of Arguments</h1>
+            <p>Successful business cases are often based on a combination of three types of arguments:</p>
+            <div class="mermaid">
+                graph TD
+                    A[Business Case] --> B[Faith];
+                    A --> C[Fear];
+                    A --> D[Facts];
+                    B --> E[Strategy & Beliefs];
+                    C --> F[Competition & Survival];
+                    D --> G[Data & Analysis];
+                    style A fill:#dbeafe,stroke:#4f46e5,stroke-width:2px
+                    style B fill:#e0f2fe,stroke:#0ea5e9
+                    style C fill:#e0f2fe,stroke:#0ea5e9
+                    style D fill:#e0f2fe,stroke:#0ea5e9
+            </div>
+        </div>
+
+        <!-- Slide 12: Faith and Fear -->
+        <div id="slide-12" class="slide">
+            <div class="comparison-grid">
+                <div class="comparison-card">
+                    <h3>Arguments Based on Faith</h3>
+                    <p>Based on beliefs about strategy, competitive advantage, and industry forces.</p>
+                    <p><em>"I believe this CRM system is necessary to achieve our goal of being customer-centric."</em></p>
+                </div>
+                <div class="comparison-card">
+                    <h3>Arguments Based on Fear</h3>
+                    <p>Based on the notion that the firm will lose out or go out of business if the system is not implemented.</p>
+                    <p><em>"If we don't implement a mobile app, our competitors will crush us."</em></p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 13: Arguments Based on Facts -->
+        <div id="slide-13" class="slide">
+            <h1>Arguments Based on Facts</h1>
+            <p>Most executives prefer arguments based on data and quantitative analysis. This typically involves a detailed <strong>Cost-Benefit Analysis</strong>.</p>
+            <div class="info-card">
+                <h3>Total Cost of Ownership (TCO)</h3>
+                <p>Understanding not just the acquisition cost, but all costs associated with ongoing use and maintenance.</p>
+            </div>
+            <ul>
+                <li><strong>Non-recurring costs:</strong> One-time costs (acquisition, site prep).</li>
+                <li><strong>Recurring costs:</strong> Ongoing costs (salaries, utilities, maintenance).</li>
+            </ul>
+        </div>
+
+        <!-- Slide 14: Tangible vs. Intangible Benefits -->
+        <div id="slide-14" class="slide">
+            <div class="two-panel-wrapper">
+                <div class="image-panel">
+                    <div class="mermaid">
+                        graph TD
+                            A[Benefits] --> B[Tangible];
+                            A --> C[Intangible];
+                            B --> D[Cost Savings];
+                            B --> E[Increased Sales];
+                            C --> F[Customer Service];
+                            C --> G[Perception];
+                        style A fill:#dbeafe,stroke:#4f46e5
+                        style B fill:#e0f2fe,stroke:#0ea5e9
+                        style C fill:#e0f2fe,stroke:#0ea5e9
+                    </div>
+                </div>
+                <div class="text-panel">
+                    <h1>Tangible vs. Intangible Benefits</h1>
+                    <p><strong>Tangible Benefits:</strong> Easy to quantify. <br>Example: Reducing error rates by 50% saves $10,000 per year in labor.</p>
+                    <p><strong>Intangible Benefits:</strong> Hard to quantify but real. <br>Example: Improved customer perception, better employee morale, or faster decision making.</p>
+                    <p class="conclusion">Even intangible benefits should be tied to monetary terms whenever possible (proxy variables).</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 15: Cost-Benefit Analysis Techniques -->
+        <div id="slide-15" class="slide">
+            <h1>Cost-Benefit Analysis Techniques</h1>
+            <p>Once costs and benefits are estimated, financial analysis determines if the project makes sense.</p>
+            <div class="comparison-grid">
+                <div class="comparison-card">
+                    <h3>Break-Even Analysis</h3>
+                    <p>Identifies at what point tangible benefits equal tangible costs.</p>
+                </div>
+                <div class="comparison-card">
+                    <h3>Net Present Value (NPV)</h3>
+                    <p>Calculates the relevant cash flow streams associated with the system at the organization's discount rate (time value of money).</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 16: Weighted Multicriteria Analysis -->
+        <div id="slide-16" class="slide">
+            <h1>Weighted Multicriteria Analysis</h1>
+            <p>Used when deciding among different IS investments or alternative designs. It accounts for requirements and constraints that are not easily quantified in dollars.</p>
+            <ol>
+                <li>Define Requirements and Constraints.</li>
+                <li>Assign Weights based on importance (e.g., Security = 18%, Cost = 15%).</li>
+                <li>Rate each alternative (1-5 scale).</li>
+                <li>Calculate weighted scores to find the best fit.</li>
+            </ol>
+        </div>
+
+        <!-- Slide 17: Knowledge Check 1 -->
+        <div id="slide-17" class="slide">
+            <h1>Knowledge Check</h1>
+            <h2>Which type of business case argument is based on the belief that the system is necessary to achieve the organization's strategy?</h2>
+            <ul>
+                <li>A) Fact</li>
+                <li>B) Fear</li>
+                <li>C) Faith</li>
+                <li>D) Fiction</li>
+            </ul>
+            <button class="reveal-answer-btn">Reveal Answer</button>
+            <div class="answer-explanation">
+                <div class="info-card">
+                    <h3>Correct Answer: C) Faith</h3>
+                    <p>Arguments based on faith often hold that an information system must be implemented to achieve the organization's strategy effectively and to gain or sustain a competitive advantage, even if hard data is lacking.</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 18: Part 2 Title -->
+        <div id="slide-18" class="slide session-title-slide">
+            <div class="slide-content-wrapper">
+                <h1>Part 2: The Systems Development Process</h1>
+                <h2>Building the Solution</h2>
+            </div>
+        </div>
+
+        <!-- Slide 19: Systems Analysis and Design -->
+        <div id="slide-19" class="slide">
+            <h1>Systems Analysis and Design</h1>
+            <p>The process of designing, building, and maintaining information systems.</p>
+            <div class="info-card">
+                <h3>The Systems Analyst</h3>
+                <p>A professional who studies the problems and needs of an organization to determine how people, methods, and information technology can best be combined to bring about improvements.</p>
+            </div>
+            <p>They are not just "techies"; they need a blend of technical, managerial, and interpersonal skills.</p>
+        </div>
+
+        <!-- Slide 20: Custom vs. Off-the-Shelf Software -->
+        <div id="slide-20" class="slide">
+            <div class="two-panel-wrapper image-right">
+                <div class="image-panel">
+                    <div class="mermaid">
+                        graph TD
+                            A[Software] --> B[Custom];
+                            A --> C[Off-the-Shelf];
+                            B --> D[Tailored];
+                            B --> E[Specific];
+                            C --> F[Cheaper];
+                            C --> G[Faster];
+                        style A fill:#dbeafe,stroke:#4f46e5
+                        style B fill:#e0f2fe,stroke:#0ea5e9
+                        style C fill:#e0f2fe,stroke:#0ea5e9
+                    </div>
+                </div>
+                <div class="text-panel">
+                    <h1>Custom vs. Off-the-Shelf</h1>
+                    <h2>Custom Software (Tailor-made)</h2>
+                    <p>Developed to meet specific specifications. <br><strong>Pros:</strong> Customizability, Problem Specificity. <br><strong>Cons:</strong> Expensive, slow, risky.</p>
+                    <h2>Off-the-Shelf Software (Packaged)</h2>
+                    <p>Used to support common business processes.<br><strong>Pros:</strong> Less costly, faster to procure, higher quality, less risky.<br><strong>Cons:</strong> May not fit unique needs.</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 21: Open Source Software -->
+        <div id="slide-21" class="slide">
+            <h1>Open Source Software</h1>
+            <p>A philosophy that promotes access to the source code of a product.</p>
+            <ul>
+                <li><strong>Free to use and modify:</strong> Often developed by a community.</li>
+                <li><strong>Examples:</strong> Linux (OS), Android (Mobile), Apache (Web Server), Firefox (Browser).</li>
+                <li><strong>Benefits:</strong> Stability, low cost, flexibility.</li>
+                <li><strong>Risks:</strong> "Hidden" costs of support and training.</li>
+            </ul>
+        </div>
+
+        <!-- Slide 22: The SDLC Overview -->
+        <div id="slide-22" class="slide">
+            <h1>The Systems Development Life Cycle (SDLC)</h1>
+            <p>Describes the life of an information system from conception to retirement. It is a structured, disciplined approach.</p>
+            <div class="mermaid">
+                graph LR
+                    P1[1. Planning] --> P2[2. Analysis];
+                    P2 --> P3[3. Design];
+                    P3 --> P4[4. Implementation];
+                    P4 --> P1;
+                    style P1 fill:#e0f2fe,stroke:#0ea5e9,stroke-width:2px
+                    style P2 fill:#e0f2fe,stroke:#0ea5e9,stroke-width:2px
+                    style P3 fill:#e0f2fe,stroke:#0ea5e9,stroke-width:2px
+                    style P4 fill:#e0f2fe,stroke:#0ea5e9,stroke-width:2px
+            </div>
+            <p>Note: While drawn as a cycle, maintenance makes it an ongoing process.</p>
+        </div>
+
+        <!-- Slide 23: Phase 1: Systems Planning and Selection -->
+        <div id="slide-23" class="slide">
+            <h1>Phase 1: Systems Planning and Selection</h1>
+            <p>Organizations have limited resources, so they must select projects that yield the most benefit.</p>
+            <ul>
+                <li><strong>Goal:</strong> Identify, plan, and select a development project.</li>
+                <li><strong>Activities:</strong> Building the business case, assessing feasibility, and prioritizing projects.</li>
+                <li><strong>Outcome:</strong> A decision to accept or reject a project.</li>
+            </ul>
+        </div>
+
+        <!-- Slide 24: Phase 2: Systems Analysis -->
+        <div id="slide-24" class="slide">
+            <h1>Phase 2: Systems Analysis</h1>
+            <p>Designers gain a thorough understanding of the current way of doing things and determine what is needed from the new system.</p>
+            <div class="info-card">
+                <h3>Requirements Collection</h3>
+                <p>The process of gathering information from users, managers, and documents. "Garbage in, garbage out" applies here.</p>
+            </div>
+            <h2>Techniques:</h2>
+            <ul>
+                <li>Interviews & Questionnaires</li>
+                <li>Observations & Document Analysis</li>
+                <li>Joint Application Design (JAD)</li>
+            </ul>
+        </div>
+
+        <!-- Slide 25: Modeling Data and Processes -->
+        <div id="slide-25" class="slide">
+            <h1>Modeling Data and Processes</h1>
+            <p>Analysts use tools to organize requirements.</p>
+            <div class="comparison-grid">
+                <div class="comparison-card">
+                    <h3>Data Modeling</h3>
+                    <p>Describing the data needed (e.g., Entity-Relationship Diagrams). Shows entities like "Student", "Class", and their relationships.</p>
+                </div>
+                <div class="comparison-card">
+                    <h3>Process Modeling</h3>
+                    <p>Describing how data moves and is transformed (e.g., Data Flow Diagrams, Pseudocode). Represents the logic of the system.</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 26: Phase 3: Systems Design -->
+        <div id="slide-26" class="slide">
+            <h1>Phase 3: Systems Design</h1>
+            <p>The details of the chosen approach are elaborated. The "How" is defined.</p>
+            <ul>
+                <li><strong>Processing and Logic:</strong> Specifying algorithms and rules.</li>
+                <li><strong>Databases and Files:</strong> Creating the actual database schema.</li>
+                <li><strong>Human-Computer Interface (HCI):</strong> Designing forms, reports, and the user interface (UI) for usability.</li>
+            </ul>
+        </div>
+
+        <!-- Slide 27: Phase 4: Systems Implementation -->
+        <div id="slide-27" class="slide">
+            <h1>Phase 4: Systems Implementation</h1>
+            <p>Transforming the design into a working system.</p>
+            <ul>
+                <li><strong>Programming:</strong> Coding the software.</li>
+                <li><strong>Testing:</strong>
+                    <ul>
+                        <li><em>Developmental:</em> Testing modules.</li>
+                        <li><em>Alpha:</em> Testing overall system internally.</li>
+                        <li><em>Beta:</em> Testing with actual users.</li>
+                    </ul>
+                </li>
+            </ul>
+        </div>
+
+        <!-- Slide 28: System Conversion Strategies -->
+        <div id="slide-28" class="slide">
+            <h1>System Conversion Strategies</h1>
+            <div class="mermaid">
+                graph TD
+                    A[Parallel] --> B[Old & New run together];
+                    C[Direct] --> D[Old stops, New starts];
+                    E[Phased] --> F[Modules introduced slowly];
+                    G[Pilot] --> H[One location first];
+                    style A fill:#dbeafe,stroke:#4f46e5
+                    style C fill:#dbeafe,stroke:#4f46e5
+                    style E fill:#dbeafe,stroke:#4f46e5
+                    style G fill:#dbeafe,stroke:#4f46e5
+            </div>
+            <p><strong>Parallel</strong> is safest but expensive. <strong>Direct</strong> is cheapest but riskiest.</p>
+        </div>
+
+        <!-- Slide 29: Training and Support -->
+        <div id="slide-29" class="slide">
+            <h1>Training and Support</h1>
+            <p>Even the best system will fail if users don't know how to use it.</p>
+            <div class="comparison-grid">
+                <div class="comparison-card">
+                    <h3>Documentation</h3>
+                    <p>User guides, reference manuals, and tutorials.</p>
+                </div>
+                <div class="comparison-card">
+                    <h3>Training</h3>
+                    <p>Classes, one-on-one instruction, or computer-aided instruction.</p>
+                </div>
+                <div class="comparison-card">
+                    <h3>Support</h3>
+                    <p>Help desks and ongoing problem-solving assistance.</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 30: Systems Maintenance -->
+        <div id="slide-30" class="slide">
+            <h1>Systems Maintenance</h1>
+            <p>The largest part of system development effort often occurs <em>after</em> implementation.</p>
+            <ul>
+                <li><strong>Corrective:</strong> Repairing flaws and bugs.</li>
+                <li><strong>Adaptive:</strong> Evolving functionality for changing business needs.</li>
+                <li><strong>Preventive:</strong> Reducing chance of future failure.</li>
+                <li><strong>Perfective:</strong> Enhancements and "bells and whistles".</li>
+            </ul>
+        </div>
+
+        <!-- Slide 31: Knowledge Check 2 -->
+        <div id="slide-31" class="slide">
+            <h1>Knowledge Check</h1>
+            <h2>Which phase of the SDLC involves gathering requirements from users?</h2>
+            <ul>
+                <li>A) Systems Planning</li>
+                <li>B) Systems Analysis</li>
+                <li>C) Systems Design</li>
+                <li>D) Systems Implementation</li>
+            </ul>
+            <button class="reveal-answer-btn">Reveal Answer</button>
+            <div class="answer-explanation">
+                <div class="info-card">
+                    <h3>Correct Answer: B) Systems Analysis</h3>
+                    <p>The Systems Analysis phase focuses on understanding the current system and determining the requirements for the new system through interviews, observations, and JAD sessions.</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 32: Part 3 Title -->
+        <div id="slide-32" class="slide session-title-slide">
+            <div class="slide-content-wrapper">
+                <h1>Part 3: Alternative Methodologies</h1>
+                <h2>Beyond the SDLC</h2>
+            </div>
+        </div>
+
+        <!-- Slide 33: Limitations of the SDLC -->
+        <div id="slide-33" class="slide">
+            <h1>Limitations of the SDLC</h1>
+            <p>The SDLC is great for structured, stable projects (like payroll), but has drawbacks:</p>
+            <ul>
+                <li><strong>Rigid:</strong> Hard to go back once a phase is done ("Waterfall").</li>
+                <li><strong>Slow:</strong> Takes a long time to see a working product.</li>
+                <li><strong>Requirements Issues:</strong> Users often don't know what they want until they see it.</li>
+            </ul>
+        </div>
+
+        <!-- Slide 34: Prototyping -->
+        <div id="slide-34" class="slide">
+            <h1>Prototyping</h1>
+            <p>Uses a trial-and-error approach for discovering how a system should operate.</p>
+            <div class="mermaid">
+                graph LR
+                    A[Collect Reqs] --> B[Build Prototype];
+                    B --> C[User Review];
+                    C -->|Changes Needed| A;
+                    C -->|Approved| D[Final System];
+                    style A fill:#e0f2fe,stroke:#0ea5e9
+                    style B fill:#e0f2fe,stroke:#0ea5e9
+                    style C fill:#dbeafe,stroke:#4f46e5
+                    style D fill:#eef2ff,stroke:#4338ca
+            </div>
+            <p>Allows for rapid feedback and refinement of requirements.</p>
+        </div>
+
+        <!-- Slide 35: Agile Methodologies -->
+        <div id="slide-35" class="slide">
+            <h1>Agile Methodologies</h1>
+            <div class="info-card">
+                <h3>Definition</h3>
+                <p>An evolutionary development approach that focuses on creating small, client-approved parts of the system as the project progresses.</p>
+            </div>
+            <ul>
+                <li><strong>Iterative:</strong> Developed in short "sprints" (2-4 weeks).</li>
+                <li><strong>Adaptive:</strong> Welcomes changing requirements.</li>
+                <li><strong>Collaborative:</strong> Self-managing teams working closely with customers.</li>
+            </ul>
+            <p>Examples: Scrum, eXtreme Programming (XP).</p>
+        </div>
+
+        <!-- Slide 36: Agile vs. Waterfall -->
+        <div id="slide-36" class="slide">
+            <div class="two-panel-wrapper">
+                <div class="image-panel">
+                     <div class="mermaid">
+                        graph TD
+                            subgraph Waterfall
+                            A[Plan] --> B[Analyze] --> C[Design] --> D[Build]
+                            end
+                            subgraph Agile
+                            E[Sprint 1] --> F[Sprint 2] --> G[Sprint 3]
+                            end
+                            style A fill:#e0f2fe
+                            style B fill:#e0f2fe
+                            style C fill:#e0f2fe
+                            style D fill:#e0f2fe
+                            style E fill:#dbeafe
+                            style F fill:#dbeafe
+                            style G fill:#dbeafe
+                     </div>
+                </div>
+                <div class="text-panel">
+                    <h1>Agile vs. Waterfall</h1>
+                    <p><strong>Waterfall (SDLC):</strong>
+                    <br>Linear, predictable. Best when requirements are well understood and stable (e.g., Engineering).</p>
+                    <p><strong>Agile:</strong>
+                    <br>Fluid, unpredictable. Best for dynamic projects where requirements change (e.g., Consumer Apps, Startups).</p>
+                    <p class="conclusion">Agile prioritizes working software over comprehensive documentation.</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 37: DevOps -->
+        <div id="slide-37" class="slide">
+            <h1>DevOps</h1>
+            <p>Historically, "Development" (creating systems) and "Operations" (running systems) were separate silos. This caused friction.</p>
+            <div class="info-card">
+                <h3>DevOps</h3>
+                <p>A culture and practice that integrates software development (Dev) and IT operations (Ops). It aims to shorten the systems development life cycle and provide continuous delivery with high software quality.</p>
+            </div>
+        </div>
+
+        <!-- Slide 38: Knowledge Check 3 -->
+        <div id="slide-38" class="slide">
+            <h1>Knowledge Check</h1>
+            <h2>Which methodology utilizes short iterations or "sprints" to deliver working software frequently?</h2>
+            <ul>
+                <li>A) SDLC</li>
+                <li>B) Waterfall</li>
+                <li>C) Agile</li>
+                <li>D) Prototyping</li>
+            </ul>
+            <button class="reveal-answer-btn">Reveal Answer</button>
+            <div class="answer-explanation">
+                <div class="info-card">
+                    <h3>Correct Answer: C) Agile</h3>
+                    <p>Agile methodologies like Scrum use iterative cycles called sprints to deliver small, working pieces of the system, allowing for rapid feedback and adaptation.</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 39: Part 4 Title -->
+        <div id="slide-39" class="slide session-title-slide">
+            <div class="slide-content-wrapper">
+                <h1>Part 4: External Acquisition & Outsourcing</h1>
+                <h2>Buying Instead of Building</h2>
+            </div>
+        </div>
+
+        <!-- Slide 40: External Acquisition -->
+        <div id="slide-40" class="slide">
+            <h1>External Acquisition</h1>
+            <p>Purchasing an existing system from an outside vendor (e.g., IBM, Oracle, SAP).</p>
+            <h2>Reasons to Acquire:</h2>
+            <ul>
+                <li><strong>Limited IS Staff:</strong> Too small or busy.</li>
+                <li><strong>Limited Skill Set:</strong> Lack of specific expertise.</li>
+                <li><strong>Performance Issues:</strong> Internal staff is overworked or underperforming.</li>
+            </ul>
+            <p>It is similar to buying a car: You analyze needs, shop around, test drive, and buy.</p>
+        </div>
+
+        <!-- Slide 41: Steps in External Acquisition -->
+        <div id="slide-41" class="slide">
+            <h1>Steps in External Acquisition</h1>
+            <ol>
+                <li><strong>Systems Planning and Selection:</strong> (Same as SDLC)</li>
+                <li><strong>Systems Analysis:</strong> (Same as SDLC)</li>
+                <li><strong>Development of a Request for Proposal (RFP):</strong> Asking vendors to bid.</li>
+                <li><strong>Proposal Evaluation:</strong> Comparing bids.</li>
+                <li><strong>Vendor Selection:</strong> Choosing the winner.</li>
+            </ol>
+        </div>
+
+        <!-- Slide 42: Request for Proposal (RFP) -->
+        <div id="slide-42" class="slide">
+            <h1>Request for Proposal (RFP)</h1>
+            <div class="info-card">
+                <h3>Definition</h3>
+                <p>A document used to tell vendors what your requirements are and to invite them to provide information about how they might be able to meet those requirements.</p>
+            </div>
+            <p>Includes: Summary of existing systems, performance requirements, reliability needs, evaluation criteria, and budget/timetable.</p>
+        </div>
+
+        <!-- Slide 43: Proposal Evaluation -->
+        <div id="slide-43" class="slide">
+            <h1>Proposal Evaluation</h1>
+            <p>How do you choose the best vendor?</p>
+            <ul>
+                <li><strong>Demonstrations:</strong> Vendor presents the system ("Test Drive").</li>
+                <li><strong>Benchmarking:</strong> Using standardized tests to compare performance (e.g., time to process 10,000 records).</li>
+                <li><strong>Criteria:</strong> Cost, functionality, support, vendor reputation.</li>
+            </ul>
+        </div>
+
+        <!-- Slide 44: Software Licensing -->
+        <div id="slide-44" class="slide">
+            <h1>Software Licensing</h1>
+            <p>When you buy software, you are buying a <em>license</em> to use it, not the software itself.</p>
+            <div class="comparison-grid">
+                <div class="comparison-card">
+                    <h3>Shrink-Wrap / Click-Wrap</h3>
+                    <p>Generic, off-the-shelf licenses. Activated when you open the box or click "I Accept".</p>
+                </div>
+                <div class="comparison-card">
+                    <h3>Enterprise License</h3>
+                    <p>Volume licenses negotiated for large organizations. Often includes limitations of liability.</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 45: Outsourcing Systems Development -->
+        <div id="slide-45" class="slide">
+            <h1>Outsourcing Systems Development</h1>
+            <p>Turning over responsibility for some or all of an organization's IS development and operations to an outside firm (e.g., Accenture, Infosys).</p>
+            <h2>Why Outsource?</h2>
+            <ul>
+                <li>Cost and Quality Concerns (Economies of scale).</li>
+                <li>Problems in IS Performance.</li>
+                <li>Focus on Core Competencies (Simplify/Downsize).</li>
+                <li>Financial Factors (Liquidate IT assets).</li>
+            </ul>
+        </div>
+
+        <!-- Slide 46: Managing Outsourcing -->
+        <div id="slide-46" class="slide">
+            <h1>Managing Outsourcing</h1>
+            <p>Outsourcing is not "fire and forget". It requires active management.</p>
+            <ul>
+                <li><strong>Strong CIO:</strong> To manage the legal and professional relationship.</li>
+                <li><strong>Performance Measurements:</strong> Clear, realistic metrics for the vendor.</li>
+                <li><strong>Multiple Levels of Interface:</strong> Operational, tactical, and strategic links between the firms.</li>
+            </ul>
+        </div>
+
+        <!-- Slide 47: Strategic Outsourcing -->
+        <div id="slide-47" class="slide">
+            <div class="two-panel-wrapper">
+                <div class="image-panel">
+                    <div class="mermaid">
+                        graph TD
+                            A[Task] --> B{Strategic?};
+                            B -->|Yes| C[Keep In-House];
+                            B -->|No| D{Critical?};
+                            D -->|Yes| E[Strategic Partner];
+                            D -->|No| F[Outsource];
+                        style A fill:#dbeafe
+                        style B fill:#e0f2fe
+                        style C fill:#eef2ff,stroke:#4338ca
+                        style F fill:#eef2ff,stroke:#4338ca
+                    </div>
+                </div>
+                <div class="text-panel">
+                    <h1>Strategic Outsourcing</h1>
+                    <p><strong>What to Outsource?</strong>
+                    <br>Strategic tasks (e.g., Apple's design) should stay in-house. Non-strategic tasks (e.g., manufacturing, payroll) are candidates for outsourcing.</p>
+                    <p><strong>When to Outsource?</strong>
+                    <br>Non-strategic tasks can be outsourced anytime. Strategic tasks might be outsourced temporarily if time-to-market is critical, but should eventually be brought in-house.</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 48: Knowledge Check 4 -->
+        <div id="slide-48" class="slide">
+            <h1>Knowledge Check</h1>
+            <h2>A document sent to vendors inviting them to bid on a project is called a:</h2>
+            <ul>
+                <li>A) Request for Information (RFI)</li>
+                <li>B) Request for Proposal (RFP)</li>
+                <li>C) System Requirements Specification (SRS)</li>
+                <li>D) Service Level Agreement (SLA)</li>
+            </ul>
+            <button class="reveal-answer-btn">Reveal Answer</button>
+            <div class="answer-explanation">
+                <div class="info-card">
+                    <h3>Correct Answer: B) Request for Proposal (RFP)</h3>
+                    <p>An RFP is used to specify requirements and invite vendors to propose solutions and costs.</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 49: Part 5 Title -->
+        <div id="slide-49" class="slide session-title-slide">
+            <div class="slide-content-wrapper">
+                <h1>Part 5: Activities and Review</h1>
+                <h2>Putting it into Practice</h2>
+            </div>
+        </div>
+
+        <!-- Slide 50: In-Class Assignment -->
+        <div id="slide-50" class="slide">
+            <h1>In-Class Assignment (30 Mins)</h1>
+            <h2>AI-Assisted RFP Creation</h2>
+            <p>Your company needs a new <strong>Customer Relationship Management (CRM)</strong> system.</p>
+            <div class="ai-assist-prompt">
+                <p><strong>Use ChatGPT or Gemini to draft an RFP structure.</strong></p>
+                <p><strong>Prompt:</strong> "I need to create an RFP for a new CRM system for a mid-sized retail company. What are the key sections I should include? Suggest 5 specific functional requirements for the 'System Performance' section."</p>
+            </div>
+            <p><strong>Task:</strong> List the top 5 most important requirements you generated and explain why they are critical for a retail business.</p>
+        </div>
+
+        <!-- Slide 51: Ethical Dilemma -->
+        <div id="slide-51" class="slide">
+            <h1>Ethical Dilemma: App Development</h1>
+            <p>Mobile phones allow developers to collect vast amounts of user data (location, contacts, microphone).</p>
+            <div class="info-card">
+                <h3>Scenario</h3>
+                <p>You are developing a weather app. You don't need the user's contact list for the app to work, but collecting it could be valuable for future marketing or selling the data.</p>
+            </div>
+            <p><strong>Question:</strong> Is it ethical to collect data you don't currently need? "Just because you can, should you?"</p>
+        </div>
+
+        <!-- Slide 52: Key Takeaways -->
+        <div id="slide-52" class="slide">
+            <h1>Key Takeaways</h1>
+            <ul class="summary-list-check">
+                <li><strong>Business Case:</strong> Essential for justifying investments using Faith, Fear, and Fact.</li>
+                <li><strong>SDLC:</strong> A structured process (Planning, Analysis, Design, Implementation) for building systems.</li>
+                <li><strong>Agile:</strong> An iterative alternative to SDLC for dynamic environments.</li>
+                <li><strong>Acquisition:</strong> Buying (COTS) is often faster and cheaper than building (Custom).</li>
+                <li><strong>Outsourcing:</strong> Moving functions to outside providers requires careful management.</li>
+            </ul>
+        </div>
+
+        <!-- Slide 53: Final Slide -->
+        <div id="slide-53" class="slide session-title-slide">
+            <div class="slide-content-wrapper">
+                <h1>Questions?</h1>
+                <h2>Open Discussion</h2>
+            </div>
+        </div>
+
+        <!-- FOOTER AND CONTROLS -->
+        <div class="slide-footer">
+            <button id="optionsBtn" class="options-button" title="Settings">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor">
+                    <path d="M10 3a1.5 1.5 0 110 3 1.5 1.5 0 010-3zM10 8.5a1.5 1.5 0 110 3 1.5 1.5 0 010-3zM11.5 14a1.5 1.5 0 10-3 0 1.5 1.5 0 003 0z" />
+                </svg>
+            </button>
+            <div class="footer-controls">
+                <button id="prevBtn" class="nav-button">Previous</button>
+                <span id="slideCounter" class="slide-counter">Slide 1 / 53</span>
+                <button id="nextBtn" class="nav-button">Next</button>
+            </div>
+            <div style="width: 40px;"></div> 
+        </div>
+
+        <!-- SETTINGS DRAWER -->
+        <div id="settingsDrawer">
+            <div class="drawer-section">
+                <h3>Theme</h3>
+                <div id="themeSwitcher" class="drawer-buttons-container"></div>
+            </div>
+            <div class="drawer-section">
+                <h3>Export</h3>
+                <div class="drawer-buttons-container">
+                    <button id="exportPdfBtn" class="drawer-button">Current Slide (PDF)</button>
+                    <button id="printAllBtn" class="drawer-button">All Slides (PDF)</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            // --- DOM Element References ---
+            const slides = document.querySelectorAll('.slide');
+            const prevBtn = document.getElementById('prevBtn');
+            const nextBtn = document.getElementById('nextBtn');
+            const slideCounter = document.getElementById('slideCounter');
+            const optionsBtn = document.getElementById('optionsBtn');
+            const settingsDrawer = document.getElementById('settingsDrawer');
+            const exportPdfBtn = document.getElementById('exportPdfBtn');
+            const printAllBtn = document.getElementById('printAllBtn');
+            const themeSwitcherContainer = document.getElementById('themeSwitcher');
+            const presentationContainer = document.querySelector('.presentation-container');
+            const slideFooter = document.querySelector('.slide-footer');
+
+            // --- State Variables ---
+            let currentSlideIndex = 0;
+            const totalSlides = 53; 
+            let footerTimeoutId = null;
+            
+            // --- Constants ---
+            const FOOTER_HIDE_DELAY = 3000;
+            const PDF_PAGE_WIDTH_IN = 11;
+            const PDF_PAGE_HEIGHT_IN = PDF_PAGE_WIDTH_IN * 9 / 16;
+
+            // --- THEME DATA ---
+            const themes = {
+                'Leaf Green': {
+                    '--bg-grad-start': '#f0fdf4', '--bg-grad-end': '#dcfce7', '--bg-grad-mid-1': '#f0fdf4', '--bg-grad-mid-2': '#dcfce7', '--bg-grad-mid-3': '#bbf7d0',
+                    '--text-primary': '#334155', '--header-main': '#166534', '--header-sub': '#15803d', '--border-header': '#86efac',
+                    '--nav-button-bg': '#16a34a', '--nav-button-hover-bg': '#15803d', '--info-card-border': '#22c55e', '--conclusion-border': '#22c55e',
+                    '--conclusion-text': '#166534', '--process-step-bg': '#f0fdf4', '--process-step-border': '#bbf7d0', '--step-number-bg': '#16a34a',
+                    '--inline-code-bg': '#dcfce7', '--inline-code-text': '#14532d', '--layer-box-bg': '#dcfce7', '--layer-box-border': '#86efac',
+                    '--flow-arrow-color': '#22c55e', '--scrollbar-thumb': '#4ade80', '--scrollbar-track': '#dcfce7'
+                },
+                'Original Purple': {
+                    '--bg-grad-start': '#f5f3ff', '--bg-grad-end': '#ddd6fe', '--bg-grad-mid-1': '#f5f3ff', '--bg-grad-mid-2': '#ede9fe', '--bg-grad-mid-3': '#ddd6fe',
+                    '--text-primary': '#334155', '--header-main': '#4338ca', '--header-sub': '#4f46e5', '--border-header': '#a5b4fc',
+                    '--nav-button-bg': '#4f46e5', '--nav-button-hover-bg': '#4338ca', '--info-card-border': '#6366f1', '--conclusion-border': '#6366f1',
+                    '--conclusion-text': '#4338ca', '--process-step-bg': '#eef2ff', '--process-step-border': '#c7d2fe', '--step-number-bg': '#4f46e5',
+                    '--inline-code-bg': '#eef2ff', '--inline-code-text': '#312e81', '--layer-box-bg': '#e0e7ff', '--layer-box-border': '#c7d2fe',
+                    '--flow-arrow-color': '#6366f1', '--scrollbar-thumb': '#a78bfa', '--scrollbar-track': '#ddd6fe'
+                },
+                'Ocean Blue': {
+                    '--bg-grad-start': '#f0f9ff', '--bg-grad-end': '#dbeafe', '--bg-grad-mid-1': '#f0f9ff', '--bg-grad-mid-2': '#e0f2fe', '--bg-grad-mid-3': '#bae6fd',
+                    '--text-primary': '#334155', '--header-main': '#0c4a6e', '--header-sub': '#0369a1', '--border-header': '#7dd3fc',
+                    '--nav-button-bg': '#0ea5e9', '--nav-button-hover-bg': '#0284c7', '--info-card-border': '#38bdf8', '--conclusion-border': '#38bdf8',
+                    '--conclusion-text': '#0c4a6e', '--process-step-bg': '#f0f9ff', '--process-step-border': '#bae6fd', '--step-number-bg': '#0ea5e9',
+                    '--inline-code-bg': '#e0f2fe', '--inline-code-text': '#075985', '--layer-box-bg': '#e0f2fe', '--layer-box-border': '#7dd3fc',
+                    '--flow-arrow-color': '#38bdf8', '--scrollbar-thumb': '#38bdf8', '--scrollbar-track': '#dbeafe'
+                },
+                'Slate Gray': {
+                    '--bg-grad-start': '#f8fafc', '--bg-grad-end': '#e2e8f0', '--bg-grad-mid-1': '#f8fafc', '--bg-grad-mid-2': '#f1f5f9', '--bg-grad-mid-3': '#e2e8f0',
+                    '--text-primary': '#334155', '--header-main': '#1e293b', '--header-sub': '#334155', '--border-header': '#94a3b8',
+                    '--nav-button-bg': '#475569', '--nav-button-hover-bg': '#334155', '--info-card-border': '#64748b', '--conclusion-border': '#64748b',
+                    '--conclusion-text': '#1e293b', '--process-step-bg': '#f8fafc', '--process-step-border': '#e2e8f0', '--step-number-bg': '#475569',
+                    '--inline-code-bg': '#f1f5f9', '--inline-code-text': '#1e293b', '--layer-box-bg': '#f1f5f9', '--layer-box-border': '#cbd5e1',
+                    '--flow-arrow-color': '#64748b', '--scrollbar-thumb': '#94a3b8', '--scrollbar-track': '#e2e8f0'
+                }
+            };
+
+            // --- Core Functions ---
+            function applyTheme(themeName) {
+                const theme = themes[themeName];
+                if (!theme) return;
+                for (const [key, value] of Object.entries(theme)) {
+                    document.documentElement.style.setProperty(key, value);
+                }
+                localStorage.setItem('presentationTheme', themeName);
+                document.querySelectorAll('.theme-button').forEach(btn => {
+                    btn.classList.toggle('active', btn.dataset.theme === themeName);
+                });
+            }
+
+            function populateThemeSwitcher() {
+                Object.keys(themes).forEach(themeName => {
+                    const button = document.createElement('button');
+                    button.className = 'drawer-button theme-button';
+                    button.textContent = themeName;
+                    button.dataset.theme = themeName;
+                    button.style.backgroundColor = themes[themeName]['--nav-button-bg'];
+                    button.addEventListener('click', () => applyTheme(themeName));
+                    themeSwitcherContainer.appendChild(button);
+                });
+            }
+            
+            function initializeMermaidDiagrams() {
+                document.querySelectorAll('.mermaid').forEach(el => {
+                    el.setAttribute('data-mermaid', el.innerHTML.trim());
+                });
+            }
+
+            function showSlide(index) {
+                if (index < 0 || index >= totalSlides) return;
+                slides.forEach((slide, i) => slide.classList.toggle('active', i === index));
+                const activeSlide = slides[index];
+                if (activeSlide) {
+                    activeSlide.scrollTop = 0;
+                    setTimeout(() => {
+                        if (window.mermaid) {
+                          try {
+                            activeSlide.querySelectorAll('.mermaid').forEach(el => {
+                                const code = el.getAttribute('data-mermaid');
+                                if (code) {
+                                    el.innerHTML = code;
+                                    el.removeAttribute('data-processed');
+                                }
+                            });
+                            mermaid.run({ nodes: activeSlide.querySelectorAll('.mermaid') });
+                          } catch (e) {
+                            console.error("Mermaid rendering error:", e);
+                            activeSlide.querySelectorAll('.mermaid').forEach(el => el.innerHTML = 'Error rendering diagram.');
+                          }
+                        }
+                    }, 50);
+                }
+                slideCounter.textContent = `Slide ${index + 1} / ${totalSlides}`;
+                prevBtn.disabled = index === 0;
+                nextBtn.disabled = index === totalSlides - 1;
+                settingsDrawer.classList.remove('active');
+                currentSlideIndex = index;
+            }
+
+            function nextSlide() { showSlide(currentSlideIndex + 1); }
+            function prevSlide() { showSlide(currentSlideIndex - 1); }
+            function toggleSettingsDrawer() { settingsDrawer.classList.toggle('active'); }
+            
+            // --- PDF and Print Functions (FIXED) ---
+            function exportCurrentSlideToPdf() {
+                const activeSlide = document.querySelector('.slide.active');
+                if (!activeSlide) return;
+
+                const drawer = document.getElementById('settingsDrawer');
+                const originalStyles = {
+                    footerClassList: Array.from(slideFooter.classList), footerInlineDisplay: slideFooter.style.display,
+                    drawerDisplay: drawer.style.display, drawerTransform: drawer.style.transform,
+                    slideOverflow: activeSlide.style.overflowY, slideHeight: activeSlide.style.height, slideAspectRatio: activeSlide.style.aspectRatio
+                };
+                
+                exportPdfBtn.disabled = true; printAllBtn.disabled = true; exportPdfBtn.textContent = 'Exporting...'; optionsBtn.disabled = true;
+                if (footerTimeoutId) { clearTimeout(footerTimeoutId); footerTimeoutId = null; }
+                slideFooter.style.display = 'none'; drawer.style.display = 'none'; drawer.classList.remove('active');
+
+                activeSlide.style.overflowY = 'visible'; activeSlide.style.height = 'auto'; activeSlide.style.aspectRatio = 'auto';
+
+                const slideNumber = currentSlideIndex + 1;
+                const filename = `IS_Today_Ch9_Slide_${slideNumber}.pdf`;
+                const opt = {
+                    margin: [0.1, 0.1, 0.1, 0.1],
+                    filename: filename,
+                    image: { type: 'jpeg', quality: 0.98 },
+                    html2canvas: { scale: 2.5, useCORS: true, logging: false, scrollY: 0 },
+                    jsPDF: { unit: 'in', format: [PDF_PAGE_WIDTH_IN, PDF_PAGE_HEIGHT_IN], orientation: 'landscape' }
+                };
+                
+                html2pdf().set(opt).from(activeSlide).save().catch(err => {
+                    console.error('PDF export error:', err);
+                }).finally(() => {
+                    slideFooter.style.display = originalStyles.footerInlineDisplay;
+                    slideFooter.className = '';
+                    originalStyles.footerClassList.forEach(cls => slideFooter.classList.add(cls));
+                    drawer.style.display = originalStyles.drawerDisplay;
+                    drawer.style.transform = originalStyles.drawerTransform;
+                    activeSlide.style.overflowY = originalStyles.slideOverflow;
+                    activeSlide.style.height = originalStyles.slideHeight;
+                    activeSlide.style.aspectRatio = originalStyles.slideAspectRatio;
+                    exportPdfBtn.disabled = false;
+                    printAllBtn.disabled = false;
+                    exportPdfBtn.textContent = 'Current Slide (PDF)';
+                    optionsBtn.disabled = false;
+                });
+            }
+
+            async function triggerPrintAllSlides() {
+                settingsDrawer.classList.remove('active');
+                if (footerTimeoutId) { clearTimeout(footerTimeoutId); footerTimeoutId = null; }
+                slideFooter.classList.remove('show-footer');
+                
+                if(window.mermaid) {
+                    try {
+                        await mermaid.run({ nodes: document.querySelectorAll('.mermaid') });
+                    } catch(e) {
+                        console.error("Mermaid printing error:", e);
+                    }
+                }
+                
+                window.print();
+            }
+
+            // --- Event Listeners ---
+            prevBtn.addEventListener('click', prevSlide);
+            nextBtn.addEventListener('click', nextSlide);
+            optionsBtn.addEventListener('click', toggleSettingsDrawer);
+            exportPdfBtn.addEventListener('click', exportCurrentSlideToPdf);
+            printAllBtn.addEventListener('click', triggerPrintAllSlides);
+
+            document.querySelectorAll('.reveal-answer-btn').forEach(button => {
+                button.addEventListener('click', () => {
+                    const explanation = button.nextElementSibling;
+                    if (explanation && explanation.classList.contains('answer-explanation')) {
+                        explanation.style.display = 'block';
+                        button.style.display = 'none';
+                    }
+                });
+            });
+            
+            // --- Initial Setup ---
+            mermaid.initialize({ startOnLoad: false, theme: 'base', themeVariables: {
+                'primaryColor': '#f8fafc', 'primaryTextColor': '#334155', 'lineColor': '#475569',
+                'textColor': '#334155', 'fontSize': '16px',
+            }});
+            
+            initializeMermaidDiagrams();
+            populateThemeSwitcher();
+            const savedTheme = localStorage.getItem('presentationTheme') || 'Original Purple';
+            applyTheme(savedTheme);
+            showSlide(currentSlideIndex);
+
+            // --- Keyboard and Mouse Listeners ---
+            document.addEventListener('keydown', (e) => {
+                if (e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA') return;
+                if (e.key === 'ArrowRight' || e.key === ' ' || e.key === 'PageDown') nextSlide();
+                if (e.key === 'ArrowLeft' || e.key === 'PageUp') prevSlide();
+                if (e.key === 'Escape') settingsDrawer.classList.remove('active');
+            });
+            presentationContainer.addEventListener('mousemove', () => {
+                 if (footerTimeoutId) clearTimeout(footerTimeoutId);
+                 slideFooter.classList.add('show-footer');
+                 footerTimeoutId = setTimeout(() => slideFooter.classList.remove('show-footer'), FOOTER_HIDE_DELAY);
+            });
+            presentationContainer.addEventListener('mouseleave', () => { if (footerTimeoutId) clearTimeout(footerTimeoutId); slideFooter.classList.remove('show-footer'); });
+            document.addEventListener('click', (e) => {
+                if (settingsDrawer.classList.contains('active') && !settingsDrawer.contains(e.target) && !optionsBtn.contains(e.target)) {
+                    settingsDrawer.classList.remove('active');
+                }
+            });
+        });
+    </script>
+</body>
+</html>

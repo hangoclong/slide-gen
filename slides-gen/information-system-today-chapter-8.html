@@ -1,0 +1,965 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Chapter 8: Strengthening Business-to-Business Relationships</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Roboto+Mono&display=swap" rel="stylesheet">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js" integrity="sha512-GsLlZN/3F2ErC5ifS5QtgpiJtWd43JWSuIgh7mbzZ8zBps+dvLusV+eNQATqgA/HdeKFVgA5v3S/cIrLF7QnIg==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    <script src="https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.min.js"></script>
+    <style>
+        :root {
+            --bg-grad-start: #f0fdf4;
+            --bg-grad-end: #dcfce7;
+            --bg-grad-mid-1: #f0fdf4;
+            --bg-grad-mid-2: #dcfce7;
+            --bg-grad-mid-3: #bbf7d0;
+            --text-primary: #334155;
+            --header-main: #166534;
+            --header-sub: #15803d;
+            --border-header: #86efac;
+            --nav-button-bg: #16a34a;
+            --nav-button-hover-bg: #15803d;
+            --info-card-border: #22c55e;
+            --conclusion-border: #22c55e;
+            --conclusion-text: #166534;
+            --process-step-bg: #f0fdf4;
+            --process-step-border: #bbf7d0;
+            --step-number-bg: #16a34a;
+            --inline-code-bg: #dcfce7;
+            --inline-code-text: #14532d;
+            --layer-box-bg: #dcfce7;
+            --layer-box-border: #86efac;
+            --flow-arrow-color: #22c55e;
+            --scrollbar-thumb: #4ade80;
+            --scrollbar-track: #dcfce7;
+        }
+
+        /* --- Base and Layout --- */
+        html, body { height: 100%; margin: 0; padding: 0; overflow: hidden; }
+        body { display: flex; justify-content: center; align-items: center; background: linear-gradient(135deg, var(--bg-grad-start) 0%, var(--bg-grad-end) 100%); font-family: 'Poppins', sans-serif; color: var(--text-primary); transition: background 0.3s ease; }
+        .presentation-container { position: relative; aspect-ratio: 16 / 9; width: 100%; height: auto; max-width: 100vw; max-height: 100vh; background-color: var(--bg-grad-start); box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1), 0 4px 10px rgba(0, 0, 0, 0.05); border-radius: 8px; display: flex; flex-direction: column; overflow: hidden; }
+        @media (min-aspect-ratio: 16/9) { .presentation-container { width: auto; height: 100%; } }
+
+        /* --- Slide Styling --- */
+        .slide { flex-grow: 1; padding: clamp(1.8rem, 3.5vh, 2.8rem) clamp(2.2rem, 4.5vw, 4.0rem); padding-bottom: calc(clamp(1.8rem, 3.5vh, 2.8rem) + 55px); overflow-y: auto; display: none; flex-direction: column; line-height: 1.7; scrollbar-width: thin; scrollbar-color: var(--scrollbar-thumb) var(--scrollbar-track); position: relative; background-color: var(--bg-grad-start); background-image: linear-gradient(160deg, var(--bg-grad-mid-1) 0%, var(--bg-grad-mid-2) 30%, var(--bg-grad-mid-3) 70%, var(--bg-grad-end) 100%); aspect-ratio: 16 / 9; height: 100%; box-sizing: border-box; transition: background-image 0.3s ease; }
+        .slide::-webkit-scrollbar { width: 8px; }
+        .slide::-webkit-scrollbar-track { background: var(--scrollbar-track); border-radius: 4px; }
+        .slide::-webkit-scrollbar-thumb { background-color: var(--scrollbar-thumb); border-radius: 4px; border: 2px solid var(--scrollbar-track); }
+        .slide.active { display: flex; }
+
+        /* --- Footer and Controls --- */
+        .slide-footer { position: absolute; bottom: 0; left: 0; width: 100%; z-index: 15; background-color: rgba(248, 250, 252, 0.85); backdrop-filter: blur(4px); border-top: 1px solid rgba(209, 213, 219, 0.5); padding: clamp(0.2rem, 0.4vh, 0.3rem) clamp(1rem, 2vw, 2rem); display: flex; justify-content: space-between; align-items: center; opacity: 0; visibility: hidden; transition: opacity 0.3s ease-in-out, visibility 0.3s ease-in-out; pointer-events: none; }
+        .slide-footer.show-footer { opacity: 1; visibility: visible; pointer-events: auto; }
+        .footer-controls { display: flex; align-items: center; gap: clamp(0.6rem, 1.1vw, 1.1rem); }
+        .nav-button, .options-button, .reveal-answer-btn { padding: clamp(0.25rem, 0.5vh, 0.4rem) clamp(0.9rem, 1.3vw, 1.3rem); background-color: var(--nav-button-bg); color: white; border-radius: 4px; text-decoration: none; font-size: clamp(0.8rem, 1.3vh, 0.9rem); font-weight: 500; transition: background-color 0.2s ease-in-out, opacity 0.2s ease-in-out, box-shadow 0.2s ease-in-out; border: none; cursor: pointer; line-height: 1.4; }
+        .nav-button:hover:not(:disabled), .options-button:hover, .reveal-answer-btn:hover { background-color: var(--nav-button-hover-bg); box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1); }
+        .nav-button:disabled { background-color: #d1d5db; color: #6b7280; cursor: not-allowed; opacity: 0.8; box-shadow: none; }
+        .options-button { background-color: #64748b; padding: clamp(0.25rem, 0.5vh, 0.4rem); line-height: 0; }
+        .options-button:hover { background-color: #475569; }
+        .options-button svg { width: clamp(1.0rem, 1.6vh, 1.2rem); height: clamp(1.0rem, 1.6vh, 1.2rem); fill: white; }
+
+        /* --- Settings/Export Drawer Menu --- */
+        #settingsDrawer { position: absolute; bottom: 0; left: 0; width: 100%; background-color: #ffffff; border-top: 1px solid #e2e8f0; box-shadow: 0 -4px 12px rgba(0, 0, 0, 0.1); padding: clamp(1rem, 2vh, 1.5rem) clamp(1.5rem, 3vw, 2rem); transform: translateY(100%); transition: transform 0.3s ease-in-out; z-index: 25; }
+        #settingsDrawer.active { transform: translateY(0); }
+        .drawer-section { margin-bottom: 1rem; }
+        .drawer-section:last-child { margin-bottom: 0; }
+        .drawer-section h3 { font-size: 1rem; font-weight: 600; color: #475569; margin-bottom: 0.75rem; text-align: center; }
+        .drawer-buttons-container { display: flex; justify-content: center; align-items: center; gap: clamp(0.6rem, 1.1vw, 1.1rem); flex-wrap: wrap; }
+        .drawer-button { padding: clamp(0.6rem, 1.1vh, 0.8rem) clamp(1.1rem, 1.6vw, 1.6rem); background-color: #16a34a; color: white; border: none; border-radius: 4px; font-size: clamp(0.95rem, 1.6vh, 1.05rem); font-weight: 500; cursor: pointer; transition: background-color 0.2s ease, opacity 0.2s ease; }
+        .drawer-button:hover:not(:disabled) { background-color: #15803d; }
+        .drawer-button:disabled { background-color: #9ca3af; cursor: not-allowed; opacity: 0.7; }
+        .theme-button { border: 2px solid transparent; }
+        .theme-button.active { border-color: var(--header-main); box-shadow: 0 0 0 2px var(--header-main); }
+
+        /* --- Content Styling --- */
+        .two-panel-wrapper { display: flex; width: 100%; height: 100%; align-items: stretch; }
+        .two-panel-wrapper.image-right { flex-direction: row-reverse; }
+        .image-panel { flex: 0 0 33%; position: relative; }
+        .image-panel img { position: absolute; top: 0; left: 0; width: 100%; height: 100%; object-fit: cover; border-radius: 20px; }
+        .text-panel { flex: 1 1 67%; padding: clamp(1.8rem, 3.5vh, 2.8rem) clamp(2.2rem, 4.5vw, 4.0rem); box-sizing: border-box; overflow-y: auto; }
+        .slide h1 { color: var(--header-main); font-size: clamp(2.5em, 4.0vw, 3.5em); font-weight: 700; margin-bottom: 1.4rem; padding-bottom: 0.6rem; line-height: 1.35; border-bottom: 3px solid var(--border-header); }
+        .slide.session-title-slide h1 { font-size: clamp(3.2em, 4.8vw, 4.5em); border-bottom: none; margin-bottom: 1.2rem; color: var(--header-main); }
+        .slide.session-title-slide h2 { font-size: clamp(1.7em, 2.8vw, 2.5em); font-weight: 400; margin-bottom: 1.0rem; color: var(--header-sub); }
+        .slide.session-title-slide .slide-content-wrapper { display: flex; flex-direction: column; justify-content: center; align-items: center; text-align: center; height: 100%; }
+        .slide h2 { color: var(--header-sub); font-size: clamp(1.6em, 2.4vw, 2.2em); font-weight: 600; margin-top: 1.8rem; margin-bottom: 1rem; }
+        .slide p, .slide ul, .slide ol { color: var(--text-primary); margin-bottom: 1rem; font-size: clamp(1.0em, 1.5vw, 1.3em); line-height: 1.8; }
+        .slide ul, .slide ol { margin-left: 1.8rem; margin-bottom: 1rem; }
+        .slide ul { list-style-type: disc; }
+        .slide ol { list-style-type: decimal; }
+        .slide li { margin-bottom: 0.8rem; }
+        .slide pre { background-color: #1e293b; color: #f8fafc; border: 1px solid #334155; padding: 0.9rem; border-radius: 6px; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word; font-family: 'Roboto Mono', 'Courier New', Courier, monospace; font-size: clamp(0.85em, 1.1vw, 1.0em); margin-top: 0.6rem; margin-bottom: 1.1rem; line-height: 1.5; }
+        .slide code { font-family: 'Roboto Mono', 'Courier New', Courier, monospace; }
+        .slide code.inline { background-color: var(--inline-code-bg); color: var(--inline-code-text); padding: 0.2em 0.5em; border-radius: 4px; font-size: 0.95em; white-space: normal; }
+        .slide .conclusion { font-weight: 600; margin-top: 1.4rem; border-left: 4px solid var(--conclusion-border); padding-left: 0.9rem; color: var(--conclusion-text); font-size: clamp(1.0em, 1.5vw, 1.3em); }
+        .info-card { background-color: #fff; border-radius: 8px; padding: clamp(0.9rem, 1.6vh, 1.3rem); box-shadow: 0 2px 4px rgba(0,0,0,0.05); border-left: 4px solid var(--info-card-border); margin-bottom: 0.9rem; }
+        .comparison-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: clamp(1rem, 2vw, 1.5rem); margin-top: 1.2rem; }
+        .comparison-card { background-color: #f8fafc; border: 1px solid #e2e8f0; border-radius: 8px; padding: clamp(0.9rem, 1.6vh, 1.3rem); }
+        .comparison-card h3 { font-weight: 600; color: var(--header-main); margin-bottom: 0.6rem; text-align: center; border-bottom: 2px solid var(--border-header); padding-bottom: 0.4rem; font-size: clamp(1.15em, 1.75vw, 1.55em); }
+        .process-step { display: flex; align-items: center; margin-bottom: 0.9rem; background-color: var(--process-step-bg); padding: 0.7rem; border-radius: 6px; border: 1px solid var(--process-step-border); }
+        .step-number { background-color: var(--step-number-bg); color: white; border-radius: 50%; width: clamp(26px, 3.2vh, 32px); height: clamp(26px, 3.2vh, 32px); display: inline-flex; justify-content: center; align-items: center; font-weight: 600; margin-right: 0.9rem; flex-shrink: 0; font-size: clamp(0.85em, 1.25vh, 0.95em); }
+        .slide .highlight { color: #dc2626; font-weight: 700; }
+        .slide .highlight-green { color: #16a34a; font-weight: 600; }
+        .summary-list-check li::before { content: '✔'; margin-right: 0.8rem; color: #16a34a; }
+        .ai-assist-prompt { background-color: #ecfdf5; border-left: 4px solid #10b981; padding: 0.8rem; margin-top: 1rem; border-radius: 4px; }
+        .ai-assist-prompt strong { color: #047857; }
+        .mermaid { background-color: #f8fafc; border: 1px solid #e2e8f0; border-radius: 8px; padding: 1rem; margin-top: 1rem; display: flex; justify-content: center; align-items: center; min-height: 150px; }
+        .answer-explanation { display: none; margin-top: 1rem; }
+
+        /* --- STYLES FOR PRINTING --- */
+        @media print {
+            .slide-footer, #settingsDrawer, .options-button, .nav-button, .slide-counter, .reveal-answer-btn { display: none !important; }
+            body { background: none !important; display: block !important; height: auto !important; overflow: visible !important; font-size: 10pt; }
+            .presentation-container { width: 100% !important; height: auto !important; max-width: none !important; max-height: none !important; box-shadow: none !important; border-radius: 0 !important; overflow: visible !important; aspect-ratio: auto !important; background-color: transparent !important; }
+            .slide { display: flex !important; flex-direction: column !important; width: 100% !important; height: 100vh !important; overflow: hidden !important; page-break-before: always !important; page-break-inside: avoid !important; padding: 0.5in !important; margin: 0 !important; border: none !important; box-shadow: none !important; aspect-ratio: auto !important; background-color: var(--bg-grad-start) !important; background-image: linear-gradient(160deg, var(--bg-grad-mid-1) 0%, var(--bg-grad-mid-2) 30%, var(--bg-grad-mid-3) 70%, var(--bg-grad-end) 100%) !important; -webkit-print-color-adjust: exact !important; print-color-adjust: exact !important; }
+            .slide:first-child { page-break-before: auto !important; }
+            .slide h1 { font-size: 18pt !important; }
+            .slide h2 { font-size: 14pt !important; }
+            .slide p, .slide ul, .slide ol, .slide li { font-size: 11pt !important; line-height: 1.4 !important; }
+            .slide code.inline, .slide pre code { font-size: 10pt !important; }
+            .slide pre { padding: 0.5rem !important; }
+            .info-card, .comparison-card, .process-step, .ai-assist-prompt { background-color: #fff !important; border-color: #ccc !important; box-shadow: none !important; }
+            .step-number { background-color: #ccc !important; color: #000 !important; }
+            .comparison-grid { grid-template-columns: 1fr !important; }
+            .mermaid { background-color: #f8fafc !important; -webkit-print-color-adjust: exact !important; print-color-adjust: exact !important; }
+            .mermaid svg { max-width: 100%; height: auto; }
+        }
+        @page { size: landscape; margin: 0.5in; }
+    </style>
+</head>
+<body>
+    <div class="presentation-container">
+
+        <!-- Slide 1: Title Slide -->
+        <div id="slide-1" class="slide active session-title-slide">
+            <div class="slide-content-wrapper">
+                <h1>Information Systems Today</h1>
+                <h2>Strengthening Business-to-Business Relationships via Supply Chain and Customer Relationship Management</h2>
+                <p class="instructor-info" style="margin-top: 2rem;">Chapter 8</p>
+                <p class="instructor-info" style="margin-top: 2rem;">Instructor: N. Long Ha (PhD)</p>
+                <p class="instructor-info" style="margin-top: 2rem;">University of Economics, Hue University</p>
+            </div>
+        </div>
+
+        <!-- Slide 2: Learning Objectives -->
+        <div id="slide-2" class="slide">
+            <h1>Learning Objectives</h1>
+            <ol>
+                <li>Describe supply chain management systems and how they help to improve business-to-business processes.</li>
+                <li>Describe customer relationship management systems and how they help to improve the activities involved in promoting and selling products to customers as well as providing customer service and nourishing long-term relationships.</li>
+            </ol>
+        </div>
+
+        <!-- Slide 3: Preview: The Power of Connection -->
+        <div id="slide-3" class="slide">
+            <h1>Preview: The Power of Connection</h1>
+            <p>Enterprise-wide information systems are key to building and strengthening organizational partnerships.</p>
+            <div class="info-card">
+                <h3>Integration is Key</h3>
+                <p>Systems must span the entire organization to tie everything together. This includes <strong>Supply Chain Management (SCM)</strong> for upstream B2B partners and <strong>Customer Relationship Management (CRM)</strong> for downstream customers.</p>
+            </div>
+            <p>In today's competitive digital world, understanding how to manage these relationships is critical for success.</p>
+        </div>
+
+        <!-- Slide 4: Case Study: Walmart -->
+        <div id="slide-4" class="slide">
+            <h1>Case Study: Walmart's Supply Chain</h1>
+            <p>Walmart is the world's largest retailer, known for its relentless pursuit of low costs. Its success is largely attributed to its highly efficient supply chain.</p>
+            <ul>
+                <li><strong>Vendor-Managed Inventory (VMI):</strong> Manufacturers monitor inventory levels in Walmart's warehouses.</li>
+                <li><strong>Cross-Docking:</strong> Direct transfers from inbound to outbound trucks without extra storage.</li>
+                <li><strong>Data Warehouse:</strong> Records every purchase globally to optimize stocking and clustering of items.</li>
+            </ul>
+        </div>
+
+        <!-- Slide 5: Cross Docking Visualization -->
+        <div id="slide-5" class="slide">
+            <h1>Visualizing Cross Docking</h1>
+            <div class="two-panel-wrapper">
+                <div class="text-panel">
+                    <p>Cross docking minimizes storage time and inventory holding costs.</p>
+                    <p>Inbound trucks arrive at one side of the distribution center. Goods are immediately sorted and moved to outbound trucks on the other side.</p>
+                    <p class="conclusion">This "just-in-time" approach keeps products moving and reduces warehousing expenses.</p>
+                </div>
+                <div class="image-panel" style="display: flex; align-items: center; justify-content: center;">
+                    <div class="mermaid">
+                        graph LR
+                            Inbound1[Inbound Truck A] --> Sort[Sorting Area]
+                            Inbound2[Inbound Truck B] --> Sort
+                            Sort --> Outbound1[Outbound Truck X]
+                            Sort --> Outbound2[Outbound Truck Y]
+                            
+                            style Sort fill:#d1fae5,stroke:#059669,stroke-width:2px
+                            style Inbound1 fill:#e0e7ff,stroke:#4f46e5
+                            style Inbound2 fill:#e0e7ff,stroke:#4f46e5
+                            style Outbound1 fill:#fce7f3,stroke:#db2777
+                            style Outbound2 fill:#fce7f3,stroke:#db2777
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 6: Supply Chain Management (SCM) -->
+        <div id="slide-6" class="slide">
+            <h1>Supply Chain Management (SCM)</h1>
+            <p>Coordinating with suppliers to improve efficiency and effectiveness.</p>
+            <div class="info-card">
+                <h3>Why Collaborate?</h3>
+                <p>When deliveries are accurate and timely, companies can convert raw materials into finished products more efficiently. This reduces inventory costs and speeds up time-to-market.</p>
+            </div>
+            <p><strong>Supply Network vs. Chain:</strong> The flow of materials is complex, involving multiple suppliers and customers, forming a network rather than a linear chain.</p>
+        </div>
+
+        <!-- Slide 7: Supply Network Visualization -->
+        <div id="slide-7" class="slide">
+            <h1>Supply Chain vs. Supply Network</h1>
+            <div class="mermaid">
+                graph TD
+                    subgraph Supply_Chain [Linear Chain]
+                        S1[Supplier] --> M1[Manufacturer] --> D1[Distributor] --> C1[Customer]
+                    end
+                    
+                    subgraph Supply_Network [Complex Network]
+                        SupA[Supplier A] --> ManX[Manufacturer X]
+                        SupB[Supplier B] --> ManX
+                        SupB --> ManY[Manufacturer Y]
+                        ManX --> Dist1[Distributor 1]
+                        ManX --> Dist2[Distributor 2]
+                        ManY --> Dist2
+                    end
+                    
+                    style Supply_Network fill:#f0fdf4,stroke:#16a34a
+            </div>
+            <p class="conclusion">Real-world supply chains are complex networks of interdependencies.</p>
+        </div>
+
+        <!-- Slide 8: B2B Electronic Commerce -->
+        <div id="slide-8" class="slide">
+            <h1>Business-to-Business (B2B) E-Commerce</h1>
+            <p>90% of all EC is B2B. It involves exchanging proprietary information like orders and invoices.</p>
+            <ul>
+                <li><strong>Electronic Data Interchange (EDI):</strong> Computer-to-computer communication of standard business documents. Replaces paper.</li>
+                <li><strong>Extranets:</strong> Using the internet to exchange data securely with partners.</li>
+                <li><strong>Portals:</strong> Access points for business partners to secured, proprietary information.</li>
+            </ul>
+        </div>
+
+        <!-- Slide 9: Portals: Supplier vs. Customer -->
+        <div id="slide-9" class="slide">
+            <h1>Portals: Connecting Partners</h1>
+            <div class="comparison-grid">
+                <div class="comparison-card">
+                    <h3>Supplier Portals</h3>
+                    <p><strong>Owned by the Buyer.</strong></p>
+                    <p>Connects a single buyer with multiple suppliers.</p>
+                    <p>Used for: Sourcing, Procurement, Managing terms.</p>
+                    <p><em>Example: HP Supplier Portal.</em></p>
+                </div>
+                <div class="comparison-card">
+                    <h3>Customer Portals</h3>
+                    <p><strong>Owned by the Supplier.</strong></p>
+                    <p>Connects a single supplier with multiple business customers.</p>
+                    <p>Used for: Sales, Customer Service, Order Tracking.</p>
+                    <p><em>Example: MyBoeingFleet.</em></p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 10: B2B Marketplaces -->
+        <div id="slide-10" class="slide">
+            <h1>B2B Marketplaces</h1>
+            <p>Operated by third-party vendors. They bring together many buyers and many sellers.</p>
+            <div class="two-panel-wrapper">
+                <div class="text-panel">
+                    <ul>
+                        <li><strong>Vertical Markets:</strong> Focused on specific industries (e.g., paper, steel, textiles).</li>
+                        <li><strong>General Markets:</strong> Alibaba.com connects buyers and suppliers from every industry globally.</li>
+                        <li><strong>Revenue Model:</strong> Transaction commissions, usage fees, or advertising.</li>
+                    </ul>
+                </div>
+                <div class="image-panel" style="display: flex; align-items: center; justify-content: center;">
+                    <div class="mermaid">
+                        graph TD
+                            B1[Buyer 1] --> M[B2B Marketplace]
+                            B2[Buyer 2] --> M
+                            B3[Buyer 3] --> M
+                            M --> S1[Supplier 1]
+                            M --> S2[Supplier 2]
+                            M --> S3[Supplier 3]
+                            
+                            style M fill:#fcd34d,stroke:#b45309,stroke-width:2px
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 11: Managing Complex Networks (Apple) -->
+        <div id="slide-11" class="slide">
+            <h1>Managing Complex Supply Networks: Apple</h1>
+            <p>The iPhone says "Designed in California, Assembled in China." This hides a massive global complexity.</p>
+            <div class="info-card">
+                <h3>Global Sourcing</h3>
+                <ul>
+                    <li><strong>Flash Memory/CPU:</strong> Samsung (Korea)</li>
+                    <li><strong>Display:</strong> LG (Korea)</li>
+                    <li><strong>Chips:</strong> Infineon (Germany), Broadcom (USA)</li>
+                    <li><strong>Assembly:</strong> Foxconn (China)</li>
+                </ul>
+            </div>
+            <p>Coordinating this requires managing risks like shortages, natural disasters, and political issues.</p>
+        </div>
+
+        <!-- Slide 12: Just-in-Time (JIT) Production -->
+        <div id="slide-12" class="slide">
+            <h1>Just-in-Time (JIT) Production</h1>
+            <p>Based on the notion that keeping inventory is costly (storage, capital, obsolescence).</p>
+            <ul>
+                <li><strong>Concept:</strong> Parts arrive just when needed for production.</li>
+                <li><strong>Example:</strong> Dell keeps only about 2 hours of inventory.</li>
+                <li><strong>Requirement:</strong> Tight cooperation and reliable logistics are essential. Disruptions can stop the line immediately.</li>
+            </ul>
+        </div>
+
+        <!-- Slide 13: Vendor-Managed Inventory (VMI) -->
+        <div id="slide-13" class="slide">
+            <h1>Vendor-Managed Inventory (VMI)</h1>
+            <p>A business model where the suppliers manage the manufacturer's (or retailer's) inventory levels.</p>
+            <div class="comparison-grid">
+                <div class="comparison-card">
+                    <h3>Manufacturer Benefits</h3>
+                    <p>Reduced inventory costs.</p>
+                    <p>Minimized stockouts.</p>
+                    <p>Offloaded management responsibility.</p>
+                </div>
+                <div class="comparison-card">
+                    <h3>Supplier Benefits</h3>
+                    <p>Access to real-time sales data.</p>
+                    <p>Better production forecasting.</p>
+                    <p>Lock-in of the customer relationship.</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 14: The Bullwhip Effect -->
+        <div id="slide-14" class="slide">
+            <h1>The Bullwhip Effect</h1>
+            <p>Small fluctuations in downstream demand can cause massive fluctuations in upstream supply chain needs.</p>
+            <div class="mermaid">
+                graph LR
+                    C[Customer Demand: +/- 5%] --> R[Retailer Order: +/- 10%]
+                    R --> D[Distributor Order: +/- 20%]
+                    D --> M[Manufacturer Prod: +/- 40%]
+                    
+                    style C fill:#d1fae5,stroke:#065f46
+                    style M fill:#fee2e2,stroke:#991b1b
+            </div>
+            <p><strong>Cause:</strong> Forecast errors and safety buffers multiply at each stage.</p>
+            <p><strong>Solution:</strong> Integrated information systems (SCM) to share real-time demand data across the chain.</p>
+        </div>
+
+        <!-- Slide 15: Corporate Social Responsibility (CSR) -->
+        <div id="slide-15" class="slide">
+            <h1>SCM and Corporate Social Responsibility</h1>
+            <p>Transparency in the supply chain is critical for CSR.</p>
+            <ul>
+                <li><strong>Product Recalls:</strong> Tracing products back to the source (e.g., a specific batch of contaminated lettuce) saves money and lives.</li>
+                <li><strong>Sustainable Practices:</strong> Ethical treatment of workers and environmental impact. Companies like Nike and HP must monitor their suppliers to maintain their own reputation.</li>
+            </ul>
+        </div>
+
+        <!-- Slide 16: SCM Architecture -->
+        <div id="slide-16" class="slide">
+            <h1>SCM System Architecture</h1>
+            <p>SCM systems consist of modules focusing on Planning and Execution.</p>
+            <div class="mermaid">
+                graph TD
+                    SCM[SCM System]
+                    Plan[Supply Chain Planning]
+                    Exec[Supply Chain Execution]
+                    Vis[Visibility & Analytics]
+                    
+                    SCM --> Plan
+                    SCM --> Exec
+                    SCM --> Vis
+                    
+                    Plan --> Demand[Demand Planning]
+                    Plan --> Dist[Distribution Planning]
+                    Plan --> Prod[Production Scheduling]
+                    Plan --> Inv[Inventory Planning]
+                    
+                    style Plan fill:#e0f2fe,stroke:#0ea5e9
+                    style Exec fill:#fce7f3,stroke:#db2777
+            </div>
+        </div>
+
+        <!-- Slide 17: Supply Chain Planning -->
+        <div id="slide-17" class="slide">
+            <h1>Supply Chain Planning (SCP)</h1>
+            <p>Developing resource plans to support production.</p>
+            <ol>
+                <li><strong>Demand Planning:</strong> Forecasting demand based on history and other factors (promotions, seasons).</li>
+                <li><strong>Distribution Planning:</strong> Planning the movement of goods to distributors and warehouses.</li>
+                <li><strong>Production Scheduling:</strong> Coordinating manufacturing activities and resources.</li>
+                <li><strong>Inventory Planning:</strong> Determining optimal safety stock levels.</li>
+            </ol>
+        </div>
+
+        <!-- Slide 18: Supply Chain Execution -->
+        <div id="slide-18" class="slide">
+            <h1>Supply Chain Execution (SCE)</h1>
+            <p>Putting the plan into motion. It manages three key flows:</p>
+            <div class="comparison-grid">
+                <div class="comparison-card">
+                    <h3>Product Flow</h3>
+                    <p>Movement of goods from supplier to consumer.</p>
+                    <p>Also includes <strong>Reverse Logistics</strong> (Returns/Recycling).</p>
+                </div>
+                <div class="comparison-card">
+                    <h3>Information Flow</h3>
+                    <p>Order processing and delivery status updates.</p>
+                    <p>removal of paper documents.</p>
+                </div>
+                <div class="comparison-card">
+                    <h3>Financial Flow</h3>
+                    <p>Payment schedules, consignment, and ownership data.</p>
+                    <p>Linkages to electronic banking.</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 19: SCM Technology: XML & RFID -->
+        <div id="slide-19" class="slide">
+            <h1>SCM Technology Enablers</h1>
+            <ul>
+                <li><strong>XML (Extensible Markup Language):</strong> A standard for exchanging structured data over the web. It allows different systems to "talk" to each other (e.g., sending an invoice from System A to System B).</li>
+                <li><strong>RFID (Radio Frequency Identification):</strong> Identifying and tracking items using radio waves. Replaces bar codes for faster, automated tracking of inventory.</li>
+            </ul>
+        </div>
+
+        <!-- Slide 20: Knowledge Check 1 -->
+        <div id="slide-20" class="slide">
+            <h1>Knowledge Check</h1>
+            <h2>Which phenomenon refers to small fluctuations in demand causing massive fluctuations in supply chain forecasts?</h2>
+            <ul>
+                <li>A) The Butterfly Effect</li>
+                <li>B) The Bullwhip Effect</li>
+                <li>C) The Supply Chain Ripple</li>
+                <li>D) The Inventory Paradox</li>
+            </ul>
+            <button class="reveal-answer-btn">Reveal Answer</button>
+            <div class="answer-explanation">
+                <div class="info-card">
+                    <h3>Correct Answer: B</h3>
+                    <p>The Bullwhip Effect occurs when forecast errors and safety stocks multiply as they move upstream in the supply chain, causing inefficiency and waste.</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 21: In-Class Assignment 1 -->
+        <div id="slide-21" class="slide">
+            <h1>In-Class Assignment (30 Mins)</h1>
+            <h2>Mapping a Supply Chain</h2>
+            <p><strong>Task:</strong> Choose a simple product (e.g., a cup of coffee, a T-shirt, or a smartphone). Use AI (ChatGPT/Gemini) to trace its supply chain back to the raw materials.</p>
+            <div class="ai-assist-prompt">
+                <p><strong>Sample Prompts:</strong></p>
+                <ul>
+                    <li>"Trace the supply chain of a cotton T-shirt from raw material to retail store. List the key players and locations."</li>
+                    <li>"What are the potential disruption risks in the supply chain of a smartphone battery?"</li>
+                    <li>"Create a Mermaid diagram code representing the supply network of a coffee shop."</li>
+                </ul>
+            </div>
+            <p><strong>Output:</strong> Draw a simple diagram of the upstream and downstream flows for your chosen product.</p>
+        </div>
+
+        <!-- Slide 22: Customer Relationship Management (CRM) -->
+        <div id="slide-22" class="slide">
+            <h1>Customer Relationship Management (CRM)</h1>
+            <p>Competition is just a click away. Companies must attract and <em>retain</em> customers.</p>
+            <div class="info-card">
+                <h3>CRM Strategy</h3>
+                <p>A corporate-level strategy to create and maintain lasting relationships by concentrating on downstream information flows.</p>
+            </div>
+            <p><strong>Goals:</strong> Attract potential customers, create loyalty, and portray a positive image.</p>
+        </div>
+
+        <!-- Slide 23: Widen, Lengthen, Deepen -->
+        <div id="slide-23" class="slide">
+            <h1>Maximizing Customer Value</h1>
+            <p>CRM helps companies to:</p>
+            <div class="mermaid">
+                graph TD
+                    C[Customer Relationship]
+                    W[Widen: Attract New]
+                    L[Lengthen: Keep Satisfied]
+                    D[Deepen: Transform to Profitable]
+                    
+                    C --> W
+                    C --> L
+                    C --> D
+                    
+                    style W fill:#bfdbfe,stroke:#1d4ed8
+                    style L fill:#bfdbfe,stroke:#1d4ed8
+                    style D fill:#bfdbfe,stroke:#1d4ed8
+            </div>
+            <p>It costs 50-100 times more to win back a lost customer than to keep a current one.</p>
+        </div>
+
+        <!-- Slide 24: CRM Architecture -->
+        <div id="slide-24" class="slide">
+            <h1>Architecture of a CRM System</h1>
+            <p>A comprehensive CRM system has three primary components:</p>
+            <ol>
+                <li><strong>Operational CRM:</strong> Systems for automating the fundamental business processes (marketing, sales, support).</li>
+                <li><strong>Analytical CRM:</strong> Analyzing customer behavior and perceptions to provide business intelligence.</li>
+                <li><strong>Collaborative CRM:</strong> Providing effective communication with the customer from the entire organization.</li>
+            </ol>
+        </div>
+
+        <!-- Slide 25: Operational CRM: SFA -->
+        <div id="slide-25" class="slide">
+            <h1>Operational CRM: Sales Force Automation (SFA)</h1>
+            <p>Supports day-to-day sales activities.</p>
+            <ul>
+                <li><strong>Order Processing:</strong> Tracking orders and status.</li>
+                <li><strong>Account Management:</strong> Managing contacts and opportunities.</li>
+                <li><strong>Benefits:</strong> Reduces paperwork, improves sales forecasting, and gives managers a clear view of the "sales pipeline."</li>
+            </ul>
+        </div>
+
+        <!-- Slide 26: Operational CRM: Customer Service -->
+        <div id="slide-26" class="slide">
+            <h1>Operational CRM: Customer Service & Support</h1>
+            <p>Automates service requests, complaints, and returns.</p>
+            <div class="info-card">
+                <h3>Customer Engagement Center (CEC)</h3>
+                <p>Uses multiple channels (web, Facebook, phone, face-to-face) to support customers.</p>
+            </div>
+            <p><strong>Goal:</strong> First-Call Resolution. Solving the customer's issue during the first contact saves costs and increases satisfaction.</p>
+        </div>
+
+        <!-- Slide 27: Operational CRM: Marketing -->
+        <div id="slide-27" class="slide">
+            <h1>Operational CRM: Enterprise Marketing Management</h1>
+            <p>Improving the management of promotional campaigns.</p>
+            <ul>
+                <li>Integrates campaigns across channels (email, social media, direct mail).</li>
+                <li>Ensures the right message goes to the right person at the right time.</li>
+                <li>Helps analyze campaign effectiveness (Conversion Rates).</li>
+            </ul>
+        </div>
+
+        <!-- Slide 28: Analytical CRM -->
+        <div id="slide-28" class="slide">
+            <h1>Analytical CRM</h1>
+            <p>Analyzing customer behavior to identify new opportunities.</p>
+            <ul>
+                <li><strong>Cross-Selling:</strong> Selling related products (e.g., a phone case with a phone).</li>
+                <li><strong>Up-Selling:</strong> Selling a more expensive version (e.g., a premium subscription).</li>
+                <li><strong>Customer Segmentation:</strong> Grouping customers to customize marketing messages.</li>
+            </ul>
+            <p>Uses Data Mining and Predictive Modeling.</p>
+        </div>
+
+        <!-- Slide 29: Social CRM -->
+        <div id="slide-29" class="slide">
+            <h1>Social CRM</h1>
+            <p>Engaging with customers via social media channels.</p>
+            <div class="two-panel-wrapper">
+                <div class="text-panel">
+                    <p>Customers share experiences on social media. Companies must monitor and participate in these conversations.</p>
+                    <p><strong>Social Media Monitoring:</strong> Identifying and assessing the volume and sentiment of what is being said about a company.</p>
+                    <p><em>Example: Dell's Social Media Listening Command Center.</em></p>
+                </div>
+                <div class="image-panel" style="display: flex; align-items: center; justify-content: center;">
+                    <div class="mermaid">
+                        graph TD
+                            Social[Social Media Post] --> Monitor[Listening Tool]
+                            Monitor --> Analyze[Sentiment Analysis]
+                            Analyze --> Act[Response/Action]
+                            Act --> Social
+                            
+                            style Monitor fill:#fbcfe8,stroke:#be185d
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 30: Collaborative CRM -->
+        <div id="slide-30" class="slide">
+            <h1>Collaborative CRM</h1>
+            <p>Facilitates information sharing across the organization to serve the customer.</p>
+            <ul>
+                <li><strong>Integration:</strong> Ensures that Sales, Support, and Marketing all have the same view of the customer.</li>
+                <li><strong>Reduced Handoffs:</strong> Customers don't have to repeat their story to different departments.</li>
+                <li><strong>Customer Focus:</strong> Communication is tailored to the customer's history and preferences.</li>
+            </ul>
+        </div>
+
+        <!-- Slide 31: Ethical Concerns in CRM -->
+        <div id="slide-31" class="slide">
+            <h1>Ethical Concerns in CRM</h1>
+            <p>CRM allows for highly personalized targeting, but it can cross the line.</p>
+            <div class="info-card">
+                <h3>The Creepiness Factor</h3>
+                <p>When does personalization become invasion of privacy? relying too much on statistical profiles may categorize customers in ways they find offensive.</p>
+            </div>
+            <p>Companies must balance personalization with privacy concerns.</p>
+        </div>
+
+        <!-- Slide 32: Knowledge Check 2 -->
+        <div id="slide-32" class="slide">
+            <h1>Knowledge Check</h1>
+            <h2>Which component of CRM focuses on analyzing customer behavior to identify cross-selling opportunities?</h2>
+            <ul>
+                <li>A) Operational CRM</li>
+                <li>B) Collaborative CRM</li>
+                <li>C) Analytical CRM</li>
+                <li>D) Social CRM</li>
+            </ul>
+            <button class="reveal-answer-btn">Reveal Answer</button>
+            <div class="answer-explanation">
+                <div class="info-card">
+                    <h3>Correct Answer: C</h3>
+                    <p>Analytical CRM uses business intelligence tools to analyze data and identify patterns, such as opportunities for cross-selling and up-selling.</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 33: Industry Analysis: Manufacturing -->
+        <div id="slide-33" class="slide">
+            <h1>Industry Analysis: Manufacturing</h1>
+            <p>Manufacturing is undergoing a digital transformation.</p>
+            <ul>
+                <li><strong>CAD (Computer-Aided Design):</strong> Speeds up product design.</li>
+                <li><strong>3D Printing (Additive Manufacturing):</strong> Allows for rapid prototyping and creating complex parts on demand. It reduces the need for large inventories of spare parts.</li>
+                <li><strong>Implication:</strong> Potentially moving manufacturing back to local markets (reducing shipping costs).</li>
+            </ul>
+        </div>
+
+        <!-- Slide 34: Emerging Trends: Augmented Reality -->
+        <div id="slide-34" class="slide">
+            <h1>Coming Attractions: Augmented Reality (AR) in SCM</h1>
+            <p>AR overlays digital information onto the physical world.</p>
+            <div class="comparison-grid">
+                <div class="comparison-card">
+                    <h3>Picking</h3>
+                    <p>AR headsets guide warehouse workers to the exact location of an item and show the best path, reducing errors.</p>
+                </div>
+                <div class="comparison-card">
+                    <h3>Loading</h3>
+                    <p>AR can show how to efficiently stack boxes in a truck to maximize space.</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 35: In-Class Assignment 2 -->
+        <div id="slide-35" class="slide">
+            <h1>In-Class Assignment (30 Mins)</h1>
+            <h2>Designing a CRM Strategy</h2>
+            <p><strong>Scenario:</strong> You are launching a new subscription box service for pet owners. You need a CRM strategy to retain customers.</p>
+            <p><strong>Task:</strong> Use ChatGPT or Gemini to outline your strategy.</p>
+            <div class="ai-assist-prompt">
+                <p><strong>Sample Prompts:</strong></p>
+                <ul>
+                    <li>"Draft a CRM email marketing sequence for a new pet subscription box customer. Include a welcome email, a check-in, and an upsell offer."</li>
+                    <li>"What are the key metrics (KPIs) to track for a subscription business CRM?"</li>
+                    <li>"How can I use social media monitoring to find potential customers for my pet business?"</li>
+                </ul>
+            </div>
+            <p><strong>Output:</strong> A 1-page plan covering Acquisition (Widen), Retention (Lengthen), and Upselling (Deepen).</p>
+        </div>
+
+        <!-- Slide 36: Key Takeaways -->
+        <div id="slide-36" class="slide">
+            <h1>Key Takeaways</h1>
+            <ul class="summary-list-check">
+                <li><strong>SCM</strong> optimizes the flow of products, information, and funds from supplier to customer.</li>
+                <li><strong>CRM</strong> manages the relationship with the customer to drive loyalty and revenue.</li>
+                <li><strong>Integration</strong> of SCM, CRM, and ERP is essential for a seamless flow of information.</li>
+                <li><strong>Collaboration</strong> via Portals and Marketplaces improves efficiency.</li>
+                <li><strong>Technology</strong> like AI, RFID, and Blockchain is transforming these fields.</li>
+            </ul>
+        </div>
+
+        <!-- Slide 37: Final Slide -->
+        <div id="slide-37" class="slide session-title-slide">
+            <div class="slide-content-wrapper">
+                <h1>Questions?</h1>
+                <h2>Open Discussion</h2>
+            </div>
+        </div>
+
+        <!-- FOOTER AND CONTROLS -->
+        <div class="slide-footer">
+            <button id="optionsBtn" class="options-button" title="Settings">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor">
+                    <path d="M10 3a1.5 1.5 0 110 3 1.5 1.5 0 010-3zM10 8.5a1.5 1.5 0 110 3 1.5 1.5 0 010-3zM11.5 14a1.5 1.5 0 10-3 0 1.5 1.5 0 003 0z" />
+                </svg>
+            </button>
+            <div class="footer-controls">
+                <button id="prevBtn" class="nav-button">Previous</button>
+                <span id="slideCounter" class="slide-counter">Slide 1 / 37</span>
+                <button id="nextBtn" class="nav-button">Next</button>
+            </div>
+            <div style="width: 40px;"></div> 
+        </div>
+
+        <!-- SETTINGS DRAWER -->
+        <div id="settingsDrawer">
+            <div class="drawer-section">
+                <h3>Theme</h3>
+                <div id="themeSwitcher" class="drawer-buttons-container"></div>
+            </div>
+            <div class="drawer-section">
+                <h3>Export</h3>
+                <div class="drawer-buttons-container">
+                    <button id="exportPdfBtn" class="drawer-button">Current Slide (PDF)</button>
+                    <button id="printAllBtn" class="drawer-button">All Slides (PDF)</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            // --- DOM Element References ---
+            const slides = document.querySelectorAll('.slide');
+            const prevBtn = document.getElementById('prevBtn');
+            const nextBtn = document.getElementById('nextBtn');
+            const slideCounter = document.getElementById('slideCounter');
+            const optionsBtn = document.getElementById('optionsBtn');
+            const settingsDrawer = document.getElementById('settingsDrawer');
+            const exportPdfBtn = document.getElementById('exportPdfBtn');
+            const printAllBtn = document.getElementById('printAllBtn');
+            const themeSwitcherContainer = document.getElementById('themeSwitcher');
+            const presentationContainer = document.querySelector('.presentation-container');
+            const slideFooter = document.querySelector('.slide-footer');
+
+            // --- State Variables ---
+            let currentSlideIndex = 0;
+            const totalSlides = 37; 
+            let footerTimeoutId = null;
+            
+            // --- Constants ---
+            const FOOTER_HIDE_DELAY = 3000;
+            const PDF_PAGE_WIDTH_IN = 11;
+            const PDF_PAGE_HEIGHT_IN = PDF_PAGE_WIDTH_IN * 9 / 16;
+
+            // --- THEME DATA ---
+            const themes = {
+                'Leaf Green': {
+                    '--bg-grad-start': '#f0fdf4', '--bg-grad-end': '#dcfce7', '--bg-grad-mid-1': '#f0fdf4', '--bg-grad-mid-2': '#dcfce7', '--bg-grad-mid-3': '#bbf7d0',
+                    '--text-primary': '#334155', '--header-main': '#166534', '--header-sub': '#15803d', '--border-header': '#86efac',
+                    '--nav-button-bg': '#16a34a', '--nav-button-hover-bg': '#15803d', '--info-card-border': '#22c55e', '--conclusion-border': '#22c55e',
+                    '--conclusion-text': '#166534', '--process-step-bg': '#f0fdf4', '--process-step-border': '#bbf7d0', '--step-number-bg': '#16a34a',
+                    '--inline-code-bg': '#dcfce7', '--inline-code-text': '#14532d', '--layer-box-bg': '#dcfce7', '--layer-box-border': '#86efac',
+                    '--flow-arrow-color': '#22c55e', '--scrollbar-thumb': '#4ade80', '--scrollbar-track': '#dcfce7'
+                },
+                'Original Purple': {
+                    '--bg-grad-start': '#f5f3ff', '--bg-grad-end': '#ddd6fe', '--bg-grad-mid-1': '#f5f3ff', '--bg-grad-mid-2': '#ede9fe', '--bg-grad-mid-3': '#ddd6fe',
+                    '--text-primary': '#334155', '--header-main': '#4338ca', '--header-sub': '#4f46e5', '--border-header': '#a5b4fc',
+                    '--nav-button-bg': '#4f46e5', '--nav-button-hover-bg': '#4338ca', '--info-card-border': '#6366f1', '--conclusion-border': '#6366f1',
+                    '--conclusion-text': '#4338ca', '--process-step-bg': '#eef2ff', '--process-step-border': '#c7d2fe', '--step-number-bg': '#4f46e5',
+                    '--inline-code-bg': '#eef2ff', '--inline-code-text': '#312e81', '--layer-box-bg': '#e0e7ff', '--layer-box-border': '#c7d2fe',
+                    '--flow-arrow-color': '#6366f1', '--scrollbar-thumb': '#a78bfa', '--scrollbar-track': '#ddd6fe'
+                },
+                'Ocean Blue': {
+                    '--bg-grad-start': '#f0f9ff', '--bg-grad-end': '#dbeafe', '--bg-grad-mid-1': '#f0f9ff', '--bg-grad-mid-2': '#e0f2fe', '--bg-grad-mid-3': '#bae6fd',
+                    '--text-primary': '#334155', '--header-main': '#0c4a6e', '--header-sub': '#0369a1', '--border-header': '#7dd3fc',
+                    '--nav-button-bg': '#0ea5e9', '--nav-button-hover-bg': '#0284c7', '--info-card-border': '#38bdf8', '--conclusion-border': '#38bdf8',
+                    '--conclusion-text': '#0c4a6e', '--process-step-bg': '#f0f9ff', '--process-step-border': '#bae6fd', '--step-number-bg': '#0ea5e9',
+                    '--inline-code-bg': '#e0f2fe', '--inline-code-text': '#075985', '--layer-box-bg': '#e0f2fe', '--layer-box-border': '#7dd3fc',
+                    '--flow-arrow-color': '#38bdf8', '--scrollbar-thumb': '#38bdf8', '--scrollbar-track': '#dbeafe'
+                },
+                'Slate Gray': {
+                    '--bg-grad-start': '#f8fafc', '--bg-grad-end': '#e2e8f0', '--bg-grad-mid-1': '#f8fafc', '--bg-grad-mid-2': '#f1f5f9', '--bg-grad-mid-3': '#e2e8f0',
+                    '--text-primary': '#334155', '--header-main': '#1e293b', '--header-sub': '#334155', '--border-header': '#94a3b8',
+                    '--nav-button-bg': '#475569', '--nav-button-hover-bg': '#334155', '--info-card-border': '#64748b', '--conclusion-border': '#64748b',
+                    '--conclusion-text': '#1e293b', '--process-step-bg': '#f8fafc', '--process-step-border': '#e2e8f0', '--step-number-bg': '#475569',
+                    '--inline-code-bg': '#f1f5f9', '--inline-code-text': '#1e293b', '--layer-box-bg': '#f1f5f9', '--layer-box-border': '#cbd5e1',
+                    '--flow-arrow-color': '#64748b', '--scrollbar-thumb': '#94a3b8', '--scrollbar-track': '#e2e8f0'
+                }
+            };
+
+            // --- Core Functions ---
+            function applyTheme(themeName) {
+                const theme = themes[themeName];
+                if (!theme) return;
+                for (const [key, value] of Object.entries(theme)) {
+                    document.documentElement.style.setProperty(key, value);
+                }
+                localStorage.setItem('presentationTheme', themeName);
+                document.querySelectorAll('.theme-button').forEach(btn => {
+                    btn.classList.toggle('active', btn.dataset.theme === themeName);
+                });
+            }
+
+            function populateThemeSwitcher() {
+                Object.keys(themes).forEach(themeName => {
+                    const button = document.createElement('button');
+                    button.className = 'drawer-button theme-button';
+                    button.textContent = themeName;
+                    button.dataset.theme = themeName;
+                    button.style.backgroundColor = themes[themeName]['--nav-button-bg'];
+                    button.addEventListener('click', () => applyTheme(themeName));
+                    themeSwitcherContainer.appendChild(button);
+                });
+            }
+            
+            function initializeMermaidDiagrams() {
+                document.querySelectorAll('.mermaid').forEach(el => {
+                    el.setAttribute('data-mermaid', el.innerHTML.trim());
+                });
+            }
+
+            function showSlide(index) {
+                if (index < 0 || index >= totalSlides) return;
+                slides.forEach((slide, i) => slide.classList.toggle('active', i === index));
+                const activeSlide = slides[index];
+                if (activeSlide) {
+                    activeSlide.scrollTop = 0;
+                    setTimeout(() => {
+                        if (window.mermaid) {
+                          try {
+                            activeSlide.querySelectorAll('.mermaid').forEach(el => {
+                                const code = el.getAttribute('data-mermaid');
+                                if (code) {
+                                    el.innerHTML = code;
+                                    el.removeAttribute('data-processed');
+                                }
+                            });
+                            mermaid.run({ nodes: activeSlide.querySelectorAll('.mermaid') });
+                          } catch (e) {
+                            console.error("Mermaid rendering error:", e);
+                            activeSlide.querySelectorAll('.mermaid').forEach(el => el.innerHTML = 'Error rendering diagram.');
+                          }
+                        }
+                    }, 50);
+                }
+                slideCounter.textContent = `Slide ${index + 1} / ${totalSlides}`;
+                prevBtn.disabled = index === 0;
+                nextBtn.disabled = index === totalSlides - 1;
+                settingsDrawer.classList.remove('active');
+                currentSlideIndex = index;
+            }
+
+            function nextSlide() { showSlide(currentSlideIndex + 1); }
+            function prevSlide() { showSlide(currentSlideIndex - 1); }
+            function toggleSettingsDrawer() { settingsDrawer.classList.toggle('active'); }
+            
+            // --- PDF and Print Functions ---
+            function exportCurrentSlideToPdf() {
+                const activeSlide = document.querySelector('.slide.active');
+                if (!activeSlide) return;
+
+                const drawer = document.getElementById('settingsDrawer');
+                const originalStyles = {
+                    footerClassList: Array.from(slideFooter.classList), footerInlineDisplay: slideFooter.style.display,
+                    drawerDisplay: drawer.style.display, drawerTransform: drawer.style.transform,
+                    slideOverflow: activeSlide.style.overflowY, slideHeight: activeSlide.style.height, slideAspectRatio: activeSlide.style.aspectRatio
+                };
+                
+                exportPdfBtn.disabled = true; printAllBtn.disabled = true; exportPdfBtn.textContent = 'Exporting...'; optionsBtn.disabled = true;
+                if (footerTimeoutId) { clearTimeout(footerTimeoutId); footerTimeoutId = null; }
+                slideFooter.style.display = 'none'; drawer.style.display = 'none'; drawer.classList.remove('active');
+
+                activeSlide.style.overflowY = 'visible'; activeSlide.style.height = 'auto'; activeSlide.style.aspectRatio = 'auto';
+
+                const slideNumber = currentSlideIndex + 1;
+                const filename = `IS_Today_Ch8_Slide_${slideNumber}.pdf`;
+                const opt = {
+                    margin: [0.1, 0.1, 0.1, 0.1],
+                    filename: filename,
+                    image: { type: 'jpeg', quality: 0.98 },
+                    html2canvas: { scale: 2.5, useCORS: true, logging: false, scrollY: 0 },
+                    jsPDF: { unit: 'in', format: [PDF_PAGE_WIDTH_IN, PDF_PAGE_HEIGHT_IN], orientation: 'landscape' }
+                };
+                
+                html2pdf().set(opt).from(activeSlide).save().catch(err => {
+                    console.error('PDF export error:', err);
+                }).finally(() => {
+                    slideFooter.style.display = originalStyles.footerInlineDisplay;
+                    slideFooter.className = '';
+                    originalStyles.footerClassList.forEach(cls => slideFooter.classList.add(cls));
+                    drawer.style.display = originalStyles.drawerDisplay;
+                    drawer.style.transform = originalStyles.drawerTransform;
+                    activeSlide.style.overflowY = originalStyles.slideOverflow;
+                    activeSlide.style.height = originalStyles.slideHeight;
+                    activeSlide.style.aspectRatio = originalStyles.slideAspectRatio;
+                    exportPdfBtn.disabled = false;
+                    printAllBtn.disabled = false;
+                    exportPdfBtn.textContent = 'Current Slide (PDF)';
+                    optionsBtn.disabled = false;
+                });
+            }
+
+            async function triggerPrintAllSlides() {
+                settingsDrawer.classList.remove('active');
+                if (footerTimeoutId) { clearTimeout(footerTimeoutId); footerTimeoutId = null; }
+                slideFooter.classList.remove('show-footer');
+                
+                if(window.mermaid) {
+                    try {
+                        await mermaid.run({ nodes: document.querySelectorAll('.mermaid') });
+                    } catch(e) {
+                        console.error("Mermaid printing error:", e);
+                    }
+                }
+                
+                window.print();
+            }
+
+            // --- Event Listeners ---
+            prevBtn.addEventListener('click', prevSlide);
+            nextBtn.addEventListener('click', nextSlide);
+            optionsBtn.addEventListener('click', toggleSettingsDrawer);
+            exportPdfBtn.addEventListener('click', exportCurrentSlideToPdf);
+            printAllBtn.addEventListener('click', triggerPrintAllSlides);
+
+            document.querySelectorAll('.reveal-answer-btn').forEach(button => {
+                button.addEventListener('click', () => {
+                    const explanation = button.nextElementSibling;
+                    if (explanation && explanation.classList.contains('answer-explanation')) {
+                        explanation.style.display = 'block';
+                        button.style.display = 'none';
+                    }
+                });
+            });
+            
+            // --- Initial Setup ---
+            mermaid.initialize({ startOnLoad: false, theme: 'base', themeVariables: {
+                'primaryColor': '#f8fafc', 'primaryTextColor': '#334155', 'lineColor': '#475569',
+                'textColor': '#334155', 'fontSize': '16px',
+            }});
+            
+            initializeMermaidDiagrams();
+            populateThemeSwitcher();
+            const savedTheme = localStorage.getItem('presentationTheme') || 'Original Purple';
+            applyTheme(savedTheme);
+            showSlide(currentSlideIndex);
+
+            // --- Keyboard and Mouse Listeners ---
+            document.addEventListener('keydown', (e) => {
+                if (e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA') return;
+                if (e.key === 'ArrowRight' || e.key === ' ' || e.key === 'PageDown') nextSlide();
+                if (e.key === 'ArrowLeft' || e.key === 'PageUp') prevSlide();
+                if (e.key === 'Escape') settingsDrawer.classList.remove('active');
+            });
+            presentationContainer.addEventListener('mousemove', () => {
+                 if (footerTimeoutId) clearTimeout(footerTimeoutId);
+                 slideFooter.classList.add('show-footer');
+                 footerTimeoutId = setTimeout(() => slideFooter.classList.remove('show-footer'), FOOTER_HIDE_DELAY);
+            });
+            presentationContainer.addEventListener('mouseleave', () => { if (footerTimeoutId) clearTimeout(footerTimeoutId); slideFooter.classList.remove('show-footer'); });
+            document.addEventListener('click', (e) => {
+                if (settingsDrawer.classList.contains('active') && !settingsDrawer.contains(e.target) && !optionsBtn.contains(e.target)) {
+                    settingsDrawer.classList.remove('active');
+                }
+            });
+        });
+    </script>
+</body>
+</html>

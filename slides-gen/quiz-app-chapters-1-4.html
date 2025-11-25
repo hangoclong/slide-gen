@@ -1,0 +1,1206 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>IS Today: Chapters 1-4 Quiz</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --primary-gradient: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            --secondary-gradient: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+            --success-gradient: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+            --accent-gradient: linear-gradient(135deg, #fa709a 0%, #fee140 100%);
+            --dark-bg: #0f0f23;
+            --card-bg: rgba(255, 255, 255, 0.95);
+            --glass-bg: rgba(255, 255, 255, 0.1);
+            --text-primary: #1a1a2e;
+            --text-secondary: #6b7280;
+            --text-light: rgba(255, 255, 255, 0.95);
+            --border-color: rgba(102, 126, 234, 0.2);
+            --shadow-sm: 0 2px 8px rgba(102, 126, 234, 0.1);
+            --shadow-md: 0 8px 24px rgba(102, 126, 234, 0.15);
+            --shadow-lg: 0 16px 48px rgba(102, 126, 234, 0.2);
+            --shadow-glow: 0 0 40px rgba(102, 126, 234, 0.3);
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            background: var(--dark-bg);
+            background-image:
+                radial-gradient(circle at 20% 50%, rgba(102, 126, 234, 0.15) 0%, transparent 50%),
+                radial-gradient(circle at 80% 80%, rgba(245, 87, 108, 0.15) 0%, transparent 50%),
+                radial-gradient(circle at 40% 20%, rgba(0, 242, 254, 0.1) 0%, transparent 50%);
+            color: var(--text-primary);
+            line-height: 1.6;
+            margin: 0;
+            padding: 20px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            position: relative;
+            overflow-x: hidden;
+        }
+
+        /* Animated background particles */
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-image:
+                radial-gradient(2px 2px at 20% 30%, rgba(255, 255, 255, 0.3), transparent),
+                radial-gradient(2px 2px at 60% 70%, rgba(255, 255, 255, 0.3), transparent),
+                radial-gradient(1px 1px at 50% 50%, rgba(255, 255, 255, 0.3), transparent),
+                radial-gradient(1px 1px at 80% 10%, rgba(255, 255, 255, 0.3), transparent);
+            background-size: 200% 200%;
+            animation: sparkle 20s ease-in-out infinite;
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        @keyframes sparkle {
+
+            0%,
+            100% {
+                opacity: 0.3;
+                transform: scale(1);
+            }
+
+            50% {
+                opacity: 0.6;
+                transform: scale(1.1);
+            }
+        }
+
+        .container {
+            width: 100%;
+            max-width: 900px;
+            background: var(--card-bg);
+            backdrop-filter: blur(20px);
+            border-radius: 24px;
+            box-shadow: var(--shadow-lg), var(--shadow-glow);
+            padding: 3rem;
+            display: flex;
+            flex-direction: column;
+            position: relative;
+            z-index: 1;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            animation: slideUp 0.6s ease-out;
+        }
+
+        @keyframes slideUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        header {
+            text-align: center;
+            margin-bottom: 2.5rem;
+            padding-bottom: 1.5rem;
+            border-bottom: 2px solid transparent;
+            background: linear-gradient(90deg, transparent, var(--border-color), transparent) bottom;
+            background-size: 100% 2px;
+            background-repeat: no-repeat;
+        }
+
+        h1 {
+            background: var(--primary-gradient);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin: 0 0 0.5rem 0;
+            font-size: 2.5rem;
+            font-weight: 800;
+            letter-spacing: -0.5px;
+            animation: gradientShift 3s ease infinite;
+        }
+
+        @keyframes gradientShift {
+
+            0%,
+            100% {
+                filter: hue-rotate(0deg);
+            }
+
+            50% {
+                filter: hue-rotate(10deg);
+            }
+        }
+
+        header p {
+            color: var(--text-secondary);
+            font-size: 1.1rem;
+            font-weight: 500;
+            margin: 0;
+        }
+
+        .stats-bar {
+            display: flex;
+            justify-content: space-between;
+            background: linear-gradient(135deg, rgba(102, 126, 234, 0.1), rgba(118, 75, 162, 0.1));
+            padding: 16px 24px;
+            border-radius: 16px;
+            margin-bottom: 24px;
+            font-weight: 600;
+            font-size: 0.95rem;
+            border: 1px solid var(--border-color);
+            box-shadow: var(--shadow-sm);
+            transition: all 0.3s ease;
+        }
+
+        .stats-bar:hover {
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-md);
+        }
+
+        .question-container {
+            margin-bottom: 2rem;
+            animation: fadeIn 0.4s ease-out;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateX(-10px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
+        }
+
+        .question-text {
+            font-size: 1.35rem;
+            font-weight: 700;
+            margin-bottom: 2rem;
+            color: var(--text-primary);
+            line-height: 1.5;
+            padding: 1.5rem;
+            background: linear-gradient(135deg, rgba(102, 126, 234, 0.05), rgba(118, 75, 162, 0.05));
+            border-radius: 16px;
+            border-left: 4px solid;
+            border-image: var(--primary-gradient) 1;
+        }
+
+        .options-grid {
+            display: grid;
+            gap: 14px;
+        }
+
+        .option-btn {
+            background: white;
+            border: 2px solid rgba(102, 126, 234, 0.2);
+            border-radius: 14px;
+            padding: 18px 20px;
+            text-align: left;
+            cursor: pointer;
+            font-size: 1.05rem;
+            font-weight: 500;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            position: relative;
+            overflow: hidden;
+            box-shadow: var(--shadow-sm);
+        }
+
+        .option-btn::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: var(--primary-gradient);
+            opacity: 0;
+            transition: all 0.4s ease;
+            z-index: -1;
+        }
+
+        .option-btn:hover:not([disabled]) {
+            border-color: #667eea;
+            transform: translateX(8px) scale(1.02);
+            box-shadow: var(--shadow-md);
+        }
+
+        .option-btn:hover:not([disabled])::before {
+            left: 0;
+            opacity: 0.1;
+        }
+
+        .option-btn.selected {
+            background: var(--primary-gradient);
+            color: white;
+            border-color: transparent;
+            font-weight: 600;
+            transform: scale(1.03);
+            box-shadow: var(--shadow-md), 0 0 20px rgba(102, 126, 234, 0.4);
+        }
+
+        .option-btn.selected::before {
+            opacity: 0;
+        }
+
+        .controls {
+            margin-top: auto;
+            display: flex;
+            justify-content: flex-end;
+            gap: 12px;
+            padding-top: 24px;
+        }
+
+        .btn {
+            padding: 14px 32px;
+            border-radius: 12px;
+            border: none;
+            font-weight: 700;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            position: relative;
+            overflow: hidden;
+            box-shadow: var(--shadow-md);
+        }
+
+        .btn::after {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 0;
+            height: 0;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.3);
+            transform: translate(-50%, -50%);
+            transition: width 0.6s, height 0.6s;
+        }
+
+        .btn:active::after {
+            width: 300px;
+            height: 300px;
+        }
+
+        .btn-primary {
+            background: var(--primary-gradient);
+            color: white;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .btn-primary:hover:not(:disabled) {
+            transform: translateY(-3px);
+            box-shadow: var(--shadow-lg), 0 0 30px rgba(102, 126, 234, 0.5);
+        }
+
+        .btn-primary:active:not(:disabled) {
+            transform: translateY(-1px);
+        }
+
+        .btn-secondary {
+            background: linear-gradient(135deg, #6b7280 0%, #4b5563 100%);
+            color: white;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .btn-secondary:hover:not(:disabled) {
+            transform: translateY(-3px);
+            box-shadow: var(--shadow-lg), 0 0 30px rgba(107, 114, 128, 0.5);
+        }
+
+        .btn-secondary:active:not(:disabled) {
+            transform: translateY(-1px);
+        }
+
+        .btn:disabled {
+            opacity: 0.4;
+            cursor: not-allowed;
+            transform: none !important;
+        }
+
+        #results-screen {
+            text-align: center;
+            display: none;
+            animation: scaleIn 0.5s ease-out;
+        }
+
+        @keyframes scaleIn {
+            from {
+                opacity: 0;
+                transform: scale(0.9);
+            }
+
+            to {
+                opacity: 1;
+                transform: scale(1);
+            }
+        }
+
+        #results-screen h2 {
+            font-size: 2.5rem;
+            font-weight: 800;
+            background: var(--primary-gradient);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: 2rem;
+        }
+
+        .score-circle {
+            width: 200px;
+            height: 200px;
+            border-radius: 50%;
+            background: var(--primary-gradient);
+            color: white;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            margin: 0 auto 2.5rem;
+            font-size: 3.5rem;
+            font-weight: 800;
+            box-shadow: var(--shadow-lg), 0 0 60px rgba(102, 126, 234, 0.6);
+            position: relative;
+            animation: pulse 2s ease-in-out infinite;
+        }
+
+        @keyframes pulse {
+
+            0%,
+            100% {
+                transform: scale(1);
+                box-shadow: var(--shadow-lg), 0 0 60px rgba(102, 126, 234, 0.6);
+            }
+
+            50% {
+                transform: scale(1.05);
+                box-shadow: var(--shadow-lg), 0 0 80px rgba(102, 126, 234, 0.8);
+            }
+        }
+
+        .score-circle::before {
+            content: '';
+            position: absolute;
+            top: -10px;
+            left: -10px;
+            right: -10px;
+            bottom: -10px;
+            border-radius: 50%;
+            background: var(--primary-gradient);
+            opacity: 0.3;
+            z-index: -1;
+            animation: rotate 3s linear infinite;
+        }
+
+        @keyframes rotate {
+            from {
+                transform: rotate(0deg);
+            }
+
+            to {
+                transform: rotate(360deg);
+            }
+        }
+
+        .score-label {
+            font-size: 1.1rem;
+            font-weight: 600;
+            opacity: 0.95;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        #results-screen p {
+            font-size: 1.2rem;
+            color: var(--text-secondary);
+            margin: 1rem 0;
+            font-weight: 500;
+        }
+
+        #results-message {
+            font-size: 1.5rem !important;
+            font-weight: 700 !important;
+            background: var(--secondary-gradient);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin: 1.5rem 0 !important;
+        }
+
+        .progress-container {
+            width: 100%;
+            background: rgba(102, 126, 234, 0.1);
+            border-radius: 12px;
+            height: 12px;
+            margin-bottom: 24px;
+            overflow: hidden;
+            box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+
+        .progress-bar {
+            height: 100%;
+            background: var(--primary-gradient);
+            border-radius: 12px;
+            width: 0%;
+            transition: width 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+            box-shadow: 0 0 20px rgba(102, 126, 234, 0.5);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .progress-bar::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            bottom: 0;
+            right: 0;
+            background: linear-gradient(90deg,
+                    transparent,
+                    rgba(255, 255, 255, 0.3),
+                    transparent);
+            animation: shimmer 2s infinite;
+        }
+
+        @keyframes shimmer {
+            0% {
+                transform: translateX(-100%);
+            }
+
+            100% {
+                transform: translateX(100%);
+            }
+        }
+
+        @media (max-width: 600px) {
+            .container {
+                padding: 1.5rem;
+                border-radius: 20px;
+            }
+
+            h1 {
+                font-size: 2rem;
+            }
+
+            .question-text {
+                font-size: 1.15rem;
+                padding: 1.2rem;
+            }
+
+            .option-btn {
+                padding: 14px 16px;
+                font-size: 0.95rem;
+            }
+
+            .score-circle {
+                width: 160px;
+                height: 160px;
+                font-size: 2.8rem;
+            }
+
+            .btn {
+                padding: 12px 24px;
+                font-size: 0.9rem;
+            }
+        }
+
+        /* Smooth scrolling */
+        html {
+            scroll-behavior: smooth;
+        }
+
+        /* Selection styling */
+        ::selection {
+            background: rgba(102, 126, 234, 0.3);
+            color: var(--text-primary);
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="container">
+        <header>
+            <h1>Information Systems Today Quiz</h1>
+            <p>Chapters 1 - 4</p>
+        </header>
+
+        <div id="quiz-screen">
+            <div class="progress-container">
+                <div class="progress-bar" id="progress-bar"></div>
+            </div>
+
+            <div class="stats-bar">
+                <span>Question: <span id="current-question-num">1</span>/<span id="total-questions">75</span></span>
+                <span><!-- Score hidden during quiz --></span>
+            </div>
+
+            <div class="question-container">
+                <div class="question-text" id="question-text">Question goes here...</div>
+                <div class="options-grid" id="options-container">
+                    <!-- Options will be generated here -->
+                </div>
+            </div>
+
+            <div class="controls">
+                <button class="btn btn-secondary" id="prev-btn" onclick="previousQuestion()" style="display: none;">←
+                    Previous</button>
+                <button class="btn btn-primary" id="next-btn" onclick="nextQuestion()" disabled>Next Question →</button>
+            </div>
+        </div>
+
+        <div id="results-screen">
+            <h2>Quiz Complete!</h2>
+            <div class="score-circle">
+                <span id="final-score">0%</span>
+                <span class="score-label">Final Score</span>
+            </div>
+            <p id="results-message">Well done!</p>
+            <p>You answered <span id="correct-count">0</span> out of <span id="total-count">0</span> questions
+                correctly.</p>
+            <button class="btn btn-primary" onclick="restartQuiz()">Retake Quiz</button>
+        </div>
+    </div>
+
+    <script>
+        // Question Data from Chapters 1-4
+        const questionBank = [
+            // CHAPTER 1: Managing in the Digital World
+            {
+                q: "What concept refers to the amount of connected data per unit of activity, which enables new business models like Uber?",
+                options: ["Digital Divide", "Digital Density", "Knowledge Society", "Open Innovation"],
+                answer: 1
+            },
+            {
+                q: "Who coined the term 'knowledge worker' more than 60 years ago?",
+                options: ["Bill Gates", "Steve Jobs", "Peter Drucker", "Mark Zuckerberg"],
+                answer: 2
+            },
+            {
+                q: "Which of the following best describes the 'Digital Divide'?",
+                options: ["The gap between those with computer access/literacy and those without", "The difference between analog and digital signals", "The separation between IT and marketing departments", "The distinction between hardware and software"],
+                answer: 0
+            },
+            {
+                q: "Which concept entails opening up the innovation process to outside entities such as customers, suppliers, and external researchers?",
+                options: ["Closed Innovation", "Internal R&D", "Open Innovation", "Outsourcing"],
+                answer: 2
+            },
+            {
+                q: "Which of the following is NOT considered a component of an Information System?",
+                options: ["People", "Information Technology", "Data", "Competitors"],
+                answer: 3
+            },
+            {
+                q: "What is the definitions of 'Data' in the context of IS?",
+                options: ["Formatted information useful for decision making", "Raw symbols, such as characters and numbers, with no inherent meaning", "Knowledge applied to a specific task", "A summary of business transactions"],
+                answer: 1
+            },
+            {
+                q: "When data is formatted, organized, or processed to be useful, it becomes:",
+                options: ["Knowledge", "Wisdom", "Information", "Big Data"],
+                answer: 2
+            },
+            {
+                q: "What does the acronym 'PAPA' stand for in the context of information ethics?",
+                options: ["Privacy, Accuracy, Property, Accessibility", "Public, Available, Protected, Authorized", "People, Applications, Processes, Automation", "Privacy, Authorization, Protection, Access"],
+                answer: 0
+            },
+            {
+                q: "The integration of economies throughout the world, enabled by innovation and technological progress, is called:",
+                options: ["Urbanization", "Globalization", "Industrialization", "Digitization"],
+                answer: 1
+            },
+            {
+                q: "Moving business processes or tasks to another company is known as:",
+                options: ["Downsizing", "Outsourcing", "Insourcing", "Rightsizing"],
+                answer: 1
+            },
+            {
+                q: "Which of the following is a 'Megatrend' shaping the digital future?",
+                options: ["Mobile", "Social Media", "Internet of Things (IoT)", "All of the above"],
+                answer: 3
+            },
+            {
+                q: "What does the 'Internet of Things' (IoT) refer to?",
+                options: ["A network of physical objects that can share data over the internet", "The connection between internet service providers", "A new social media platform", "The World Wide Web"],
+                answer: 0
+            },
+            {
+                q: "Which ethical issue is concerned with who owns information about individuals and how information can be sold/exchanged?",
+                options: ["Privacy", "Accuracy", "Property", "Accessibility"],
+                answer: 2
+            },
+            {
+                q: "A 'knowledge society' is one where:",
+                options: ["Manual labor is the primary source of wealth", "Education is the cornerstone and knowledge is a key asset", "Computers replace all human workers", "Manufacturing is the dominant industry"],
+                answer: 1
+            },
+            {
+                q: "The 'quantified self' movement refers to:",
+                options: ["Using sensors to track daily life and self-improvement", "Selling personal data to corporations", "Counting the number of friends on social media", "Measuring net worth accurately"],
+                answer: 0
+            },
+            {
+                q: "Which is NOT a primary reason companies outsource?",
+                options: ["To reduce or control costs", "To free up internal resources", "To increase government regulation", "To focus on core activities"],
+                answer: 2
+            },
+            {
+                q: "What is the 'network effect'?",
+                options: ["The speed of the internet increases with more cables", "The value of a network increases with the number of other users", "The cost of networking decreases over time", "Networks become slower with more users"],
+                answer: 1
+            },
+            {
+                q: "A website asking for permission to send a weekly newsletter is an example of:",
+                options: ["Opt-out", "Opt-in", "Data Mining", "Spam"],
+                answer: 1
+            },
+            {
+                q: "Which of the following is considered 'Intellectual Property'?",
+                options: ["A physical building", "Software code", "Raw land", "A generic fact"],
+                answer: 1
+            },
+
+            // CHAPTER 2: Gaining Competitive Advantage
+            {
+                q: "Which organizational level focuses on long-term strategic questions like 'Which products should we produce?'",
+                options: ["Operational Level", "Managerial Level", "Executive Level", "Technical Level"],
+                answer: 2
+            },
+            {
+                q: "At the operational level, decisions are typically:",
+                options: ["Unstructured and ad-hoc", "Semistructured", "Structured and recurring", "Complex and long-term"],
+                answer: 2
+            },
+            {
+                q: "Which strategy involves offering the best prices in the industry on goods or services?",
+                options: ["Differentiation Strategy", "Low-cost Leadership Strategy", "Best-cost Provider Strategy", "Niche Strategy"],
+                answer: 1
+            },
+            {
+                q: "What does the 'Freemium' revenue model entail?",
+                options: ["Everything is free forever", "Giving away a limited version for free and charging for premium features", "Charging a flat subscription fee", "Generating revenue solely through ads"],
+                answer: 1
+            },
+            {
+                q: "The 'Long Tail' refers to:",
+                options: ["The long time it takes to develop software", "Catering to niche markets in addition to mainstream products", "The physical shape of fiber optic cables", "A long-term marketing strategy"],
+                answer: 1
+            },
+            {
+                q: "Uber and Airbnb are prime examples of what type of business model?",
+                options: ["Manufacturing", "Pipe-based", "Platform-based", "Franchise"],
+                answer: 2
+            },
+            {
+                q: "Which term describes an economic system where assets or services are shared between private individuals, often via the internet?",
+                options: ["The Sharing Economy", "Socialism", "Capitalism", "The Gig Economy"],
+                answer: 0
+            },
+            {
+                q: "In the 'Lean Startup' methodology, what is an MVP?",
+                options: ["Most Valuable Professional", "Minimum Viable Product", "Maximum Viable Product", "Market Value Price"],
+                answer: 1
+            },
+            {
+                q: "Which innovation type uses a markedly new or different technology to replace existing products?",
+                options: ["Incremental Innovation", "Radical (Disruptive) Innovation", "Process Innovation", "Brand Innovation"],
+                answer: 1
+            },
+            {
+                q: "What are 'Key Performance Indicators' (KPIs)?",
+                options: ["Passwords for executives", "Metrics deemed most critical to assessing progress toward a goal", "A list of all employees", "A type of computer chip"],
+                answer: 1
+            },
+            {
+                q: "Porter's Five Forces model helps organizations analyze:",
+                options: ["The internal value chain", "The software development lifecycle", "The competitive forces within an industry", "Employee performance"],
+                answer: 2
+            },
+            {
+                q: "Which value chain activity involves receiving and stocking raw materials?",
+                options: ["Outbound Logistics", "Operations", "Inbound Logistics", "Marketing and Sales"],
+                answer: 2
+            },
+            {
+                q: "Using information systems to enable the same work to be done with fewer people is an example of:",
+                options: ["Automating", "Learning", "Strategizing", "Outsourcing"],
+                answer: 0
+            },
+            {
+                q: "The 'Gig Economy' is characterized by:",
+                options: ["Long-term employment contracts", "Workers hired for short-term, temporary jobs", "Government-controlled jobs", "Manufacturing-based jobs"],
+                answer: 1
+            },
+            {
+                q: "First-mover advantage refers to:",
+                options: ["The first person to leave the office", "Being the first to enter a market", "Moving the headquarters to a cheaper location", "The advantage of having the fastest computer"],
+                answer: 1
+            },
+            {
+                q: "Crowdfunding is:",
+                options: ["A large group of people gathering in a cloud", "Securing business financing from individuals in the marketplace", "Outsourcing tasks to a crowd", "A social media platform"],
+                answer: 1
+            },
+            {
+                q: "Which is NOT one of Porter's primary competitive forces?",
+                options: ["Threat of new entrants", "Bargaining power of customers", "Government regulation", "Threat of substitute products"],
+                answer: 2
+            },
+            {
+                q: "Value Chain Analysis helps organizations to:",
+                options: ["Determine where value is added and costs are incurred", "Create a supply chain", "Calculate taxes", "Manage human resources only"],
+                answer: 0
+            },
+            {
+                q: "A 'Pivot' in the lean startup context means:",
+                options: ["Rotating an image", "Changing direction while being grounded in what was learned", "Failing completely and quitting", "Staying the course regardless of feedback"],
+                answer: 1
+            },
+
+            // CHAPTER 3: Managing IS Infrastructure
+            {
+                q: "Which of the following is NOT a component of the IS infrastructure?",
+                options: ["Hardware", "System Software", "Business Processes", "Data Centers"],
+                answer: 2
+            },
+            {
+                q: "Which computing model allows organizations to rent resources on an as-needed basis?",
+                options: ["Grid Computing", "Utility Computing / Cloud Computing", "Mainframe Computing", "Client-Server Computing"],
+                answer: 1
+            },
+            {
+                q: "Moore's Law predicts that the number of transistors on a chip will double about every:",
+                options: ["6 months", "2 years", "5 years", "10 years"],
+                answer: 1
+            },
+            {
+                q: "Which cloud service model provides only the basic capabilities of processing, storage, and networking?",
+                options: ["Software as a Service (SaaS)", "Platform as a Service (PaaS)", "Infrastructure as a Service (IaaS)", "Database as a Service (DBaaS)"],
+                answer: 2
+            },
+            {
+                q: "Salesforce.com is a prime example of which cloud service model?",
+                options: ["IaaS", "PaaS", "SaaS", "Private Cloud"],
+                answer: 2
+            },
+            {
+                q: "What is 'Grid Computing'?",
+                options: ["Using a grid of excel sheets", "Combining many small, networked computers to solve a large problem", "The power grid", "A type of graph"],
+                answer: 1
+            },
+            {
+                q: "Which of the following is system software that controls the computer's basic operations?",
+                options: ["Microsoft Word", "Google Chrome", "The Operating System (e.g., Windows)", "A Video Game"],
+                answer: 2
+            },
+            {
+                q: "What is 'Green Computing'?",
+                options: ["Using only green colored computers", "Using computing resources efficiently to reduce environmental impact", "Computers used in agriculture", "Recycling old paper"],
+                answer: 1
+            },
+            {
+                q: "Which network type typically spans a city-wide area?",
+                options: ["Personal Area Network (PAN)", "Local Area Network (LAN)", "Metropolitan Area Network (MAN)", "Wide Area Network (WAN)"],
+                answer: 2
+            },
+            {
+                q: "The Internet is essentially a:",
+                options: ["Large Wide Area Network (WAN)", "Local Area Network (LAN)", "Personal Area Network (PAN)", "Mainframe"],
+                answer: 0
+            },
+            {
+                q: "What is the standard protocol of the Internet?",
+                options: ["Ethernet", "TCP/IP", "Bluetooth", "USB"],
+                answer: 1
+            },
+            {
+                q: "Which represents the hierarchy of domain names correctly? (e.g. www.google.com)",
+                options: ["Host.Domain.Top-level Domain", "Top-level Domain.Domain.Host", "Domain.Host.Top-level Domain", "None of the above"],
+                answer: 0
+            },
+            {
+                q: "Which cloud model is used exclusively by a single organization?",
+                options: ["Public Cloud", "Private Cloud", "Hybrid Cloud", "Community Cloud"],
+                answer: 1
+            },
+            {
+                q: "Service-Oriented Architecture (SOA) breaks business processes down into:",
+                options: ["Silos", "Individual services", "Large monolithic blocks", "Hardware components"],
+                answer: 1
+            },
+            {
+                q: "What is a 'Content Delivery Network' (CDN)?",
+                options: ["A TV station", "A network of servers in various locations to store copies of content closer to users", "A shipping company", "A social media site"],
+                answer: 1
+            },
+            {
+                q: "Which represents a human-readable address for a website?",
+                options: ["IP Address", "URL (Uniform Resource Locator)", "MAC Address", "HTML"],
+                answer: 1
+            },
+            {
+                q: "Which storage type is volatile (loses data when power is off)?",
+                options: ["Hard Drive", "Flash Drive", "RAM (Random Access Memory)", "Optical Disk"],
+                answer: 2
+            },
+            {
+                q: "IP Convergence refers to:",
+                options: ["The end of the internet", "The use of IP for transporting voice, video, fax, and data traffic", "Combining IP addresses", "None of the above"],
+                answer: 1
+            },
+            {
+                q: "Which is a benefit of Cloud Computing?",
+                options: ["Rapid Elasticity", "On-Demand Self-Service", "Measured Service", "All of the above"],
+                answer: 3
+            },
+
+            // CHAPTER 4: E-Commerce
+            {
+                q: "Which type of EC involves transactions between businesses and consumers?",
+                options: ["B2B", "B2C", "C2C", "G2C"],
+                answer: 1
+            },
+            {
+                q: "Which is the largest form of EC in terms of revenue?",
+                options: ["B2C", "B2B", "C2C", "C2B"],
+                answer: 1
+            },
+            {
+                q: "eBay is a prime example of which EC model?",
+                options: ["B2B", "B2C", "C2C", "G2B"],
+                answer: 2
+            },
+            {
+                q: "Which strategy involves operating solely in the physical world (no online sales)?",
+                options: ["Click-only", "Click-and-Mortar", "Brick-and-Mortar", "Pure Play"],
+                answer: 2
+            },
+            {
+                q: "What is 'Disintermediation'?",
+                options: ["Adding more middlemen", "Cutting out the 'middleman' to sell directly to customers", "Destroying media", "Breaking the internet"],
+                answer: 1
+            },
+            {
+                q: "What is 'Mass Customization'?",
+                options: ["Selling the same product to everyone", "Tailoring products to individual needs on a large scale", "Handcrafting every item", "Selling only to masses"],
+                answer: 1
+            },
+            {
+                q: "What is 'Showrooming'?",
+                options: ["Displaying products in a window", "Shoppers examining a product in a store then purchasing it online for less", "Selling furniture", "Using VR to show rooms"],
+                answer: 1
+            },
+            {
+                q: "Which pricing model does Priceline.com use (Name Your Own Price)?",
+                options: ["Menu-driven pricing", "Dynamic pricing", "Fixed pricing", "Subscription pricing"],
+                answer: 1
+            },
+            {
+                q: "Which concept refers to the principle that all internet data should be treated the same?",
+                options: ["Net Neutrality", "Digital Divide", "Censorship", "Traffic Shaping"],
+                answer: 0
+            },
+            {
+                q: "What is 'SEO'?",
+                options: ["Search Engine Operations", "Search Engine Optimization", "System Error Output", "Standard Electronic Order"],
+                answer: 1
+            },
+            {
+                q: "In internet marketing, 'Conversion Rate' refers to:",
+                options: ["The number of clicks on an ad", "The percentage of visitors who perform a desired action (e.g., purchase)", "The speed of the website", "The cost per click"],
+                answer: 1
+            },
+            {
+                q: "Paying a fee for every time a user clicks on an ad is known as:",
+                options: ["Pay-per-view", "Pay-per-click", "Impression-based", "Subscription"],
+                answer: 1
+            },
+            {
+                q: "Which form of EC involves the government providing services to citizens (e.g., e-filing taxes)?",
+                options: ["G2B", "G2G", "G2C", "C2G"],
+                answer: 2
+            },
+            {
+                q: "Digital Rights Management (DRM) is used to:",
+                options: ["Protect intellectual property by limiting illegal copying", "Manage digital marketing", "Organize digital files", "Speed up downloads"],
+                answer: 0
+            },
+            {
+                q: "What is a QR code?",
+                options: ["Quality Report", "Quick Response code (2D barcode)", "Question Response", "Quantity Rate"],
+                answer: 1
+            },
+            {
+                q: "Which allows customers to scan items in a store and find online reviews/prices?",
+                options: ["Mobile Commerce", "E-Government", "Grid Computing", "Group Buying"],
+                answer: 0
+            },
+            {
+                q: "The 'long tail' business model is often successful for e-tailers because:",
+                options: ["They have high storage costs", "They are limited by shelf space", "They can offer a virtually unlimited variety of niche products", "They only sell hit products"],
+                answer: 2
+            },
+            {
+                q: "Which is a potential drawback of e-tailing?",
+                options: ["Unlimited product variety", "Lack of trust / inability to touch product", "Global reach", "Lower prices"],
+                answer: 1
+            }
+        ];
+
+        let currentQuestionIndex = 0;
+        let score = 0;
+        let shuffledQuestions = [];
+        let selectedOptionIndex = null; // Track current selection
+        let userAnswers = []; // Store all user answers for back navigation
+        const STORAGE_KEY = 'quiz_progress';
+
+        // DOM Elements
+        const questionText = document.getElementById('question-text');
+        const optionsContainer = document.getElementById('options-container');
+        const nextBtn = document.getElementById('next-btn');
+        const currentQuestionNumEl = document.getElementById('current-question-num');
+        const totalQuestionsEl = document.getElementById('total-questions');
+        const quizScreen = document.getElementById('quiz-screen');
+        const resultsScreen = document.getElementById('results-screen');
+        const progressBar = document.getElementById('progress-bar');
+        const prevBtn = document.getElementById('prev-btn');
+
+        // Shuffle array function
+        function shuffleArray(array) {
+            for (let i = array.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [array[i], array[j]] = [array[j], array[i]];
+            }
+            return array;
+        }
+
+        function initQuiz() {
+            // Check for saved progress
+            const savedProgress = loadProgress();
+
+            if (savedProgress && savedProgress.shuffledQuestions) {
+                // Resume from saved progress
+                currentQuestionIndex = savedProgress.currentQuestionIndex;
+                score = savedProgress.score;
+                shuffledQuestions = savedProgress.shuffledQuestions;
+                userAnswers = savedProgress.userAnswers || [];
+
+                // Show resume notification
+                if (currentQuestionIndex > 0) {
+                    const resume = confirm(`You have progress saved at question ${currentQuestionIndex + 1}. Would you like to resume?`);
+                    if (!resume) {
+                        // Start fresh
+                        startFreshQuiz();
+                        return;
+                    }
+                }
+            } else {
+                // Start fresh
+                startFreshQuiz();
+            }
+
+            // Update UI
+            totalQuestionsEl.textContent = shuffledQuestions.length;
+            quizScreen.style.display = 'block';
+            resultsScreen.style.display = 'none';
+
+            loadQuestion();
+        }
+
+        function startFreshQuiz() {
+            currentQuestionIndex = 0;
+            score = 0;
+            selectedOptionIndex = null;
+            userAnswers = [];
+            shuffledQuestions = shuffleArray([...questionBank]);
+            clearProgress();
+        }
+        function loadQuestion() {
+            const currentQuestion = shuffledQuestions[currentQuestionIndex];
+
+            // Check if we have a saved answer for this question
+            if (userAnswers[currentQuestionIndex] !== undefined) {
+                selectedOptionIndex = userAnswers[currentQuestionIndex];
+            } else {
+                selectedOptionIndex = null;
+            }
+
+            // Update progress
+            currentQuestionNumEl.textContent = currentQuestionIndex + 1;
+            const progressPercent = ((currentQuestionIndex) / shuffledQuestions.length) * 100;
+            progressBar.style.width = `${progressPercent}%`;
+
+            // Set question text
+            questionText.textContent = currentQuestion.q;
+
+            // Clear previous options
+            optionsContainer.innerHTML = '';
+            nextBtn.disabled = selectedOptionIndex === null; // Enable if answer exists
+
+            // Show/hide previous button
+            prevBtn.style.display = currentQuestionIndex > 0 ? 'block' : 'none';
+
+            // Create option buttons
+            currentQuestion.options.forEach((option, index) => {
+                const button = document.createElement('div');
+                button.className = 'option-btn';
+                button.textContent = option;
+                button.onclick = () => selectAnswer(index);
+
+                // Restore previous selection
+                if (index === selectedOptionIndex) {
+                    button.classList.add('selected');
+                }
+
+                optionsContainer.appendChild(button);
+            });
+
+            // Save progress
+            saveProgress();
+        }
+
+        function selectAnswer(index) {
+            selectedOptionIndex = index;
+            userAnswers[currentQuestionIndex] = index;
+
+            // Update UI to show selection
+            const options = document.querySelectorAll('.option-btn');
+            options.forEach((btn, i) => {
+                if (i === index) {
+                    btn.classList.add('selected');
+                } else {
+                    btn.classList.remove('selected');
+                }
+            });
+
+            // Enable next button
+            nextBtn.disabled = false;
+
+            // Save progress
+            saveProgress();
+        }
+
+        function nextQuestion() {
+            // Recalculate score before moving to the next question or showing results
+            recalculateScore();
+
+            currentQuestionIndex++;
+
+            if (currentQuestionIndex < shuffledQuestions.length) {
+                loadQuestion();
+            } else {
+                showResults();
+            }
+        }
+
+        function previousQuestion() {
+            if (currentQuestionIndex > 0) {
+                currentQuestionIndex--;
+                loadQuestion();
+            }
+        }
+
+        function recalculateScore() {
+            score = 0;
+            for (let i = 0; i < userAnswers.length; i++) {
+                if (userAnswers[i] !== undefined && shuffledQuestions[i] && userAnswers[i] === shuffledQuestions[i].answer) {
+                    score++;
+                }
+            }
+        }
+        function showResults() {
+            // Final score calculation
+            recalculateScore();
+
+            quizScreen.style.display = 'none';
+            resultsScreen.style.display = 'block';
+
+            const percentage = Math.round((score / shuffledQuestions.length) * 100);
+            document.getElementById('final-score').textContent = `${percentage}%`;
+            document.getElementById('correct-count').textContent = score;
+            document.getElementById('total-count').textContent = shuffledQuestions.length;
+
+            const messageEl = document.getElementById('results-message');
+            if (percentage >= 90) messageEl.textContent = "Outstanding! You're an IS master!";
+            else if (percentage >= 80) messageEl.textContent = "Great job! You know your stuff.";
+            else if (percentage >= 70) messageEl.textContent = "Good effort! Keep studying.";
+            else messageEl.textContent = "Keep reviewing the chapters. You can do better!";
+
+            // Clear saved progress
+            clearProgress();
+        }
+
+        function restartQuiz() {
+            clearProgress();
+            startFreshQuiz();
+            totalQuestionsEl.textContent = shuffledQuestions.length;
+            quizScreen.style.display = 'block';
+            resultsScreen.style.display = 'none';
+            loadQuestion();
+        }
+
+        // LocalStorage functions
+        function saveProgress() {
+            const progress = {
+                currentQuestionIndex,
+                score,
+                shuffledQuestions,
+                userAnswers,
+                timestamp: Date.now()
+            };
+            localStorage.setItem(STORAGE_KEY, JSON.stringify(progress));
+        }
+
+        function loadProgress() {
+            const saved = localStorage.getItem(STORAGE_KEY);
+            if (!saved) return null;
+
+            try {
+                const progress = JSON.parse(saved);
+                // Check if progress is less than 7 days old
+                const daysSinceLastSave = (Date.now() - progress.timestamp) / (1000 * 60 * 60 * 24);
+                if (daysSinceLastSave > 7) {
+                    clearProgress();
+                    return null;
+                }
+                return progress;
+            } catch (e) {
+                clearProgress();
+                return null;
+            }
+        }
+
+        function clearProgress() {
+            localStorage.removeItem(STORAGE_KEY);
+        }
+
+        // Start the quiz on load
+        initQuiz();
+
+    </script>
+
+</body>
+
+</html>

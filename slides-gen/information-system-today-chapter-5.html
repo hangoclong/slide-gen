@@ -1,0 +1,1151 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Chapter 5: Enhancing Organizational Communication and Collaboration Using Social Media</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Roboto+Mono&display=swap" rel="stylesheet">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js" integrity="sha512-GsLlZN/3F2ErC5ifS5QtgpiJtWd43JWSuIgh7mbzZ8zBps+dvLusV+eNQATqgA/HdeKFVgA5v3S/cIrLF7QnIg==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    <script src="https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.min.js"></script>
+    <style>
+        :root {
+            --bg-grad-start: #f5f3ff;
+            --bg-grad-end: #ddd6fe;
+            --bg-grad-mid-1: #f5f3ff;
+            --bg-grad-mid-2: #ede9fe;
+            --bg-grad-mid-3: #ddd6fe;
+            --text-primary: #334155;
+            --header-main: #4338ca;
+            --header-sub: #4f46e5;
+            --border-header: #a5b4fc;
+            --nav-button-bg: #4f46e5;
+            --nav-button-hover-bg: #4338ca;
+            --info-card-border: #6366f1;
+            --conclusion-border: #6366f1;
+            --conclusion-text: #4338ca;
+            --process-step-bg: #eef2ff;
+            --process-step-border: #c7d2fe;
+            --step-number-bg: #4f46e5;
+            --inline-code-bg: #eef2ff;
+            --inline-code-text: #312e81;
+            --layer-box-bg: #e0e7ff;
+            --layer-box-border: #c7d2fe;
+            --flow-arrow-color: #6366f1;
+            --scrollbar-thumb: #a78bfa;
+            --scrollbar-track: #ddd6fe;
+        }
+
+        /* --- Base and Layout --- */
+        html, body { height: 100%; margin: 0; padding: 0; overflow: hidden; }
+        body { display: flex; justify-content: center; align-items: center; background: linear-gradient(135deg, var(--bg-grad-start) 0%, var(--bg-grad-end) 100%); font-family: 'Poppins', sans-serif; color: var(--text-primary); transition: background 0.3s ease; }
+        .presentation-container { position: relative; aspect-ratio: 16 / 9; width: 100%; height: auto; max-width: 100vw; max-height: 100vh; background-color: var(--bg-grad-start); box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1), 0 4px 10px rgba(0, 0, 0, 0.05); border-radius: 8px; display: flex; flex-direction: column; overflow: hidden; }
+        @media (min-aspect-ratio: 16/9) { .presentation-container { width: auto; height: 100%; } }
+
+        /* --- Slide Styling --- */
+        .slide { flex-grow: 1; padding: clamp(1.8rem, 3.5vh, 2.8rem) clamp(2.2rem, 4.5vw, 4.0rem); padding-bottom: calc(clamp(1.8rem, 3.5vh, 2.8rem) + 55px); overflow-y: auto; display: none; flex-direction: column; line-height: 1.7; scrollbar-width: thin; scrollbar-color: var(--scrollbar-thumb) var(--scrollbar-track); position: relative; background-color: var(--bg-grad-start); background-image: linear-gradient(160deg, var(--bg-grad-mid-1) 0%, var(--bg-grad-mid-2) 30%, var(--bg-grad-mid-3) 70%, var(--bg-grad-end) 100%); aspect-ratio: 16 / 9; height: 100%; box-sizing: border-box; transition: background-image 0.3s ease; }
+        .slide::-webkit-scrollbar { width: 8px; }
+        .slide::-webkit-scrollbar-track { background: var(--scrollbar-track); border-radius: 4px; }
+        .slide::-webkit-scrollbar-thumb { background-color: var(--scrollbar-thumb); border-radius: 4px; border: 2px solid var(--scrollbar-track); }
+        .slide.active { display: flex; }
+
+        /* --- Footer and Controls --- */
+        .slide-footer { position: absolute; bottom: 0; left: 0; width: 100%; z-index: 15; background-color: rgba(248, 250, 252, 0.85); backdrop-filter: blur(4px); border-top: 1px solid rgba(209, 213, 219, 0.5); padding: clamp(0.2rem, 0.4vh, 0.3rem) clamp(1rem, 2vw, 2rem); display: flex; justify-content: space-between; align-items: center; opacity: 0; visibility: hidden; transition: opacity 0.3s ease-in-out, visibility 0.3s ease-in-out; pointer-events: none; }
+        .slide-footer.show-footer { opacity: 1; visibility: visible; pointer-events: auto; }
+        .footer-controls { display: flex; align-items: center; gap: clamp(0.6rem, 1.1vw, 1.1rem); }
+        .nav-button, .options-button, .reveal-answer-btn { padding: clamp(0.25rem, 0.5vh, 0.4rem) clamp(0.9rem, 1.3vw, 1.3rem); background-color: var(--nav-button-bg); color: white; border-radius: 4px; text-decoration: none; font-size: clamp(0.8rem, 1.3vh, 0.9rem); font-weight: 500; transition: background-color 0.2s ease-in-out, opacity 0.2s ease-in-out, box-shadow 0.2s ease-in-out; border: none; cursor: pointer; line-height: 1.4; }
+        .nav-button:hover:not(:disabled), .options-button:hover, .reveal-answer-btn:hover { background-color: var(--nav-button-hover-bg); box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1); }
+        .nav-button:disabled { background-color: #d1d5db; color: #6b7280; cursor: not-allowed; opacity: 0.8; box-shadow: none; }
+        .options-button { background-color: #64748b; padding: clamp(0.25rem, 0.5vh, 0.4rem); line-height: 0; }
+        .options-button:hover { background-color: #475569; }
+        .options-button svg { width: clamp(1.0rem, 1.6vh, 1.2rem); height: clamp(1.0rem, 1.6vh, 1.2rem); fill: white; }
+
+        /* --- Settings/Export Drawer Menu --- */
+        #settingsDrawer { position: absolute; bottom: 0; left: 0; width: 100%; background-color: #ffffff; border-top: 1px solid #e2e8f0; box-shadow: 0 -4px 12px rgba(0, 0, 0, 0.1); padding: clamp(1rem, 2vh, 1.5rem) clamp(1.5rem, 3vw, 2rem); transform: translateY(100%); transition: transform 0.3s ease-in-out; z-index: 25; }
+        #settingsDrawer.active { transform: translateY(0); }
+        .drawer-section { margin-bottom: 1rem; }
+        .drawer-section:last-child { margin-bottom: 0; }
+        .drawer-section h3 { font-size: 1rem; font-weight: 600; color: #475569; margin-bottom: 0.75rem; text-align: center; }
+        .drawer-buttons-container { display: flex; justify-content: center; align-items: center; gap: clamp(0.6rem, 1.1vw, 1.1rem); flex-wrap: wrap; }
+        .drawer-button { padding: clamp(0.6rem, 1.1vh, 0.8rem) clamp(1.1rem, 1.6vw, 1.6rem); background-color: #16a34a; color: white; border: none; border-radius: 4px; font-size: clamp(0.95rem, 1.6vh, 1.05rem); font-weight: 500; cursor: pointer; transition: background-color 0.2s ease, opacity 0.2s ease; }
+        .drawer-button:hover:not(:disabled) { background-color: #15803d; }
+        .drawer-button:disabled { background-color: #9ca3af; cursor: not-allowed; opacity: 0.7; }
+        .theme-button { border: 2px solid transparent; }
+        .theme-button.active { border-color: var(--header-main); box-shadow: 0 0 0 2px var(--header-main); }
+
+        /* --- Content Styling --- */
+        .two-panel-wrapper { display: flex; width: 100%; height: 100%; align-items: stretch; }
+        .two-panel-wrapper.image-right { flex-direction: row-reverse; }
+        .image-panel { flex: 0 0 33%; position: relative; }
+        .image-panel img { position: absolute; top: 0; left: 0; width: 100%; height: 100%; object-fit: cover; border-radius: 20px; }
+        .text-panel { flex: 1 1 67%; padding: clamp(1.8rem, 3.5vh, 2.8rem) clamp(2.2rem, 4.5vw, 4.0rem); box-sizing: border-box; overflow-y: auto; }
+        .slide h1 { color: var(--header-main); font-size: clamp(2.5em, 4.0vw, 3.5em); font-weight: 700; margin-bottom: 1.4rem; padding-bottom: 0.6rem; line-height: 1.35; border-bottom: 3px solid var(--border-header); }
+        .slide.session-title-slide h1 { font-size: clamp(3.2em, 4.8vw, 4.5em); border-bottom: none; margin-bottom: 1.2rem; color: var(--header-main); }
+        .slide.session-title-slide h2 { font-size: clamp(1.7em, 2.8vw, 2.5em); font-weight: 400; margin-bottom: 1.0rem; color: var(--header-sub); }
+        .slide.session-title-slide .slide-content-wrapper { display: flex; flex-direction: column; justify-content: center; align-items: center; text-align: center; height: 100%; }
+        .slide h2 { color: var(--header-sub); font-size: clamp(1.6em, 2.4vw, 2.2em); font-weight: 600; margin-top: 1.8rem; margin-bottom: 1rem; }
+        .slide p, .slide ul, .slide ol { color: var(--text-primary); margin-bottom: 1rem; font-size: clamp(1.0em, 1.5vw, 1.3em); line-height: 1.8; }
+        .slide ul, .slide ol { margin-left: 1.8rem; margin-bottom: 1rem; }
+        .slide ul { list-style-type: disc; }
+        .slide ol { list-style-type: decimal; }
+        .slide li { margin-bottom: 0.8rem; }
+        .slide pre { background-color: #1e293b; color: #f8fafc; border: 1px solid #334155; padding: 0.9rem; border-radius: 6px; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word; font-family: 'Roboto Mono', 'Courier New', Courier, monospace; font-size: clamp(0.85em, 1.1vw, 1.0em); margin-top: 0.6rem; margin-bottom: 1.1rem; line-height: 1.5; }
+        .slide code { font-family: 'Roboto Mono', 'Courier New', Courier, monospace; }
+        .slide code.inline { background-color: var(--inline-code-bg); color: var(--inline-code-text); padding: 0.2em 0.5em; border-radius: 4px; font-size: 0.95em; white-space: normal; }
+        .slide .conclusion { font-weight: 600; margin-top: 1.4rem; border-left: 4px solid var(--conclusion-border); padding-left: 0.9rem; color: var(--conclusion-text); font-size: clamp(1.0em, 1.5vw, 1.3em); }
+        .info-card { background-color: #fff; border-radius: 8px; padding: clamp(0.9rem, 1.6vh, 1.3rem); box-shadow: 0 2px 4px rgba(0,0,0,0.05); border-left: 4px solid var(--info-card-border); margin-bottom: 0.9rem; }
+        .comparison-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: clamp(1rem, 2vw, 1.5rem); margin-top: 1.2rem; }
+        .comparison-card { background-color: #f8fafc; border: 1px solid #e2e8f0; border-radius: 8px; padding: clamp(0.9rem, 1.6vh, 1.3rem); }
+        .comparison-card h3 { font-weight: 600; color: var(--header-main); margin-bottom: 0.6rem; text-align: center; border-bottom: 2px solid var(--border-header); padding-bottom: 0.4rem; font-size: clamp(1.15em, 1.75vw, 1.55em); }
+        .process-step { display: flex; align-items: center; margin-bottom: 0.9rem; background-color: var(--process-step-bg); padding: 0.7rem; border-radius: 6px; border: 1px solid var(--process-step-border); }
+        .step-number { background-color: var(--step-number-bg); color: white; border-radius: 50%; width: clamp(26px, 3.2vh, 32px); height: clamp(26px, 3.2vh, 32px); display: inline-flex; justify-content: center; align-items: center; font-weight: 600; margin-right: 0.9rem; flex-shrink: 0; font-size: clamp(0.85em, 1.25vh, 0.95em); }
+        .slide .highlight { color: #dc2626; font-weight: 700; }
+        .slide .highlight-green { color: #16a34a; font-weight: 600; }
+        .summary-list-check li::before { content: '✔'; margin-right: 0.8rem; color: #16a34a; }
+        .ai-assist-prompt { background-color: #ecfdf5; border-left: 4px solid #10b981; padding: 0.8rem; margin-top: 1rem; border-radius: 4px; }
+        .ai-assist-prompt strong { color: #047857; }
+        .mermaid { background-color: #f8fafc; border: 1px solid #e2e8f0; border-radius: 8px; padding: 1rem; margin-top: 1rem; display: flex; justify-content: center; align-items: center; min-height: 150px; }
+        .answer-explanation { display: none; margin-top: 1rem; }
+
+        /* --- STYLES FOR PRINTING --- */
+        @media print {
+            .slide-footer, #settingsDrawer, .options-button, .nav-button, .slide-counter, .reveal-answer-btn { display: none !important; }
+            body { background: none !important; display: block !important; height: auto !important; overflow: visible !important; font-size: 10pt; }
+            .presentation-container { width: 100% !important; height: auto !important; max-width: none !important; max-height: none !important; box-shadow: none !important; border-radius: 0 !important; overflow: visible !important; aspect-ratio: auto !important; background-color: transparent !important; }
+            .slide { display: flex !important; flex-direction: column !important; width: 100% !important; height: 100vh !important; overflow: hidden !important; page-break-before: always !important; page-break-inside: avoid !important; padding: 0.5in !important; margin: 0 !important; border: none !important; box-shadow: none !important; aspect-ratio: auto !important; background-color: var(--bg-grad-start) !important; background-image: linear-gradient(160deg, var(--bg-grad-mid-1) 0%, var(--bg-grad-mid-2) 30%, var(--bg-grad-mid-3) 70%, var(--bg-grad-end) 100%) !important; -webkit-print-color-adjust: exact !important; print-color-adjust: exact !important; }
+            .slide:first-child { page-break-before: auto !important; }
+            .slide h1 { font-size: 18pt !important; }
+            .slide h2 { font-size: 14pt !important; }
+            .slide p, .slide ul, .slide ol, .slide li { font-size: 11pt !important; line-height: 1.4 !important; }
+            .slide code.inline, .slide pre code { font-size: 10pt !important; }
+            .slide pre { padding: 0.5rem !important; }
+            .info-card, .comparison-card, .process-step, .ai-assist-prompt { background-color: #fff !important; border-color: #ccc !important; box-shadow: none !important; }
+            .step-number { background-color: #ccc !important; color: #000 !important; }
+            .comparison-grid { grid-template-columns: 1fr !important; }
+            .mermaid { background-color: #f8fafc !important; -webkit-print-color-adjust: exact !important; print-color-adjust: exact !important; }
+            .mermaid svg { max-width: 100%; height: auto; }
+        }
+        @page { size: landscape; margin: 0.5in; }
+    </style>
+</head>
+<body>
+    <div class="presentation-container">
+
+        <!-- Slide 1: Title Slide -->
+        <div id="slide-1" class="slide active session-title-slide">
+            <div class="slide-content-wrapper">
+                <h1>Information Systems Today</h1>
+                <h2>Enhancing Organizational Communication and Collaboration Using Social Media</h2>
+                <p class="instructor-info" style="margin-top: 2rem;">Chapter 5</p>
+                <p class="instructor-info" style="margin-top: 2rem;">Instructor: N. Long Ha (PhD)</p>
+                <p class="instructor-info" style="margin-top: 2rem;">University of Economics, Hue University</p>
+            </div>
+        </div>
+
+        <!-- Slide 2: Learning Objectives -->
+        <div id="slide-2" class="slide">
+            <h1>Learning Objectives</h1>
+            <ol>
+                <li>Explain organizations' needs for communication and collaboration.</li>
+                <li>Explain social media and evolving web capabilities.</li>
+                <li>Describe various social media applications, and explain their role in enhancing communication, collaboration, cooperation, and connection.</li>
+                <li>Describe how companies can manage enterprise-oriented social media applications and deal with potential pitfalls associated with social media.</li>
+            </ol>
+        </div>
+
+        <!-- Slide 3: Preview: Social Media in Business -->
+        <div id="slide-3" class="slide">
+            <h1>Preview: Social Media in Business</h1>
+            <p>You use social media daily—Instagram, Facebook, Wikipedia. But why study it in a business context?</p>
+            <div class="info-card">
+                <p>Social media introduces unprecedented ways to:</p>
+                <ul>
+                    <li>Connect with friends and colleagues.</li>
+                    <li>Share knowledge instantly.</li>
+                    <li>Collaborate with global teams 5,000 miles away.</li>
+                </ul>
+            </div>
+            <p>Companies cannot afford to miss this trend. It is a critical skill for the modern workforce, and ignoring it can lead to losing talent and market relevance.</p>
+        </div>
+
+        <!-- Slide 4: Case Study: Managing in the Digital World -->
+        <div id="slide-4" class="slide">
+            <h1>Managing in the Digital World: The Facebook Phenomenon</h1>
+            <p>Interactions between customers and brands used to be one-way (TV ads, billboards). Today, it is dynamic and interactive.</p>
+            <ul>
+                <li><strong>Massive Scale:</strong> Billions of daily users.</li>
+                <li><strong>Deep Connection:</strong> "Like" buttons and comments allow businesses to track loyalty and sentiment instantly.</li>
+                <li><strong>Market Value:</strong> Social media giants have become some of the most valuable companies on earth.</li>
+            </ul>
+            <p class="conclusion">Through platforms like Facebook, companies can interact with customers like never before, predicting future demands through collective tastes.</p>
+        </div>
+
+        <!-- Slide 5: The Need for Communication and Collaboration -->
+        <div id="slide-5" class="slide">
+            <div class="two-panel-wrapper">
+                <div class="image-panel">
+                    <img src="img-information-system-today-chapter-5/slide-5.png" alt="Virtual teams collaborating globally" onerror="this.src='https://placehold.co/400x600?text=Virtual+Teams'">
+                </div>
+                <div class="text-panel">
+                    <h1>The Need for Communication and Collaboration</h1>
+                    <p>Organizations rely on effective communication and collaboration to achieve common goals.</p>
+                    <div class="info-card">
+                        <h3>Why is it essential?</h3>
+                        <p>Globalization has enabled companies to source materials and talent globally. Business processes now span departments, organizations, and national borders. Effective communication conveys specifications, coordinates schedules, and solves problems.</p>
+                    </div>
+                    <p>Without it, "silos" form, inefficiencies rise, and companies fail to compete in the global market.</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 6: Virtual Teams -->
+        <div id="slide-6" class="slide">
+            <h1>Managing the Virtual Organization</h1>
+            <p>To be competitive, organizations must bring together the right people with the right skills, regardless of location.</p>
+            <div class="info-card">
+                <h3>Virtual Teams</h3>
+                <p>Teams composed of members from different geographic areas, assembled as needed to collaborate on a certain project.</p>
+            </div>
+            <ul>
+                <li><strong>Fluid Membership:</strong> Teams form and disband as needed.</li>
+                <li><strong>24/7 Operations:</strong> "Follow the sun" workflow (e.g., developers in India, managers in the US, testers in Europe).</li>
+                <li><strong>Amplified by Pandemic:</strong> COVID-19 forced the world to adopt remote work, accelerating the virtual team trend.</li>
+            </ul>
+        </div>
+
+        <!-- Slide 7: Synchronous vs. Asynchronous -->
+        <div id="slide-7" class="slide">
+            <h1>Synchronous vs. Asynchronous Communication</h1>
+            <p>Virtual teams need flexible tools to communicate across time zones.</p>
+            <div class="comparison-grid">
+                <div class="comparison-card">
+                    <h3>Synchronous</h3>
+                    <p><strong>At the same time.</strong></p>
+                    <p>Examples: Phone calls, Zoom meetings, Instant Messaging (IM), Face-to-face meetings.</p>
+                    <p><em>Best for: Urgent issues, complex brainstorming.</em></p>
+                </div>
+                <div class="comparison-card">
+                    <h3>Asynchronous</h3>
+                    <p><strong>Not coordinated in time.</strong></p>
+                    <p>Examples: Email, Discussion Boards, Wikis, Shared Documents.</p>
+                    <p><em>Best for: Global teams, non-urgent tasks, documentation.</em></p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 8: Mermaid: Collaboration Matrix -->
+        <div id="slide-8" class="slide">
+            <h1>Modes of Group Interaction</h1>
+            <p>Collaboration tools can be categorized by <strong>Time</strong> and <strong>Space</strong>.</p>
+            <div class="mermaid">
+                graph TD
+                    CT[Collaboration Tools]
+                    
+                    T1[Same Time / Synchronous]
+                    T2[Different Time / Asynchronous]
+                    
+                    CT --> T1
+                    CT --> T2
+                    
+                    T1 --> SP1[Same Place: Live Meetings]
+                    T1 --> DP1[Different Place: Video Conf / Chat]
+                    
+                    T2 --> SP2[Same Place: Shared PCs]
+                    T2 --> DP2[Different Place: Email / Wikis / Social Media]
+                    
+                    style CT fill:#e0e7ff,stroke:#4338ca,stroke-width:2px
+                    style DP2 fill:#dcfce7,stroke:#166534,stroke-width:2px
+            </div>
+            <p class="conclusion">Modern social media tools largely fill the "Different Time" and "Different Place" category.</p>
+        </div>
+
+        <!-- Slide 9: Collaboration Software Overview -->
+        <div id="slide-9" class="slide">
+            <h1>Collaboration Software (Groupware)</h1>
+            <p>Collaboration software enables people to work together more effectively.</p>
+            <ul>
+                <li><strong>Evolution:</strong> From Lotus Notes (1989) to modern cloud suites like Microsoft Teams and Google Workspace.</li>
+                <li><strong>Key Dimensions:</strong>
+                    <ul>
+                        <li>Support for <strong>synchronous</strong> vs. <strong>asynchronous</strong> work.</li>
+                        <li>Support for <strong>face-to-face</strong> vs. <strong>distributed</strong> groups.</li>
+                    </ul>
+                </li>
+            </ul>
+            <p>Tools include electronic calendars, knowledge management systems, and online document systems.</p>
+        </div>
+
+        <!-- Slide 10: Discussion Forums -->
+        <div id="slide-10" class="slide">
+            <h1>Discussion Forums</h1>
+            <p>One of the oldest and most widely used tools for asynchronous group communication.</p>
+            <ul>
+                <li><strong>Threaded Discussions:</strong> Allows conversations to be organized by topic and keeps history intact.</li>
+                <li><strong>Moderation:</strong> Can be monitored to ensure relevance and accuracy.</li>
+                <li><strong>Knowledge Base:</strong> Over time, a forum becomes a searchable repository of solutions (e.g., Stack Overflow, internal company support forums).</li>
+            </ul>
+            <div class="info-card">
+                <p>Modern tools like Slack and Microsoft Teams have evolved forums into "Channels," combining the speed of chat with the structure of threads.</p>
+            </div>
+        </div>
+
+        <!-- Slide 11: Electronic Meeting Systems (EMS) -->
+        <div id="slide-11" class="slide">
+            <h1>Electronic Meeting Systems (EMS)</h1>
+            <p>Meetings can be inefficient. EMS provides tools to help groups solve problems and make decisions.</p>
+            <div class="process-step">
+                <div class="step-number">1</div>
+                <div><strong>Idea Generation:</strong> Participants type ideas anonymously to avoid "groupthink" or fear of criticism.</div>
+            </div>
+            <div class="process-step">
+                <div class="step-number">2</div>
+                <div><strong>Idea Evaluation:</strong> The group categorizes and consolidates ideas.</div>
+            </div>
+            <div class="process-step">
+                <div class="step-number">3</div>
+                <div><strong>Voting:</strong> Participants rank or vote on ideas to reach a consensus quickly.</div>
+            </div>
+        </div>
+
+        <!-- Slide 12: Videoconferencing -->
+        <div id="slide-12" class="slide">
+            <div class="two-panel-wrapper image-right">
+                <div class="image-panel">
+                    <img src="img-information-system-today-chapter-5/slide-12.png" alt="Desktop videoconferencing in action" onerror="this.src='https://placehold.co/400x600?text=Videoconferencing'">
+                </div>
+                <div class="text-panel">
+                    <h1>Videoconferencing</h1>
+                    <p>From the 1960s "picturephone" to daily Zoom calls, video has become mainstream.</p>
+                    <div class="comparison-grid">
+                        <div class="comparison-card">
+                            <h3>Desktop Videoconferencing</h3>
+                            <p>Simple, low-cost. Requires only a webcam and software (Skype, Teams, Zoom). Ideal for individuals and remote workers.</p>
+                        </div>
+                        <div class="comparison-card">
+                            <h3>Dedicated Systems</h3>
+                            <p>High-end, realistic experience for conference rooms. Can cost thousands of dollars but offers high-fidelity audio and video for critical meetings.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 13: Intranets and Employee Portals -->
+        <div id="slide-13" class="slide">
+            <h1>Intranets and Employee Portals</h1>
+            <div class="info-card">
+                <h3>Intranet</h3>
+                <p>A private network using web technologies, used to facilitate the secured transmission of proprietary information within an organization.</p>
+            </div>
+            <ul>
+                <li><strong>Real-Time Access:</strong> Unlike paper, intranets provide up-to-the-minute corporate news and data.</li>
+                <li><strong>Enterprise Search:</strong> Allows employees to find documents and data scattered across the organization.</li>
+                <li><strong>Employee Portals:</strong> Self-service for HR benefits, travel management, and training. Reduces administrative costs significantly.</li>
+            </ul>
+        </div>
+
+        <!-- Slide 14: Knowledge Check 1 -->
+        <div id="slide-14" class="slide">
+            <h1>Knowledge Check</h1>
+            <h2>Which of the following best describes "asynchronous" communication?</h2>
+            <ul>
+                <li>A) Communication that occurs at the same time, like a phone call.</li>
+                <li>B) Communication that is not coordinated in time, like email.</li>
+                <li>C) Communication that requires a video connection.</li>
+                <li>D) Communication that only happens within an intranet.</li>
+            </ul>
+            <button class="reveal-answer-btn">Reveal Answer</button>
+            <div class="answer-explanation">
+                <div class="info-card">
+                    <h3>Correct Answer: B</h3>
+                    <p>Asynchronous communication happens when participants do not need to be present at the same time. Examples include email, discussion forums, and shared documents, allowing flexibility for virtual teams in different time zones.</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 15: The Evolving Web: From 1.0 to 2.0 -->
+        <div id="slide-15" class="slide">
+            <h1>The Evolving Web: Web 1.0 vs. Web 2.0</h1>
+            <p>The internet has shifted from a one-way medium to a collaborative platform.</p>
+            <div class="comparison-grid">
+                <div class="comparison-card">
+                    <h3>Web 1.0 (The Passive Web)</h3>
+                    <p>Me focused.</p>
+                    <p>Read-only content.</p>
+                    <p>Companies create content; users consume it.</p>
+                    <p>Example: Encyclopedia Britannica Online.</p>
+                </div>
+                <div class="comparison-card">
+                    <h3>Web 2.0 (The Social Web)</h3>
+                    <p>Me and You.</p>
+                    <p>Read/Write content.</p>
+                    <p>Users create and share content (User-Generated Content).</p>
+                    <p>Example: Wikipedia, YouTube.</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 16: Web 2.0 Characteristics -->
+        <div id="slide-16" class="slide">
+            <h1>Core Characteristics of Web 2.0</h1>
+            <div class="two-panel-wrapper">
+                <div style="flex: 0 0 40%; display: flex; align-items: center; justify-content: center; padding: 1rem;">
+                    <div class="mermaid">
+                        graph TD
+                            W2[Web 2.0]
+                            W2 --> I[Interactive]
+                            W2 --> U[User-Centered]
+                            W2 --> S[Social]
+                            W2 --> N[Network Effect]
+                            
+                            style W2 fill:#c7d2fe,stroke:#4338ca,stroke-width:2px
+                            style I fill:#e0f2fe,stroke:#0ea5e9
+                            style U fill:#e0f2fe,stroke:#0ea5e9
+                            style S fill:#e0f2fe,stroke:#0ea5e9
+                            style N fill:#e0f2fe,stroke:#0ea5e9
+                    </div>
+                </div>
+                <div class="text-panel">
+                    <ul>
+                        <li><strong>Interactive:</strong> Shift from transaction to interaction.</li>
+                        <li><strong>User-Centered:</strong> Users rule, not techies.</li>
+                        <li><strong>Social:</strong> Connects ideas and people.</li>
+                        <li><strong>Network Effect:</strong> The value of the network increases with the number of users (e.g., Facebook is valuable because everyone is on it).</li>
+                    </ul>
+                    <p class="conclusion">Web 2.0 applications shift the user's role from a passive consumer of content to its creator.</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 17: Mashups -->
+        <div id="slide-17" class="slide">
+            <h1>Mashups</h1>
+            <p>A unique Web 2.0 capability is the ability to mix data from different sources.</p>
+            <div class="info-card">
+                <h3>Mashup</h3>
+                <p>A new application (or website) that uses data from one or more service providers. It creates new value by combining existing services.</p>
+            </div>
+            <ul>
+                <li><strong>Powered by APIs:</strong> Application Programming Interfaces allow systems to talk to each other.</li>
+                <li><strong>Example:</strong> A real estate site that combines Google Maps (location), Flickr (photos), and local crime data to give a complete view of a property.</li>
+            </ul>
+        </div>
+
+        <!-- Slide 18: The Evolving Workspace -->
+        <div id="slide-18" class="slide">
+            <h1>The Evolving Workspace</h1>
+            <p>The rise of Web 2.0 has coincided with the entry of <strong>Millennials (Generation Y)</strong> into the workforce.</p>
+            <ul>
+                <li><strong>New Expectations:</strong> They expect a "portfolio career" rather than a job for life.</li>
+                <li><strong>Born Digital:</strong> They are accustomed to social tools and connectivity.</li>
+                <li><strong>Culture Clash:</strong> If companies ban social media, these workers may leave or find workarounds.</li>
+            </ul>
+            <p>To attract top talent, companies must embrace digital trends and open culture.</p>
+        </div>
+
+        <!-- Slide 19: Future Web Capabilities -->
+        <div id="slide-19" class="slide">
+            <h1>Future Web Capabilities: The Semantic Web</h1>
+            <p>If Web 2.0 is about people connecting, the Semantic Web is about machines understanding.</p>
+            <div class="info-card">
+                <h3>The Semantic Web</h3>
+                <p>A set of design principles that allow computers to better index and understand the <em>meaning</em> of web content, not just keywords.</p>
+            </div>
+            <ul>
+                <li><strong>Context Awareness:</strong> Searching for "Jaguar" and the computer knowing if you mean the car or the animal based on context.</li>
+                <li><strong>Web 3.0:</strong> Often associated with mobility, "contextual web," and AI integration.</li>
+            </ul>
+        </div>
+
+        <!-- Slide 20: Knowledge Check 2 -->
+        <div id="slide-20" class="slide">
+            <h1>Knowledge Check</h1>
+            <h2>What is a "Mashup" in the context of Web 2.0?</h2>
+            <ul>
+                <li>A) A type of social network for music lovers.</li>
+                <li>B) An application that combines data from one or more service providers to create new value.</li>
+                <li>C) A conflict between two users on a wiki.</li>
+                <li>D) A security breach involving mixed data types.</li>
+            </ul>
+            <button class="reveal-answer-btn">Reveal Answer</button>
+            <div class="answer-explanation">
+                <div class="info-card">
+                    <h3>Correct Answer: B</h3>
+                    <p>A mashup uses Application Programming Interfaces (APIs) to pull data from different sources (like maps, weather, and traffic) and combines them into a single, new application.</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 21: Social Media in the Enterprise -->
+        <div id="slide-21" class="slide">
+            <h1>Social Media in the Enterprise</h1>
+            <p>Businesses are using social tools to enhance four key areas:</p>
+            <div class="mermaid">
+                graph TD
+                    A[Enterprise Social Media] --> B[Communication];
+                    A --> C[Cooperation];
+                    A --> D[Collaboration];
+                    A --> E[Connection];
+                    B --> B1[Blogs, Microblogs, IM];
+                    C --> C1[Media Sharing, Tagging];
+                    D --> D1[Wikis, Cloud Tools];
+                    E --> E1[Social Networks, Viral Marketing];
+                    style A fill:#e0f2fe,stroke:#0ea5e9,stroke-width:2px
+                    style B fill:#dbeafe,stroke:#4f46e5,stroke-width:1px
+                    style C fill:#dbeafe,stroke:#4f46e5,stroke-width:1px
+                    style D fill:#dbeafe,stroke:#4f46e5,stroke-width:1px
+                    style E fill:#dbeafe,stroke:#4f46e5,stroke-width:1px
+            </div>
+        </div>
+
+        <!-- Slide 22: Enhancing Communication: Blogs -->
+        <div id="slide-22" class="slide">
+            <h1>Enhancing Communication: Blogs</h1>
+            <p><strong>Blogging:</strong> Keeping an online text diary.</p>
+            <ul>
+                <li><strong>For Individuals:</strong> "Amateurization of journalism." Brings breaking news fast but can lack verification and objectivity.</li>
+                <li><strong>For Business:</strong>
+                    <ul>
+                        <li>Connect with employees and customers.</li>
+                        <li>Voice ideas and obtain feedback (e.g., Google's official blog).</li>
+                        <li>Create a more "human" and approachable corporate image.</li>
+                    </ul>
+                </li>
+            </ul>
+        </div>
+
+        <!-- Slide 23: Enhancing Communication: Microblogging -->
+        <div id="slide-23" class="slide">
+            <h1>Enhancing Communication: Microblogging</h1>
+            <p>Short status updates (e.g., Twitter/X, Weibo).</p>
+            <div class="info-card">
+                <h3>Key Features</h3>
+                <p><strong>Tweets:</strong> Short messages (up to 280 chars).<br>
+                <strong>Hashtags (#):</strong> Tagging topics to make them searchable and trackable.<br>
+                <strong>Trending:</strong> Topics that are currently popular due to user volume.</p>
+            </div>
+            <p>Companies use it for breaking news, customer support, and brand loyalty (e.g., Coca-Cola responding to followers).</p>
+        </div>
+
+        <!-- Slide 24: Enhancing Communication: Instant Messaging -->
+        <div id="slide-24" class="slide">
+            <h1>Enhancing Communication: Instant Messaging (IM)</h1>
+            <p>Real-time written conversations.</p>
+            <ul>
+                <li><strong>Enterprise Use:</strong> Tools like Slack or Microsoft Teams allow creating different channels for different projects, reducing email clutter.</li>
+                <li><strong>Customer Service:</strong> Using WhatsApp or Web Chat for immediate support.</li>
+                <li><strong>Chatbots:</strong> Automated agents that handle routine queries before routing to a human.</li>
+            </ul>
+        </div>
+
+        <!-- Slide 25: Enhancing Cooperation: Media Sharing -->
+        <div id="slide-25" class="slide">
+            <h1>Enhancing Cooperation: Media Sharing</h1>
+            <p>Sharing user-generated content (pictures, videos, audio) creates win-win situations.</p>
+            <div class="comparison-grid">
+                <div class="comparison-card">
+                    <h3>Video/Image Sharing</h3>
+                    <p>Flickr, Instagram, YouTube. Companies use these to share product demos, culture videos, or viral campaigns.</p>
+                </div>
+                <div class="comparison-card">
+                    <h3>Webcasting / Podcasting</h3>
+                    <p>Distribution of digital media for on-demand playback. Used for training, shareholder meetings, and education (iTunes U).</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 26: Enhancing Cooperation: Tagging -->
+        <div id="slide-26" class="slide">
+            <h1>Enhancing Cooperation: Tagging & Metadata</h1>
+            <p>User-generated content is vast. How do we organize it?</p>
+            <div class="info-card">
+                <h3>Metadata</h3>
+                <p>Data about data (e.g., who took a photo, when, where). <strong>Tagging</strong> is manually adding metadata (keywords) to content.</p>
+            </div>
+            <ul>
+                <li><strong>Tag Clouds:</strong> Visualizations where the size of a word represents its frequency.</li>
+                <li><strong>Geotagging:</strong> Adding geospatial metadata (latitude/longitude). Useful for mapping but raises privacy concerns (e.g., John McAfee's arrest due to metadata).</li>
+            </ul>
+        </div>
+
+        <!-- Slide 27: Enhancing Cooperation: Social Bookmarking -->
+        <div id="slide-27" class="slide">
+            <h1>Enhancing Cooperation: Social Bookmarking</h1>
+            <p>Allowing users to share interesting content and create categorization systems.</p>
+            <ul>
+                <li><strong>Folksonomies:</strong> Categorization systems created by users (socially), not experts.</li>
+                <li><strong>Examples:</strong> Reddit, Pinterest, StumbleUpon.</li>
+                <li><strong>Business Use:</strong> Mapping "islands" of knowledge within an organization. Identifying what employees find valuable.</li>
+            </ul>
+        </div>
+
+        <!-- Slide 28: Knowledge Check 3 -->
+        <div id="slide-28" class="slide">
+            <h1>Knowledge Check</h1>
+            <h2>What is "metadata"?</h2>
+            <ul>
+                <li>A) Data that is encrypted for security.</li>
+                <li>B) Data about data, such as the location or date of a photo.</li>
+                <li>C) A type of computer virus.</li>
+                <li>D) The physical storage medium for big data.</li>
+            </ul>
+            <button class="reveal-answer-btn">Reveal Answer</button>
+            <div class="answer-explanation">
+                <div class="info-card">
+                    <h3>Correct Answer: B</h3>
+                    <p>Metadata describes other data. It provides context, such as who created a file, when it was created, or where a photo was taken, making content easier to categorize and find.</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 29: Enhancing Collaboration: Cloud Tools -->
+        <div id="slide-29" class="slide">
+            <div class="two-panel-wrapper image-right">
+                <div class="image-panel">
+                    <img src="img-information-system-today-chapter-5/slide-29.png" alt="Cloud collaboration concept" onerror="this.src='https://placehold.co/400x600?text=Cloud+Collaboration'">
+                </div>
+                <div class="text-panel">
+                    <h1>Enhancing Collaboration: Cloud-Based Tools</h1>
+                    <p>Cloud computing allows for easy access and transfer of documents.</p>
+                    <ul>
+                        <li><strong>Synchronized Storage:</strong> Dropbox, OneDrive, Google Drive. Latest version always available on all devices.</li>
+                        <li><strong>Productivity Suites:</strong> Google Workspace, Office 365. Multiple users can edit the same document simultaneously in real-time.</li>
+                        <li><strong>Benefit:</strong> No need to email attachments back and forth (version control).</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 30: Cloud Benefits vs. Risks -->
+        <div id="slide-30" class="slide">
+            <h1>Cloud-Based Collaboration: Benefits vs. Risks</h1>
+            <div class="comparison-grid">
+                <div class="comparison-card">
+                    <h3>Benefits</h3>
+                    <p>Reduced costs.</p>
+                    <p>Easy to use & deploy.</p>
+                    <p>Access from anywhere.</p>
+                    <p>No software upgrades needed.</p>
+                </div>
+                <div class="comparison-card">
+                    <h3>Risks</h3>
+                    <p>Loss of control over data.</p>
+                    <p>Security/Compliance issues.</p>
+                    <p>Tools may change without notice.</p>
+                    <p>Requires internet connection.</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 31: Content Management Systems (CMS) -->
+        <div id="slide-31" class="slide">
+            <h1>Content Management Systems (CMS)</h1>
+            <p>Systems that allow users to publish, edit, version track, and retrieve digital content.</p>
+            <ul>
+                <li><strong>Websites:</strong> WordPress, Joomla, Drupal. Allows non-technical users to update websites.</li>
+                <li><strong>Learning:</strong> Learning Management Systems (LMS) like Blackboard or Moodle for education.</li>
+                <li><strong>Digital Assets:</strong> Managing documents and corporate files (e.g., SharePoint).</li>
+            </ul>
+        </div>
+
+        <!-- Slide 32: Collective Intelligence -->
+        <div id="slide-32" class="slide">
+            <h1>Collective Intelligence</h1>
+            <div class="info-card">
+                <h3>Wisdom of Crowds</h3>
+                <p>The concept that distributed groups of people with diverse expertise will outperform individual experts.</p>
+            </div>
+            <ul>
+                <li><strong>Open Source Software:</strong> Firefox, Linux. Created and maintained by thousands of volunteers.</li>
+                <li><strong>Peer Production:</strong> Creation of goods/services by self-organizing communities.</li>
+            </ul>
+        </div>
+
+        <!-- Slide 33: Wikis -->
+        <div id="slide-33" class="slide">
+            <h1>Wikis</h1>
+            <p>Websites allowing people to create, edit, or delete content collaboratively.</p>
+            <ul>
+                <li><strong>History Tracking:</strong> Keeps all prior versions, allowing reverts of changes.</li>
+                <li><strong>Wikipedia:</strong> The most famous example. High quality due to the sheer number of contributors monitoring edits.</li>
+                <li><strong>Corporate Use:</strong> Internal knowledge repositories, project documentation.</li>
+            </ul>
+            <p class="conclusion">Wikis rely on the community to minimize vandalism and ensure accuracy.</p>
+        </div>
+
+        <!-- Slide 34: Crowdsourcing -->
+        <div id="slide-34" class="slide">
+            <h1>Crowdsourcing</h1>
+            <p>Using everyday people as a cheap labor force.</p>
+            <div class="two-panel-wrapper">
+                <div class="image-panel">
+                    <img src="img-information-system-today-chapter-5/slide-34.png" alt="Crowdsourcing concept" onerror="this.src='https://placehold.co/400x600?text=Crowdsourcing'">
+                </div>
+                <div class="text-panel">
+                    <ul>
+                        <li><strong>Micro-Tasking:</strong> Amazon Mechanical Turk. Users solve small tasks (HITs) that computers can't do easily (e.g., identifying objects in photos).</li>
+                        <li><strong>Open Innovation:</strong> Asking the crowd for R&D ideas.</li>
+                        <li><strong>Citizen Science:</strong> Ordinary people contributing data to scientific projects.</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 35: Enhancing Connection: Social Networking -->
+        <div id="slide-35" class="slide">
+            <h1>Enhancing Connection: Social Networking</h1>
+            <p>Social online communities where individuals meet, communicate, and collaborate.</p>
+            <ul>
+                <li><strong>General:</strong> Facebook. 2.6+ billion users. Leverages the network effect.</li>
+                <li><strong>Professional:</strong> LinkedIn. For jobs, business contacts, and industry news.</li>
+                <li><strong>Enterprise:</strong> Yammer, Slack. Private social networks for internal company use.</li>
+            </ul>
+        </div>
+
+        <!-- Slide 36: Viral Marketing -->
+        <div id="slide-36" class="slide">
+            <h1>Viral Marketing</h1>
+            <p>Using the network effect to increase brand awareness.</p>
+            <div class="info-card">
+                <h3>Viral Marketing</h3>
+                <p>Marketing techniques driven by word-of-mouth, spreading like a virus through social networks.</p>
+            </div>
+            <h3>Critical Factors (Thomas Baekdal):</h3>
+            <ol>
+                <li>Do something unexpected.</li>
+                <li>Make people feel something.</li>
+                <li>Make sequels.</li>
+                <li>Allow sharing and easy distribution.</li>
+            </ol>
+            <p><em>Example: Hotmail's "Get your free email" footer strategy.</em></p>
+        </div>
+
+        <!-- Slide 37: Knowledge Check 4 -->
+        <div id="slide-37" class="slide">
+            <h1>Knowledge Check</h1>
+            <h2>Which of the following is an example of "Crowdsourcing"?</h2>
+            <ul>
+                <li>A) Using cloud storage to back up files.</li>
+                <li>B) Using Amazon Mechanical Turk to get people to tag thousands of images.</li>
+                <li>C) Sending an email to a colleague.</li>
+                <li>D) Installing antivirus software.</li>
+            </ul>
+            <button class="reveal-answer-btn">Reveal Answer</button>
+            <div class="answer-explanation">
+                <div class="info-card">
+                    <h3>Correct Answer: B</h3>
+                    <p>Crowdsourcing involves outsourcing tasks to a distributed group of people (the crowd). Mechanical Turk is a prime example where small "Human Intelligence Tasks" are distributed to workers globally.</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 38: Managing Enterprise Social Media -->
+        <div id="slide-38" class="slide">
+            <h1>Managing Enterprise Social Media</h1>
+            <p>Success in the consumer world does not guarantee success in the corporate world. Management is key.</p>
+            <div class="comparison-grid">
+                <div class="comparison-card">
+                    <h3>Culture</h3>
+                    <p>Requires a culture of openness, trust, and sharing. Top-down hierarchies often resist social tools.</p>
+                </div>
+                <div class="comparison-card">
+                    <h3>Context</h3>
+                    <p>Must solve a specific business need. Don't just use a wiki because it's "cool."</p>
+                </div>
+                <div class="comparison-card">
+                    <h3>Critical Mass</h3>
+                    <p>Needs enough users to create value (Network Effect). Hard for small companies.</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 39: Organizational Pitfalls -->
+        <div id="slide-39" class="slide">
+            <h1>Organizational Pitfalls</h1>
+            <ul>
+                <li><strong>Generation Gap:</strong> Millennials embrace these tools; Baby Boomers may resist or not understand them.</li>
+                <li><strong>Technological Inertia:</strong> People are resistant to change unless they see immediate benefits.</li>
+                <li><strong>Security:</strong> increased sharing means increased risk of data leaks or IP theft.</li>
+            </ul>
+        </div>
+
+        <!-- Slide 40: Dangers: Online Product Reviews -->
+        <div id="slide-40" class="slide">
+            <h1>Dangers: Online Product Reviews</h1>
+            <p>Reviews are critical for purchasing decisions, but they are easily manipulated.</p>
+            <ul>
+                <li><strong>Fake Reviews:</strong> Companies hire people to post positive reviews for themselves or negative ones for competitors.</li>
+                <li><strong>Unethical:</strong> Undermines trust in the review system.</li>
+                <li><strong>Detection:</strong> Sites like Fakespot analyze language patterns to identify fake reviews.</li>
+            </ul>
+        </div>
+
+        <!-- Slide 41: Dangers: Microblogging Blunders -->
+        <div id="slide-41" class="slide">
+            <h1>Dangers: Microblogging Blunders</h1>
+            <p>Posting without thinking can be disastrous.</p>
+            <div class="info-card">
+                <h3>Example: #myNYPD</h3>
+                <p>The NYPD encouraged people to tweet photos with officers to boost their image. Instead, critics flooded the hashtag with photos of police brutality. The campaign backfired completely.</p>
+            </div>
+            <p>For individuals, ranting about a boss or posting inappropriate content can lead to being fired.</p>
+        </div>
+
+        <!-- Slide 42: Dangers: Bad Vibes Going Viral -->
+        <div id="slide-42" class="slide">
+            <div class="two-panel-wrapper image-right">
+                <div class="image-panel">
+                    <img src="img-information-system-today-chapter-5/slide-42.png" alt="United Breaks Guitars video thumbnail concept" onerror="this.src='https://placehold.co/400x600?text=Bad+Vibes+Viral'">
+                </div>
+                <div class="text-panel">
+                    <h1>When Bad Vibes Go Viral</h1>
+                    <p>The internet never forgets, and negative news travels fast.</p>
+                    <ul>
+                        <li><strong>United Breaks Guitars:</strong> A musician's $3,500 guitar was broken by baggage handlers. United refused to pay. He made a music video that got 15 million views. United's stock dropped.</li>
+                        <li><strong>Domino's Pizza:</strong> Employees posted a prank video contaminating food. It went viral. Domino's had to respond with a CEO video apology to restore trust.</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 43: Crisis Management -->
+        <div id="slide-43" class="slide">
+            <h1>Social Media Crisis Management</h1>
+            <p>How to handle a PR disaster in the digital age (Tips from Richard Levick):</p>
+            <ol>
+                <li><strong>Identify a Crisis Team:</strong> PR, execs, lawyers.</li>
+                <li><strong>Identify Your Nightmare:</strong> Know what could go wrong.</li>
+                <li><strong>Monitor Social Media:</strong> Listen to what is being said (Social Listening).</li>
+                <li><strong>Act Fast:</strong> The first 24 hours are critical. A slow response looks like indifference.</li>
+            </ol>
+        </div>
+
+        <!-- Slide 44: Societal Impacts -->
+        <div id="slide-44" class="slide">
+            <h1>Societal Impacts of Social Media</h1>
+            <div class="comparison-grid">
+                <div class="comparison-card">
+                    <h3>Positives</h3>
+                    <p>Democratized content creation.</p>
+                    <p>Lowered barriers to entry for politics (e.g., small donor funding).</p>
+                    <p>Wider access to information.</p>
+                </div>
+                <div class="comparison-card">
+                    <h3>Negatives</h3>
+                    <p>Filter Bubbles / Echo Chambers.</p>
+                    <p>Fake News & Clickbait.</p>
+                    <p>Algorithms replacing editorial judgment.</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 45: In-Class Assignment -->
+        <div id="slide-45" class="slide">
+            <h1>In-Class Assignment (30 Mins)</h1>
+            <h2>The Viral Campaign Strategy</h2>
+            <p><strong>Scenario:</strong> You are the social media team for a new eco-friendly water bottle brand. You need to create a viral marketing campaign concept.</p>
+            <p><strong>Task:</strong> Use ChatGPT or Gemini to brainstorm.</p>
+            <div class="ai-assist-prompt">
+                <p><strong>Sample Prompts:</strong></p>
+                <ul>
+                    <li>"Generate 3 viral marketing campaign ideas for a sustainable water bottle brand that targets Gen Z. Focus on humor and 'doing something unexpected'."</li>
+                    <li>"What are some trending hashtags related to sustainability and hydration right now?"</li>
+                    <li>"Draft a script for a 30-second TikTok video that could go viral for this product."</li>
+                </ul>
+            </div>
+            <p><strong>Output:</strong> Present your best campaign idea to the class. Why will it go viral? What are the risks?</p>
+        </div>
+
+        <!-- Slide 46: Key Takeaways -->
+        <div id="slide-46" class="slide">
+            <h1>Key Takeaways</h1>
+            <ul class="summary-list-check">
+                <li>Social media enhances organizational communication, collaboration, and connection.</li>
+                <li>Virtual teams rely on synchronous and asynchronous tools to work globally.</li>
+                <li>Web 2.0 shifted the web from static content to user-generated, social interaction.</li>
+                <li>Enterprise tools (Wikis, Cloud, Intranets) harness collective intelligence.</li>
+                <li>Managing social media requires understanding culture, monitoring for crises, and acting fast when things go wrong.</li>
+            </ul>
+        </div>
+
+        <!-- Slide 47: Final Slide -->
+        <div id="slide-47" class="slide session-title-slide">
+            <div class="slide-content-wrapper">
+                <h1>Questions?</h1>
+                <h2>Open Discussion</h2>
+            </div>
+        </div>
+
+        <!-- FOOTER AND CONTROLS -->
+        <div class="slide-footer">
+            <button id="optionsBtn" class="options-button" title="Settings">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor">
+                    <path d="M10 3a1.5 1.5 0 110 3 1.5 1.5 0 010-3zM10 8.5a1.5 1.5 0 110 3 1.5 1.5 0 010-3zM11.5 14a1.5 1.5 0 10-3 0 1.5 1.5 0 003 0z" />
+                </svg>
+            </button>
+            <div class="footer-controls">
+                <button id="prevBtn" class="nav-button">Previous</button>
+                <span id="slideCounter" class="slide-counter">Slide 1 / 47</span>
+                <button id="nextBtn" class="nav-button">Next</button>
+            </div>
+            <div style="width: 40px;"></div> 
+        </div>
+
+        <!-- SETTINGS DRAWER -->
+        <div id="settingsDrawer">
+            <div class="drawer-section">
+                <h3>Theme</h3>
+                <div id="themeSwitcher" class="drawer-buttons-container"></div>
+            </div>
+            <div class="drawer-section">
+                <h3>Export</h3>
+                <div class="drawer-buttons-container">
+                    <button id="exportPdfBtn" class="drawer-button">Current Slide (PDF)</button>
+                    <button id="printAllBtn" class="drawer-button">All Slides (PDF)</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            // --- DOM Element References ---
+            const slides = document.querySelectorAll('.slide');
+            const prevBtn = document.getElementById('prevBtn');
+            const nextBtn = document.getElementById('nextBtn');
+            const slideCounter = document.getElementById('slideCounter');
+            const optionsBtn = document.getElementById('optionsBtn');
+            const settingsDrawer = document.getElementById('settingsDrawer');
+            const exportPdfBtn = document.getElementById('exportPdfBtn');
+            const printAllBtn = document.getElementById('printAllBtn');
+            const themeSwitcherContainer = document.getElementById('themeSwitcher');
+            const presentationContainer = document.querySelector('.presentation-container');
+            const slideFooter = document.querySelector('.slide-footer');
+
+            // --- State Variables ---
+            let currentSlideIndex = 0;
+            const totalSlides = 47; 
+            let footerTimeoutId = null;
+            
+            // --- Constants ---
+            const FOOTER_HIDE_DELAY = 3000;
+            const PDF_PAGE_WIDTH_IN = 11;
+            const PDF_PAGE_HEIGHT_IN = PDF_PAGE_WIDTH_IN * 9 / 16;
+
+            // --- THEME DATA ---
+            const themes = {
+                'Leaf Green': {
+                    '--bg-grad-start': '#f0fdf4', '--bg-grad-end': '#dcfce7', '--bg-grad-mid-1': '#f0fdf4', '--bg-grad-mid-2': '#dcfce7', '--bg-grad-mid-3': '#bbf7d0',
+                    '--text-primary': '#334155', '--header-main': '#166534', '--header-sub': '#15803d', '--border-header': '#86efac',
+                    '--nav-button-bg': '#16a34a', '--nav-button-hover-bg': '#15803d', '--info-card-border': '#22c55e', '--conclusion-border': '#22c55e',
+                    '--conclusion-text': '#166534', '--process-step-bg': '#f0fdf4', '--process-step-border': '#bbf7d0', '--step-number-bg': '#16a34a',
+                    '--inline-code-bg': '#dcfce7', '--inline-code-text': '#14532d', '--layer-box-bg': '#dcfce7', '--layer-box-border': '#86efac',
+                    '--flow-arrow-color': '#22c55e', '--scrollbar-thumb': '#4ade80', '--scrollbar-track': '#dcfce7'
+                },
+                'Original Purple': {
+                    '--bg-grad-start': '#f5f3ff', '--bg-grad-end': '#ddd6fe', '--bg-grad-mid-1': '#f5f3ff', '--bg-grad-mid-2': '#ede9fe', '--bg-grad-mid-3': '#ddd6fe',
+                    '--text-primary': '#334155', '--header-main': '#4338ca', '--header-sub': '#4f46e5', '--border-header': '#a5b4fc',
+                    '--nav-button-bg': '#4f46e5', '--nav-button-hover-bg': '#4338ca', '--info-card-border': '#6366f1', '--conclusion-border': '#6366f1',
+                    '--conclusion-text': '#4338ca', '--process-step-bg': '#eef2ff', '--process-step-border': '#c7d2fe', '--step-number-bg': '#4f46e5',
+                    '--inline-code-bg': '#eef2ff', '--inline-code-text': '#312e81', '--layer-box-bg': '#e0e7ff', '--layer-box-border': '#c7d2fe',
+                    '--flow-arrow-color': '#6366f1', '--scrollbar-thumb': '#a78bfa', '--scrollbar-track': '#ddd6fe'
+                },
+                'Ocean Blue': {
+                    '--bg-grad-start': '#f0f9ff', '--bg-grad-end': '#dbeafe', '--bg-grad-mid-1': '#f0f9ff', '--bg-grad-mid-2': '#e0f2fe', '--bg-grad-mid-3': '#bae6fd',
+                    '--text-primary': '#334155', '--header-main': '#0c4a6e', '--header-sub': '#0369a1', '--border-header': '#7dd3fc',
+                    '--nav-button-bg': '#0ea5e9', '--nav-button-hover-bg': '#0284c7', '--info-card-border': '#38bdf8', '--conclusion-border': '#38bdf8',
+                    '--conclusion-text': '#0c4a6e', '--process-step-bg': '#f0f9ff', '--process-step-border': '#bae6fd', '--step-number-bg': '#0ea5e9',
+                    '--inline-code-bg': '#e0f2fe', '--inline-code-text': '#075985', '--layer-box-bg': '#e0f2fe', '--layer-box-border': '#7dd3fc',
+                    '--flow-arrow-color': '#38bdf8', '--scrollbar-thumb': '#38bdf8', '--scrollbar-track': '#dbeafe'
+                },
+                'Slate Gray': {
+                    '--bg-grad-start': '#f8fafc', '--bg-grad-end': '#e2e8f0', '--bg-grad-mid-1': '#f8fafc', '--bg-grad-mid-2': '#f1f5f9', '--bg-grad-mid-3': '#e2e8f0',
+                    '--text-primary': '#334155', '--header-main': '#1e293b', '--header-sub': '#334155', '--border-header': '#94a3b8',
+                    '--nav-button-bg': '#475569', '--nav-button-hover-bg': '#334155', '--info-card-border': '#64748b', '--conclusion-border': '#64748b',
+                    '--conclusion-text': '#1e293b', '--process-step-bg': '#f8fafc', '--process-step-border': '#e2e8f0', '--step-number-bg': '#475569',
+                    '--inline-code-bg': '#f1f5f9', '--inline-code-text': '#1e293b', '--layer-box-bg': '#f1f5f9', '--layer-box-border': '#cbd5e1',
+                    '--flow-arrow-color': '#64748b', '--scrollbar-thumb': '#94a3b8', '--scrollbar-track': '#e2e8f0'
+                }
+            };
+
+            // --- Core Functions ---
+            function applyTheme(themeName) {
+                const theme = themes[themeName];
+                if (!theme) return;
+                for (const [key, value] of Object.entries(theme)) {
+                    document.documentElement.style.setProperty(key, value);
+                }
+                localStorage.setItem('presentationTheme', themeName);
+                document.querySelectorAll('.theme-button').forEach(btn => {
+                    btn.classList.toggle('active', btn.dataset.theme === themeName);
+                });
+            }
+
+            function populateThemeSwitcher() {
+                Object.keys(themes).forEach(themeName => {
+                    const button = document.createElement('button');
+                    button.className = 'drawer-button theme-button';
+                    button.textContent = themeName;
+                    button.dataset.theme = themeName;
+                    button.style.backgroundColor = themes[themeName]['--nav-button-bg'];
+                    button.addEventListener('click', () => applyTheme(themeName));
+                    themeSwitcherContainer.appendChild(button);
+                });
+            }
+            
+            function initializeMermaidDiagrams() {
+                document.querySelectorAll('.mermaid').forEach(el => {
+                    el.setAttribute('data-mermaid', el.innerHTML.trim());
+                });
+            }
+
+            function showSlide(index) {
+                if (index < 0 || index >= totalSlides) return;
+                slides.forEach((slide, i) => slide.classList.toggle('active', i === index));
+                const activeSlide = slides[index];
+                if (activeSlide) {
+                    activeSlide.scrollTop = 0;
+                    setTimeout(() => {
+                        if (window.mermaid) {
+                          try {
+                            activeSlide.querySelectorAll('.mermaid').forEach(el => {
+                                const code = el.getAttribute('data-mermaid');
+                                if (code) {
+                                    el.innerHTML = code;
+                                    el.removeAttribute('data-processed');
+                                }
+                            });
+                            mermaid.run({ nodes: activeSlide.querySelectorAll('.mermaid') });
+                          } catch (e) {
+                            console.error("Mermaid rendering error:", e);
+                            activeSlide.querySelectorAll('.mermaid').forEach(el => el.innerHTML = 'Error rendering diagram.');
+                          }
+                        }
+                    }, 50);
+                }
+                slideCounter.textContent = `Slide ${index + 1} / ${totalSlides}`;
+                prevBtn.disabled = index === 0;
+                nextBtn.disabled = index === totalSlides - 1;
+                settingsDrawer.classList.remove('active');
+                currentSlideIndex = index;
+            }
+
+            function nextSlide() { showSlide(currentSlideIndex + 1); }
+            function prevSlide() { showSlide(currentSlideIndex - 1); }
+            function toggleSettingsDrawer() { settingsDrawer.classList.toggle('active'); }
+            
+            // --- PDF and Print Functions ---
+            function exportCurrentSlideToPdf() {
+                const activeSlide = document.querySelector('.slide.active');
+                if (!activeSlide) return;
+
+                const drawer = document.getElementById('settingsDrawer');
+                const originalStyles = {
+                    footerClassList: Array.from(slideFooter.classList), footerInlineDisplay: slideFooter.style.display,
+                    drawerDisplay: drawer.style.display, drawerTransform: drawer.style.transform,
+                    slideOverflow: activeSlide.style.overflowY, slideHeight: activeSlide.style.height, slideAspectRatio: activeSlide.style.aspectRatio
+                };
+                
+                exportPdfBtn.disabled = true; printAllBtn.disabled = true; exportPdfBtn.textContent = 'Exporting...'; optionsBtn.disabled = true;
+                if (footerTimeoutId) { clearTimeout(footerTimeoutId); footerTimeoutId = null; }
+                slideFooter.style.display = 'none'; drawer.style.display = 'none'; drawer.classList.remove('active');
+
+                activeSlide.style.overflowY = 'visible'; activeSlide.style.height = 'auto'; activeSlide.style.aspectRatio = 'auto';
+
+                const slideNumber = currentSlideIndex + 1;
+                const filename = `IS_Today_Ch5_Slide_${slideNumber}.pdf`;
+                const opt = {
+                    margin: [0.1, 0.1, 0.1, 0.1],
+                    filename: filename,
+                    image: { type: 'jpeg', quality: 0.98 },
+                    html2canvas: { scale: 2.5, useCORS: true, logging: false, scrollY: 0 },
+                    jsPDF: { unit: 'in', format: [PDF_PAGE_WIDTH_IN, PDF_PAGE_HEIGHT_IN], orientation: 'landscape' }
+                };
+                
+                html2pdf().set(opt).from(activeSlide).save().catch(err => {
+                    console.error('PDF export error:', err);
+                }).finally(() => {
+                    slideFooter.style.display = originalStyles.footerInlineDisplay;
+                    slideFooter.className = '';
+                    originalStyles.footerClassList.forEach(cls => slideFooter.classList.add(cls));
+                    drawer.style.display = originalStyles.drawerDisplay;
+                    drawer.style.transform = originalStyles.drawerTransform;
+                    activeSlide.style.overflowY = originalStyles.slideOverflow;
+                    activeSlide.style.height = originalStyles.slideHeight;
+                    activeSlide.style.aspectRatio = originalStyles.slideAspectRatio;
+                    exportPdfBtn.disabled = false;
+                    printAllBtn.disabled = false;
+                    exportPdfBtn.textContent = 'Current Slide (PDF)';
+                    optionsBtn.disabled = false;
+                });
+            }
+
+            async function triggerPrintAllSlides() {
+                settingsDrawer.classList.remove('active');
+                if (footerTimeoutId) { clearTimeout(footerTimeoutId); footerTimeoutId = null; }
+                slideFooter.classList.remove('show-footer');
+                
+                if(window.mermaid) {
+                    try {
+                        await mermaid.run({ nodes: document.querySelectorAll('.mermaid') });
+                    } catch(e) {
+                        console.error("Mermaid printing error:", e);
+                    }
+                }
+                
+                window.print();
+            }
+
+            // --- Event Listeners ---
+            prevBtn.addEventListener('click', prevSlide);
+            nextBtn.addEventListener('click', nextSlide);
+            optionsBtn.addEventListener('click', toggleSettingsDrawer);
+            exportPdfBtn.addEventListener('click', exportCurrentSlideToPdf);
+            printAllBtn.addEventListener('click', triggerPrintAllSlides);
+
+            document.querySelectorAll('.reveal-answer-btn').forEach(button => {
+                button.addEventListener('click', () => {
+                    const explanation = button.nextElementSibling;
+                    if (explanation && explanation.classList.contains('answer-explanation')) {
+                        explanation.style.display = 'block';
+                        button.style.display = 'none';
+                    }
+                });
+            });
+            
+            // --- Initial Setup ---
+            mermaid.initialize({ startOnLoad: false, theme: 'base', themeVariables: {
+                'primaryColor': '#f8fafc', 'primaryTextColor': '#334155', 'lineColor': '#475569',
+                'textColor': '#334155', 'fontSize': '16px',
+            }});
+            
+            initializeMermaidDiagrams();
+            populateThemeSwitcher();
+            const savedTheme = localStorage.getItem('presentationTheme') || 'Original Purple';
+            applyTheme(savedTheme);
+            showSlide(currentSlideIndex);
+
+            // --- Keyboard and Mouse Listeners ---
+            document.addEventListener('keydown', (e) => {
+                if (e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA') return;
+                if (e.key === 'ArrowRight' || e.key === ' ' || e.key === 'PageDown') nextSlide();
+                if (e.key === 'ArrowLeft' || e.key === 'PageUp') prevSlide();
+                if (e.key === 'Escape') settingsDrawer.classList.remove('active');
+            });
+            presentationContainer.addEventListener('mousemove', () => {
+                 if (footerTimeoutId) clearTimeout(footerTimeoutId);
+                 slideFooter.classList.add('show-footer');
+                 footerTimeoutId = setTimeout(() => slideFooter.classList.remove('show-footer'), FOOTER_HIDE_DELAY);
+            });
+            presentationContainer.addEventListener('mouseleave', () => { if (footerTimeoutId) clearTimeout(footerTimeoutId); slideFooter.classList.remove('show-footer'); });
+            document.addEventListener('click', (e) => {
+                if (settingsDrawer.classList.contains('active') && !settingsDrawer.contains(e.target) && !optionsBtn.contains(e.target)) {
+                    settingsDrawer.classList.remove('active');
+                }
+            });
+        });
+    </script>
+</body>
+</html>

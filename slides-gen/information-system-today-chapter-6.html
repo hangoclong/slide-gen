@@ -1,0 +1,1296 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Chapter 6: Enhancing Business Intelligence Using Big Data, Analytics, and AI</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Roboto+Mono&display=swap" rel="stylesheet">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js" integrity="sha512-GsLlZN/3F2ErC5ifS5QtgpiJtWd43JWSuIgh7mbzZ8zBps+dvLusV+eNQATqgA/HdeKFVgA5v3S/cIrLF7QnIg==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    <script src="https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.min.js"></script>
+    <style>
+        :root {
+            --bg-grad-start: #f5f3ff;
+            --bg-grad-end: #ddd6fe;
+            --bg-grad-mid-1: #f5f3ff;
+            --bg-grad-mid-2: #ede9fe;
+            --bg-grad-mid-3: #ddd6fe;
+            --text-primary: #334155;
+            --header-main: #4338ca;
+            --header-sub: #4f46e5;
+            --border-header: #a5b4fc;
+            --nav-button-bg: #4f46e5;
+            --nav-button-hover-bg: #4338ca;
+            --info-card-border: #6366f1;
+            --conclusion-border: #6366f1;
+            --conclusion-text: #4338ca;
+            --process-step-bg: #eef2ff;
+            --process-step-border: #c7d2fe;
+            --step-number-bg: #4f46e5;
+            --inline-code-bg: #eef2ff;
+            --inline-code-text: #312e81;
+            --layer-box-bg: #e0e7ff;
+            --layer-box-border: #c7d2fe;
+            --flow-arrow-color: #6366f1;
+            --scrollbar-thumb: #a78bfa;
+            --scrollbar-track: #ddd6fe;
+        }
+
+        /* --- Base and Layout --- */
+        html, body { height: 100%; margin: 0; padding: 0; overflow: hidden; }
+        body { display: flex; justify-content: center; align-items: center; background: linear-gradient(135deg, var(--bg-grad-start) 0%, var(--bg-grad-end) 100%); font-family: 'Poppins', sans-serif; color: var(--text-primary); transition: background 0.3s ease; }
+        .presentation-container { position: relative; aspect-ratio: 16 / 9; width: 100%; height: auto; max-width: 100vw; max-height: 100vh; background-color: var(--bg-grad-start); box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1), 0 4px 10px rgba(0, 0, 0, 0.05); border-radius: 8px; display: flex; flex-direction: column; overflow: hidden; }
+        @media (min-aspect-ratio: 16/9) { .presentation-container { width: auto; height: 100%; } }
+
+        /* --- Slide Styling --- */
+        .slide { flex-grow: 1; padding: clamp(1.8rem, 3.5vh, 2.8rem) clamp(2.2rem, 4.5vw, 4.0rem); padding-bottom: calc(clamp(1.8rem, 3.5vh, 2.8rem) + 55px); overflow-y: auto; display: none; flex-direction: column; line-height: 1.7; scrollbar-width: thin; scrollbar-color: var(--scrollbar-thumb) var(--scrollbar-track); position: relative; background-color: var(--bg-grad-start); background-image: linear-gradient(160deg, var(--bg-grad-mid-1) 0%, var(--bg-grad-mid-2) 30%, var(--bg-grad-mid-3) 70%, var(--bg-grad-end) 100%); aspect-ratio: 16 / 9; height: 100%; box-sizing: border-box; transition: background-image 0.3s ease; }
+        .slide::-webkit-scrollbar { width: 8px; }
+        .slide::-webkit-scrollbar-track { background: var(--scrollbar-track); border-radius: 4px; }
+        .slide::-webkit-scrollbar-thumb { background-color: var(--scrollbar-thumb); border-radius: 4px; border: 2px solid var(--scrollbar-track); }
+        .slide.active { display: flex; }
+
+        /* --- Footer and Controls --- */
+        .slide-footer { position: absolute; bottom: 0; left: 0; width: 100%; z-index: 15; background-color: rgba(248, 250, 252, 0.85); backdrop-filter: blur(4px); border-top: 1px solid rgba(209, 213, 219, 0.5); padding: clamp(0.2rem, 0.4vh, 0.3rem) clamp(1rem, 2vw, 2rem); display: flex; justify-content: space-between; align-items: center; opacity: 0; visibility: hidden; transition: opacity 0.3s ease-in-out, visibility 0.3s ease-in-out; pointer-events: none; }
+        .slide-footer.show-footer { opacity: 1; visibility: visible; pointer-events: auto; }
+        .footer-controls { display: flex; align-items: center; gap: clamp(0.6rem, 1.1vw, 1.1rem); }
+        .nav-button, .options-button, .reveal-answer-btn { padding: clamp(0.25rem, 0.5vh, 0.4rem) clamp(0.9rem, 1.3vw, 1.3rem); background-color: var(--nav-button-bg); color: white; border-radius: 4px; text-decoration: none; font-size: clamp(0.8rem, 1.3vh, 0.9rem); font-weight: 500; transition: background-color 0.2s ease-in-out, opacity 0.2s ease-in-out, box-shadow 0.2s ease-in-out; border: none; cursor: pointer; line-height: 1.4; }
+        .nav-button:hover:not(:disabled), .options-button:hover, .reveal-answer-btn:hover { background-color: var(--nav-button-hover-bg); box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1); }
+        .nav-button:disabled { background-color: #d1d5db; color: #6b7280; cursor: not-allowed; opacity: 0.8; box-shadow: none; }
+        .options-button { background-color: #64748b; padding: clamp(0.25rem, 0.5vh, 0.4rem); line-height: 0; }
+        .options-button:hover { background-color: #475569; }
+        .options-button svg { width: clamp(1.0rem, 1.6vh, 1.2rem); height: clamp(1.0rem, 1.6vh, 1.2rem); fill: white; }
+
+        /* --- Settings/Export Drawer Menu --- */
+        #settingsDrawer { position: absolute; bottom: 0; left: 0; width: 100%; background-color: #ffffff; border-top: 1px solid #e2e8f0; box-shadow: 0 -4px 12px rgba(0, 0, 0, 0.1); padding: clamp(1rem, 2vh, 1.5rem) clamp(1.5rem, 3vw, 2rem); transform: translateY(100%); transition: transform 0.3s ease-in-out; z-index: 25; }
+        #settingsDrawer.active { transform: translateY(0); }
+        .drawer-section { margin-bottom: 1rem; }
+        .drawer-section:last-child { margin-bottom: 0; }
+        .drawer-section h3 { font-size: 1rem; font-weight: 600; color: #475569; margin-bottom: 0.75rem; text-align: center; }
+        .drawer-buttons-container { display: flex; justify-content: center; align-items: center; gap: clamp(0.6rem, 1.1vw, 1.1rem); flex-wrap: wrap; }
+        .drawer-button { padding: clamp(0.6rem, 1.1vh, 0.8rem) clamp(1.1rem, 1.6vw, 1.6rem); background-color: #16a34a; color: white; border: none; border-radius: 4px; font-size: clamp(0.95rem, 1.6vh, 1.05rem); font-weight: 500; cursor: pointer; transition: background-color 0.2s ease, opacity 0.2s ease; }
+        .drawer-button:hover:not(:disabled) { background-color: #15803d; }
+        .drawer-button:disabled { background-color: #9ca3af; cursor: not-allowed; opacity: 0.7; }
+        .theme-button { border: 2px solid transparent; }
+        .theme-button.active { border-color: var(--header-main); box-shadow: 0 0 0 2px var(--header-main); }
+
+        /* --- Content Styling --- */
+        .two-panel-wrapper { display: flex; width: 100%; height: 100%; align-items: stretch; }
+        .two-panel-wrapper.image-right { flex-direction: row-reverse; }
+        .image-panel { flex: 0 0 33%; position: relative; }
+        .image-panel img { position: absolute; top: 0; left: 0; width: 100%; height: 100%; object-fit: cover; border-radius: 20px; }
+        .text-panel { flex: 1 1 67%; padding: clamp(1.8rem, 3.5vh, 2.8rem) clamp(2.2rem, 4.5vw, 4.0rem); box-sizing: border-box; overflow-y: auto; }
+        .slide h1 { color: var(--header-main); font-size: clamp(2.5em, 4.0vw, 3.5em); font-weight: 700; margin-bottom: 1.4rem; padding-bottom: 0.6rem; line-height: 1.35; border-bottom: 3px solid var(--border-header); }
+        .slide.session-title-slide h1 { font-size: clamp(3.2em, 4.8vw, 4.5em); border-bottom: none; margin-bottom: 1.2rem; color: var(--header-main); }
+        .slide.session-title-slide h2 { font-size: clamp(1.7em, 2.8vw, 2.5em); font-weight: 400; margin-bottom: 1.0rem; color: var(--header-sub); }
+        .slide.session-title-slide .slide-content-wrapper { display: flex; flex-direction: column; justify-content: center; align-items: center; text-align: center; height: 100%; }
+        .slide h2 { color: var(--header-sub); font-size: clamp(1.6em, 2.4vw, 2.2em); font-weight: 600; margin-top: 1.8rem; margin-bottom: 1rem; }
+        .slide p, .slide ul, .slide ol { color: var(--text-primary); margin-bottom: 1rem; font-size: clamp(1.0em, 1.5vw, 1.3em); line-height: 1.8; }
+        .slide ul, .slide ol { margin-left: 1.8rem; margin-bottom: 1rem; }
+        .slide ul { list-style-type: disc; }
+        .slide ol { list-style-type: decimal; }
+        .slide li { margin-bottom: 0.8rem; }
+        .slide pre { background-color: #1e293b; color: #f8fafc; border: 1px solid #334155; padding: 0.9rem; border-radius: 6px; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word; font-family: 'Roboto Mono', 'Courier New', Courier, monospace; font-size: clamp(0.85em, 1.1vw, 1.0em); margin-top: 0.6rem; margin-bottom: 1.1rem; line-height: 1.5; }
+        .slide code { font-family: 'Roboto Mono', 'Courier New', Courier, monospace; }
+        .slide code.inline { background-color: var(--inline-code-bg); color: var(--inline-code-text); padding: 0.2em 0.5em; border-radius: 4px; font-size: 0.95em; white-space: normal; }
+        .slide .conclusion { font-weight: 600; margin-top: 1.4rem; border-left: 4px solid var(--conclusion-border); padding-left: 0.9rem; color: var(--conclusion-text); font-size: clamp(1.0em, 1.5vw, 1.3em); }
+        .info-card { background-color: #fff; border-radius: 8px; padding: clamp(0.9rem, 1.6vh, 1.3rem); box-shadow: 0 2px 4px rgba(0,0,0,0.05); border-left: 4px solid var(--info-card-border); margin-bottom: 0.9rem; }
+        .comparison-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: clamp(1rem, 2vw, 1.5rem); margin-top: 1.2rem; }
+        .comparison-card { background-color: #f8fafc; border: 1px solid #e2e8f0; border-radius: 8px; padding: clamp(0.9rem, 1.6vh, 1.3rem); }
+        .comparison-card h3 { font-weight: 600; color: var(--header-main); margin-bottom: 0.6rem; text-align: center; border-bottom: 2px solid var(--border-header); padding-bottom: 0.4rem; font-size: clamp(1.15em, 1.75vw, 1.55em); }
+        .process-step { display: flex; align-items: center; margin-bottom: 0.9rem; background-color: var(--process-step-bg); padding: 0.7rem; border-radius: 6px; border: 1px solid var(--process-step-border); }
+        .step-number { background-color: var(--step-number-bg); color: white; border-radius: 50%; width: clamp(26px, 3.2vh, 32px); height: clamp(26px, 3.2vh, 32px); display: inline-flex; justify-content: center; align-items: center; font-weight: 600; margin-right: 0.9rem; flex-shrink: 0; font-size: clamp(0.85em, 1.25vh, 0.95em); }
+        .slide .highlight { color: #dc2626; font-weight: 700; }
+        .slide .highlight-green { color: #16a34a; font-weight: 600; }
+        .summary-list-check li::before { content: '✔'; margin-right: 0.8rem; color: #16a34a; }
+        .ai-assist-prompt { background-color: #ecfdf5; border-left: 4px solid #10b981; padding: 0.8rem; margin-top: 1rem; border-radius: 4px; }
+        .ai-assist-prompt strong { color: #047857; }
+        .mermaid { background-color: #f8fafc; border: 1px solid #e2e8f0; border-radius: 8px; padding: 1rem; margin-top: 1rem; display: flex; justify-content: center; align-items: center; min-height: 150px; }
+        .answer-explanation { display: none; margin-top: 1rem; }
+
+        /* --- STYLES FOR PRINTING --- */
+        @media print {
+            .slide-footer, #settingsDrawer, .options-button, .nav-button, .slide-counter, .reveal-answer-btn { display: none !important; }
+            body { background: none !important; display: block !important; height: auto !important; overflow: visible !important; font-size: 10pt; }
+            .presentation-container { width: 100% !important; height: auto !important; max-width: none !important; max-height: none !important; box-shadow: none !important; border-radius: 0 !important; overflow: visible !important; aspect-ratio: auto !important; background-color: transparent !important; }
+            .slide { display: flex !important; flex-direction: column !important; width: 100% !important; height: 100vh !important; overflow: hidden !important; page-break-before: always !important; page-break-inside: avoid !important; padding: 0.5in !important; margin: 0 !important; border: none !important; box-shadow: none !important; aspect-ratio: auto !important; background-color: var(--bg-grad-start) !important; background-image: linear-gradient(160deg, var(--bg-grad-mid-1) 0%, var(--bg-grad-mid-2) 30%, var(--bg-grad-mid-3) 70%, var(--bg-grad-end) 100%) !important; -webkit-print-color-adjust: exact !important; print-color-adjust: exact !important; }
+            .slide:first-child { page-break-before: auto !important; }
+            .slide h1 { font-size: 18pt !important; }
+            .slide h2 { font-size: 14pt !important; }
+            .slide p, .slide ul, .slide ol, .slide li { font-size: 11pt !important; line-height: 1.4 !important; }
+            .slide code.inline, .slide pre code { font-size: 10pt !important; }
+            .slide pre { padding: 0.5rem !important; }
+            .info-card, .comparison-card, .process-step, .ai-assist-prompt { background-color: #fff !important; border-color: #ccc !important; box-shadow: none !important; }
+            .step-number { background-color: #ccc !important; color: #000 !important; }
+            .comparison-grid { grid-template-columns: 1fr !important; }
+            .mermaid { background-color: #f8fafc !important; -webkit-print-color-adjust: exact !important; print-color-adjust: exact !important; }
+            .mermaid svg { max-width: 100%; height: auto; }
+        }
+        @page { size: landscape; margin: 0.5in; }
+    </style>
+</head>
+<body>
+    <div class="presentation-container">
+
+        <!-- Slide 1: Title Slide -->
+        <div id="slide-1" class="slide active session-title-slide">
+            <div class="slide-content-wrapper">
+                <h1>Information Systems Today</h1>
+                <h2>Enhancing Business Intelligence Using Big Data, Analytics, and AI</h2>
+                <p class="instructor-info" style="margin-top: 2rem;">Chapter 6</p>
+                <p class="instructor-info" style="margin-top: 2rem;">Instructor: N. Long Ha (PhD)</p>
+                <p class="instructor-info" style="margin-top: 2rem;">University of Economics, Hue University</p>
+            </div>
+        </div>
+
+        <!-- Slide 2: Learning Objectives -->
+        <div id="slide-2" class="slide">
+            <h1>Learning Objectives</h1>
+            <ol>
+                <li>Describe the need for business intelligence, advanced analytics, and artificial intelligence and how databases serve as a foundation for making better business decisions.</li>
+                <li>Explain core concepts of business intelligence, advanced analytics, and artificial intelligence.</li>
+                <li>Describe how organizations can enhance decision making by using knowledge management and geographic information systems.</li>
+            </ol>
+        </div>
+
+        <!-- Slide 3: Introduction -->
+        <div id="slide-3" class="slide">
+            <h1>The Need for High-Quality Information</h1>
+            <p>Today's organizations operate in a global, highly competitive, and rapidly changing environment.</p>
+            <div class="info-card">
+                <h3>The Key to Success</h3>
+                <p>Effective management relies on high-quality and timely information to support decision making.</p>
+            </div>
+            <p>This information must be extracted from:</p>
+            <ul>
+                <li>Ever-increasing amounts of <strong>structured</strong> and <strong>unstructured</strong> data.</li>
+                <li>A variety of internal and external sources.</li>
+            </ul>
+        </div>
+
+        <!-- Slide 4: Managing in the Digital World: Drones -->
+        <div id="slide-4" class="slide">
+            <h1>Managing in the Digital World: Intelligence Through Drones</h1>
+            <p>Drone technology has progressed rapidly, enabling new forms of data collection and autonomous operation.</p>
+            <div class="comparison-grid">
+                <div class="comparison-card">
+                    <h3>Swarm Technology</h3>
+                    <p>Companies like Verge Aero allow thousands of drones to fly in unison, deciding autonomously how to avoid collisions and reach destinations.</p>
+                </div>
+                <div class="comparison-card">
+                    <h3>Pandemic Response</h3>
+                    <p>Drones were used to honor healthcare workers and can be used for contactless delivery of medical supplies.</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 5: Drones in Surveillance & Delivery -->
+        <div id="slide-5" class="slide">
+            <div class="two-panel-wrapper">
+                <div class="text-panel">
+                    <h1>Drones in Surveillance & Delivery</h1>
+                    <h2>Surveillance</h2>
+                    <p>The U.S. Army and DARPA use tiny drones for real-time intelligence. Swarm technology allows them to map cities and navigate inside buildings without GPS.</p>
+                    <h2>Delivery</h2>
+                    <p><strong>Amazon Prime Air</strong> aims to deliver packages within 30 minutes using small flying drones, envisioning a future where local warehouses dispatch automated fleets.</p>
+                </div>
+                <div class="image-panel" style="display: flex; align-items: center; justify-content: center;">
+                    <div class="mermaid">
+                        graph TD
+                            A[Drone Technology] --> B[Surveillance]
+                            A --> C[Delivery]
+                            A --> D[Agriculture]
+                            B --> B1[Real-time Intel]
+                            B --> B2[Indoor Mapping]
+                            C --> C1[Amazon Prime Air]
+                            C --> C2[30-min Delivery]
+                            D --> D1[Crop Monitoring]
+                            D --> D2[Precision Farming]
+                            
+                            style A fill:#e0e7ff,stroke:#4338ca,stroke-width:2px
+                            style B fill:#dbeafe,stroke:#0ea5e9
+                            style C fill:#dbeafe,stroke:#0ea5e9
+                            style D fill:#dbeafe,stroke:#0ea5e9
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 6: Drones in Agriculture -->
+        <div id="slide-6" class="slide">
+            <h1>Drones in Agriculture</h1>
+            <p>Drones gather geographic data to help farmers increase efficiency and precision.</p>
+            <div class="info-card">
+                <h3>Precision Agriculture</h3>
+                <p>Current technology leverages sensors and AI to monitor crops, livestock, and soil quality. Drones can even deliver fertilizers to specific plots that need it most.</p>
+            </div>
+            <p><strong>Disaster Recovery:</strong> Drones quickly assess damage from natural disasters like flooding, helping farmers recover faster.</p>
+        </div>
+
+        <!-- Slide 7: The Need for Business Intelligence -->
+        <div id="slide-7" class="slide">
+            <h1>Why Organizations Need Business Intelligence</h1>
+            <p>Business processes often span multiple departments. The information needed to monitor them is often "missing"—hidden in disconnected spreadsheets and databases.</p>
+            <div class="info-card">
+                <h3>Data-Driven Organizations</h3>
+                <p>Organizations that make decisions backed by verifiable data are measurably more productive and profitable. They can better plan for the future and respond to threats.</p>
+            </div>
+        </div>
+
+        <!-- Slide 8: Threats & Opportunities -->
+        <div id="slide-8" class="slide">
+            <h1>External Threats and Opportunities</h1>
+            <p>The business environment is characterized by unstable market conditions and fierce competition.</p>
+            <ul>
+                <li><strong>Globalization:</strong> Provides new markets but also increases competition from developing countries.</li>
+                <li><strong>Consumer Demands:</strong> Customers can easily switch to competitors; loyalty is harder to maintain.</li>
+                <li><strong>Regulation:</strong> Stringent laws (e.g., Sarbanes-Oxley) require rigorous reporting and data management.</li>
+            </ul>
+            <p class="conclusion">BI helps organizations respond swiftly to these pressures.</p>
+        </div>
+
+        <!-- Slide 9: Big Data Characteristics -->
+        <div id="slide-9" class="slide">
+            <h1>Big Data: Volume, Variety, Velocity</h1>
+            <div class="two-panel-wrapper">
+                <div class="text-panel">
+                    <p><strong>Volume:</strong> Unprecedented amounts of data.</p>
+                    <p><strong>Variety:</strong> Structured (databases), Semistructured (sensor data), Unstructured (social media, video).</p>
+                    <p><strong>Velocity:</strong> Rapid data generation and the need for real-time processing.</p>
+                </div>
+                <div class="image-panel" style="display: flex; align-items: center; justify-content: center;">
+                    <div class="mermaid">
+                        graph TD
+                            BD[Big Data]
+                            BD --> V1[Volume]
+                            BD --> V2[Variety]
+                            BD --> V3[Velocity]
+                            
+                            V1 --> D1[Terabytes to Zettabytes]
+                            V2 --> D2[Structured & Unstructured]
+                            V3 --> D3[Real-time Streams]
+                            
+                            style BD fill:#4338ca,color:#fff,stroke:#333,stroke-width:2px
+                            style V1 fill:#e0e7ff,stroke:#6366f1
+                            style V2 fill:#e0e7ff,stroke:#6366f1
+                            style V3 fill:#e0e7ff,stroke:#6366f1
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 10: Big Data Opportunities -->
+        <div id="slide-10" class="slide">
+            <h1>Big Data Opportunities</h1>
+            <p>Analyzing Big Data can reveal hidden relationships and patterns.</p>
+            <div class="comparison-grid">
+                <div class="comparison-card">
+                    <h3>Structured Data</h3>
+                    <p>Fits neatly into spreadsheets. Transaction data, customer records. Essential for operational efficiency.</p>
+                </div>
+                <div class="comparison-card">
+                    <h3>Unstructured Data</h3>
+                    <p>Messy and complex. Text, audio, video, social sentiment. analyzing this is expensive but yields deeper insights.</p>
+                </div>
+            </div>
+            <p class="conclusion">Successful organizations leverage both to form a comprehensive strategy.</p>
+        </div>
+
+        <!-- Slide 11: Continuous Planning Process -->
+        <div id="slide-11" class="slide">
+            <h1>Effective Planning is Continuous</h1>
+            <p>Old Model: Annual strategic plans and backward-looking budgets.</p>
+            <p>New Model: <strong>Continuous Planning Process</strong>.</p>
+            <div class="mermaid">
+                graph LR
+                    A[Manage] --> B[Plan]
+                    B --> C[Monitor]
+                    C --> D[Analyze]
+                    D --> A
+                    
+                    style A fill:#dbeafe,stroke:#0ea5e9
+                    style B fill:#dbeafe,stroke:#0ea5e9
+                    style C fill:#dbeafe,stroke:#0ea5e9
+                    style D fill:#dbeafe,stroke:#0ea5e9
+            </div>
+            <p>Organizations continuously monitor and analyze data to make ongoing adjustments to plans and operations.</p>
+        </div>
+
+        <!-- Slide 12: Databases: The Foundation -->
+        <div id="slide-12" class="slide">
+            <h1>Databases: The Foundation of Intelligence</h1>
+            <div class="info-card">
+                <h3>Database</h3>
+                <p>A collection of related data organized in a way that facilitates data searches. They are vital to an organization's success.</p>
+            </div>
+            <p>Databases power everything from inventory tracking and sales transactions to the dynamic content on e-commerce websites.</p>
+        </div>
+
+        <!-- Slide 13: Databases in E-Commerce -->
+        <div id="slide-13" class="slide">
+            <h1>Enabling Interactive Websites</h1>
+            <p>E-commerce sites like Amazon rely on databases to provide dynamic content.</p>
+            <ul>
+                <li><strong>Product Catalogs:</strong> Data about products (name, price, image) is stored in a database and inserted into page templates.</li>
+                <li><strong>Transactions:</strong> When you order, the system reads and writes to the database instantly.</li>
+                <li><strong>Scale:</strong> Amazon processes millions of transactions daily, requiring highly efficient database management.</li>
+            </ul>
+        </div>
+
+        <!-- Slide 14: Database Terminology -->
+        <div id="slide-14" class="slide">
+            <h1>Database Terminology</h1>
+            <p>Understanding the structure of a database is essential.</p>
+            <div class="comparison-grid">
+                <div class="comparison-card">
+                    <h3>Entity (Table)</h3>
+                    <p>Something you collect data about (e.g., Customers, Products).</p>
+                </div>
+                <div class="comparison-card">
+                    <h3>Record (Row)</h3>
+                    <p>A collection of related attributes about a single instance of an entity (e.g., one specific customer).</p>
+                </div>
+                <div class="comparison-card">
+                    <h3>Attribute (Column)</h3>
+                    <p>Individual pieces of data (e.g., Name, SSN, Price).</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 15: Advantages of the Database Approach -->
+        <div id="slide-15" class="slide">
+            <h1>Advantages of the Database Approach</h1>
+            <p>Before DBMS, data was stored in redundant, flat files. The database approach offers:</p>
+            <ul>
+                <li><strong>Minimal Data Redundancy:</strong> Single copy of data saves space.</li>
+                <li><strong>Improved Data Consistency:</strong> Changes (e.g., address update) apply everywhere.</li>
+                <li><strong>Increased Security:</strong> Centralized access control.</li>
+                <li><strong>Program-Data Independence:</strong> Changing software doesn't require rebuilding the data.</li>
+            </ul>
+        </div>
+
+        <!-- Slide 16: Database Types: RDBMS vs. NoSQL -->
+        <div id="slide-16" class="slide">
+            <h1>Database Types: RDBMS vs. NoSQL</h1>
+            <div class="comparison-grid">
+                <div class="comparison-card">
+                    <h3>RDBMS (Relational)</h3>
+                    <p>Balances efficiency and ease of retrieval.</p>
+                    <p>Stores data in tables linked via relationships.</p>
+                    <p>Good for structured data (e.g., accounting).</p>
+                </div>
+                <div class="comparison-card">
+                    <h3>NoSQL</h3>
+                    <p>Highly scalable, distributed across many machines.</p>
+                    <p>Flexible data types (images, audio, social posts).</p>
+                    <p>Essential for Big Data and Cloud Computing (e.g., Amazon SimpleDB).</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 17: Effective Database Management -->
+        <div id="slide-17" class="slide">
+            <h1>Effective Database Management</h1>
+            <p>A database is only as good as the data it holds.</p>
+            <ul>
+                <li><strong>Data Model:</strong> A map or diagram that represents entities and their relationships.</li>
+                <li><strong>Data Dictionary:</strong> Defines the format, type, and valid values for each attribute (metadata).</li>
+                <li><strong>Business Rules:</strong> Policies that prevent illegal or illogical entries (e.g., a ship date cannot be before the order date).</li>
+            </ul>
+        </div>
+
+        <!-- Slide 18: Master Data Management (MDM) -->
+        <div id="slide-18" class="slide">
+            <h1>Master Data Management (MDM)</h1>
+            <div class="info-card">
+                <h3>Single Version of the Truth</h3>
+                <p>It is imperative that marketing, accounting, and sales share the same definitions and data for "Customer" or "Revenue".</p>
+            </div>
+            <p><strong>Master Data:</strong> The data deemed most important in the operation of a business (customers, suppliers, employees). MDM is a management issue, not just a technology issue.</p>
+        </div>
+
+        <!-- Slide 19: Entering and Querying Data -->
+        <div id="slide-19" class="slide">
+            <h1>Entering and Querying Data</h1>
+            <p>Data is captured via <strong>Forms</strong> (e.g., web checkout, surveys) or automatic sensors (IoT, POS terminals).</p>
+            <p>To retrieve data, we use a <strong>Query</strong>.</p>
+            <div class="info-card">
+                <h3>SQL (Structured Query Language)</h3>
+                <p>The most common language for interfacing with RDBMS.</p>
+                <p><code class="inline">SELECT AUTHOR, TITLE FROM BOOKS WHERE PRICE < 20</code></p>
+            </div>
+        </div>
+
+        <!-- Slide 20: Knowledge Check 1 -->
+        <div id="slide-20" class="slide">
+            <h1>Knowledge Check</h1>
+            <h2>Which of the following best describes "Master Data"?</h2>
+            <ul>
+                <li>A) Data that is generated by social media bots.</li>
+                <li>B) The data deemed most important in the operation of a business, shared among multiple units.</li>
+                <li>C) Data that has been deleted from the system.</li>
+                <li>D) A backup copy of all transaction logs.</li>
+            </ul>
+            <button class="reveal-answer-btn">Reveal Answer</button>
+            <div class="answer-explanation">
+                <div class="info-card">
+                    <h3>Correct Answer: B</h3>
+                    <p>Master data refers to the core data that is essential for business operations, such as data about customers, suppliers, and products. Managing it ensures a "single version of the truth."</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 21: Common Reports & Queries -->
+        <div id="slide-21" class="slide">
+            <h1>Common Reports & Queries</h1>
+            <p>Business users need data presented in useful formats.</p>
+            <ul>
+                <li><strong>Scheduled Reports:</strong> Produced at predefined intervals (daily/weekly).</li>
+                <li><strong>Exception Reports:</strong> Highlight situations out of the normal range.</li>
+                <li><strong>Drill-down Reports:</strong> Provide greater detail to analyze root causes.</li>
+                <li><strong>Ad Hoc Queries:</strong> Unplanned information requests for non-routine decisions.</li>
+            </ul>
+        </div>
+
+        <!-- Slide 22: OLTP vs. OLAP -->
+        <div id="slide-22" class="slide">
+            <h1>OLTP vs. OLAP</h1>
+            <div class="comparison-grid">
+                <div class="comparison-card">
+                    <h3>OLTP (Operational)</h3>
+                    <p><strong>Online Transaction Processing</strong></p>
+                    <p>Run the business on a current basis.</p>
+                    <p>Fast processing of simple transactions (orders, payments).</p>
+                    <p>Focus: Efficiency & Speed.</p>
+                </div>
+                <div class="comparison-card">
+                    <h3>OLAP (Informational)</h3>
+                    <p><strong>Online Analytical Processing</strong></p>
+                    <p>Support managerial decision making.</p>
+                    <p>Complex queries on historical data.</p>
+                    <p>Focus: Analysis & Insight.</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 23: Data Warehouses -->
+        <div id="slide-23" class="slide">
+            <h1>Data Warehouses</h1>
+            <p>Operational systems are optimized for transactions, not analysis. Running complex queries on them slows down the business.</p>
+            <div class="info-card">
+                <h3>Data Warehouse</h3>
+                <p>A company's virtual storehouse of valuable data from disparate information systems and external sources. It supports analysis without impacting operational performance.</p>
+            </div>
+            <p>Used by companies like Walmart and UPS to integrate data for comprehensive analysis.</p>
+        </div>
+
+        <!-- Slide 24: The ETL Process -->
+        <div id="slide-24" class="slide">
+            <h1>The ETL Process</h1>
+            <p>Consolidating data from various systems into a warehouse.</p>
+            <div class="mermaid">
+                graph LR
+                    S[Source Systems] --> E[Extraction]
+                    E --> T[Transformation]
+                    T --> L[Loading]
+                    L --> DW[Data Warehouse]
+                    
+                    style S fill:#e0f2fe,stroke:#0ea5e9
+                    style E fill:#eef2ff,stroke:#4f46e5
+                    style T fill:#eef2ff,stroke:#4f46e5
+                    style L fill:#eef2ff,stroke:#4f46e5
+                    style DW fill:#dbeafe,stroke:#4338ca,stroke-width:2px
+            </div>
+            <p><strong>Transformation</strong> includes <em>data cleansing</em>: detecting and correcting corrupt or inaccurate data.</p>
+        </div>
+
+        <!-- Slide 25: Data Marts -->
+        <div id="slide-25" class="slide">
+            <h1>Data Marts</h1>
+            <p>A Data Warehouse can be massive and expensive (millions of dollars). A <strong>Data Mart</strong> is a data warehouse that is limited in scope.</p>
+            <ul>
+                <li>Contains selected data for a specific end-user group (e.g., Marketing Data Mart, Inventory Data Mart).</li>
+                <li>Lower cost (<$1M) and easier to deploy.</li>
+                <li>Can be deployed on less powerful hardware.</li>
+            </ul>
+        </div>
+
+        <!-- Slide 26: BI vs. Advanced Analytics -->
+        <div id="slide-26" class="slide">
+            <h1>BI vs. Advanced Analytics</h1>
+            <div class="comparison-grid">
+                <div class="comparison-card">
+                    <h3>Business Intelligence (BI)</h3>
+                    <p>Focus: <strong>What happened?</strong></p>
+                    <p>Analyzes past and current data.</p>
+                    <p>Tools: Reports, Dashboards, OLAP.</p>
+                    <p>User: Business Users.</p>
+                </div>
+                <div class="comparison-card">
+                    <h3>Advanced Analytics</h3>
+                    <p>Focus: <strong>Why? What will happen?</strong></p>
+                    <p>Predictive modeling, pattern discovery.</p>
+                    <p>Tools: Data Mining, Machine Learning.</p>
+                    <p>User: Data Scientists/Analysts.</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 27: Decision Support Systems (DSS) -->
+        <div id="slide-27" class="slide">
+            <h1>Decision Support Systems (DSS)</h1>
+            <p>Interactive decision aids that use models to manipulate data.</p>
+            <ul>
+                <li><strong>What-if Analysis:</strong> Hypothetical changes to data (e.g., "What if interest rates rise by 1%?").</li>
+                <li><strong>Goal-Seeking:</strong> Determining input parameters to achieve a desired result (e.g., "What sales volume is needed to reach $1M profit?").</li>
+                <li><strong>Optimization:</strong> Finding the best balance between parameters within constraints.</li>
+            </ul>
+        </div>
+
+        <!-- Slide 28: OLAP Concepts -->
+        <div id="slide-28" class="slide">
+            <h1>OLAP: Dimensions and Measures</h1>
+            <p>OLAP allows complex, multidimensional analysis.</p>
+            <ul>
+                <li><strong>Measures (Facts):</strong> The values or numbers to analyze (e.g., Sales Revenue, Profit).</li>
+                <li><strong>Dimensions:</strong> Ways to summarize the data (e.g., Region, Time, Product Line).</li>
+            </ul>
+            <p>Dimensions often have hierarchies (Year > Quarter > Month > Day).</p>
+        </div>
+
+        <!-- Slide 29: The OLAP Cube -->
+        <div id="slide-29" class="slide">
+            <h1>The OLAP Cube</h1>
+            <div class="two-panel-wrapper">
+                <div class="text-panel">
+                    <p>An OLAP cube allows for <strong>Slicing and Dicing</strong>.</p>
+                    <p><strong>Slicing:</strong> Analyzing a subset of the data (e.g., only Q2 sales).</p>
+                    <p><strong>Dicing:</strong> Analyzing a slice on another dimension (e.g., Q2 sales for the Western Region only).</p>
+                </div>
+                <div class="image-panel" style="display: flex; align-items: center; justify-content: center;">
+                    <div class="mermaid">
+                        graph TD
+                            Cube[OLAP Cube]
+                            Dim1[Time]
+                            Dim2[Region]
+                            Dim3[Product]
+                            
+                            Cube --- Dim1
+                            Cube --- Dim2
+                            Cube --- Dim3
+                            
+                            style Cube fill:#c7d2fe,stroke:#4338ca,stroke-width:2px
+                            style Dim1 fill:#e0e7ff,stroke:#6366f1
+                            style Dim2 fill:#e0e7ff,stroke:#6366f1
+                            style Dim3 fill:#e0e7ff,stroke:#6366f1
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 30: Information Visualization -->
+        <div id="slide-30" class="slide">
+            <h1>Information Visualization: Digital Dashboards</h1>
+            <p><strong>Visualization:</strong> Displaying complex data relationships graphically.</p>
+            <div class="info-card">
+                <h3>Digital Dashboards</h3>
+                <p>Provide a quick overview of Key Performance Indicators (KPIs). They use traffic lights, speedometers, and charts to highlight trends and exceptions.</p>
+            </div>
+            <p>Dashboards support: <strong>Push reporting</strong> (overview), <strong>Exception alerts</strong> (problems), and <strong>Pull reporting</strong> (drill-down).</p>
+        </div>
+
+        <!-- Slide 31: Visual Analytics -->
+        <div id="slide-31" class="slide">
+            <h1>Visual Analytics</h1>
+            <p>Combining human intelligence with machine capability.</p>
+            <ul>
+                <li><strong>Problem:</strong> Data is often noisy and complex. Machines are fast but lack intuition.</li>
+                <li><strong>Solution:</strong> Interactive visualizations that allow humans to spot patterns that algorithms might miss.</li>
+                <li><strong>Example:</strong> Tracking hurricane intensification by visualizing "hot towers" in cloud data.</li>
+            </ul>
+        </div>
+
+        <!-- Slide 32: Visual Analytics Example -->
+        <div id="slide-32" class="slide">
+            <h1>Visual Analytics in Action</h1>
+            <p>Imagine trying to understand a hurricane from a spreadsheet of numbers. It's nearly impossible.</p>
+            <div class="mermaid">
+                graph LR
+                    A[Raw Data] --> B[Visualization]
+                    B --> C[Human Perception]
+                    C --> D[Insight/Discovery]
+                    
+                    style A fill:#e0f2fe,stroke:#0ea5e9
+                    style B fill:#dbeafe,stroke:#4f46e5
+                    style C fill:#eef2ff,stroke:#4338ca
+                    style D fill:#c7d2fe,stroke:#4338ca
+            </div>
+            <p>Visual analytics allows analysts to see the "story" in the data, such as the formation of a storm or a sudden shift in customer sentiment.</p>
+        </div>
+
+        <!-- Slide 33: Knowledge Check 2 -->
+        <div id="slide-33" class="slide">
+            <h1>Knowledge Check</h1>
+            <h2>What is the primary difference between OLTP and OLAP?</h2>
+            <ul>
+                <li>A) OLTP is for managers; OLAP is for clerks.</li>
+                <li>B) OLTP is for current, operational transactions; OLAP is for analyzing historical data.</li>
+                <li>C) OLTP uses Data Warehouses; OLAP uses Data Marts.</li>
+                <li>D) OLTP is slower than OLAP.</li>
+            </ul>
+            <button class="reveal-answer-btn">Reveal Answer</button>
+            <div class="answer-explanation">
+                <div class="info-card">
+                    <h3>Correct Answer: B</h3>
+                    <p>OLTP (Online Transaction Processing) is designed for fast, daily operations like processing orders. OLAP (Online Analytical Processing) is designed for complex analysis of historical data to support decision making.</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 34: Data Mining -->
+        <div id="slide-34" class="slide">
+            <h1>Advanced Analytics: Data Mining</h1>
+            <p>Data mining provides capabilities for discovering "hidden" predictive relationships in data.</p>
+            <ul>
+                <li><strong>Atheoretical:</strong> "Panning for gold" without a specific hypothesis.</li>
+                <li><strong>Data Reduction:</strong> Essential preparatory step to handle massive datasets.</li>
+                <li><strong>Algorithms:</strong> Search for patterns, trends, or rules.</li>
+            </ul>
+        </div>
+
+        <!-- Slide 35: Association Discovery -->
+        <div id="slide-35" class="slide">
+            <h1>Association Discovery</h1>
+            <p>Technique used to find correlations among sets of items.</p>
+            <div class="info-card">
+                <h3>The "Coffee and Sugar" Rule</h3>
+                <p>Mining sales data might reveal that 80% of people who buy coffee also buy sugar.</p>
+                <ul>
+                    <li><strong>Support:</strong> % of transactions where both occur.</li>
+                    <li><strong>Confidence:</strong> Reliability of the correlation.</li>
+                </ul>
+            </div>
+            <p><strong>Sequence Discovery:</strong> Finding associations over time (e.g., buying a TV today leads to buying a Blu-ray player next month).</p>
+        </div>
+
+        <!-- Slide 36: Clustering vs. Classification -->
+        <div id="slide-36" class="slide">
+            <h1>Clustering vs. Classification</h1>
+            <div class="comparison-grid">
+                <div class="comparison-card">
+                    <h3>Clustering (Unsupervised)</h3>
+                    <p>Grouping related records based on similarity.</p>
+                    <p>The groups are <strong>not known</strong> beforehand.</p>
+                    <p><em>Example: Finding natural customer segments based on spending habits.</em></p>
+                </div>
+                <div class="comparison-card">
+                    <h3>Classification (Supervised)</h3>
+                    <p>Segmenting records into <strong>known</strong> classes.</p>
+                    <p>The algorithm is trained on labeled data.</p>
+                    <p><em>Example: Classifying loan applicants as "Low Risk" or "High Risk".</em></p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 37: Text Mining -->
+        <div id="slide-37" class="slide">
+            <h1>Text Mining</h1>
+            <p>Analyzing unstructured text to extract information. 80-90% of data is unstructured.</p>
+            <div class="two-panel-wrapper">
+                <div class="text-panel">
+                    <ul>
+                        <li><strong>Sources:</strong> Emails, call center logs, social media posts, wikis.</li>
+                        <li><strong>Sentiment Analysis:</strong> Learning about customers' thoughts, feelings, and emotions.</li>
+                        <li><strong>Application:</strong> Identifying fraud, monitoring employee satisfaction, competitive intelligence.</li>
+                    </ul>
+                </div>
+                <div class="image-panel" style="display: flex; align-items: center; justify-content: center;">
+                    <div class="mermaid">
+                        graph TD
+                            Docs[Documents] --> NLP[Natural Language Processing]
+                            NLP --> Concepts[Extract Concepts]
+                            NLP --> Sentiment[Extract Sentiment]
+                            Concepts --> Insight[Business Insight]
+                            Sentiment --> Insight
+                            
+                            style NLP fill:#e0e7ff,stroke:#4338ca
+                            style Insight fill:#dcfce7,stroke:#166534,stroke-width:2px
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 38: Web Mining -->
+        <div id="slide-38" class="slide">
+            <h1>Web Content & Usage Mining</h1>
+            <ul>
+                <li><strong>Web Content Mining:</strong> Extracting textual information from web pages using "web crawlers" or spiders. Used for competitive intelligence.</li>
+                <li><strong>Web Usage Mining (Web Analytics):</strong> Analyzing clickstream data.
+                    <ul>
+                        <li>How do users navigate the site?</li>
+                        <li><strong>Stickiness:</strong> The ability to attract and keep visitors.</li>
+                        <li>Optimizing website structure based on user paths.</li>
+                    </ul>
+                </li>
+            </ul>
+        </div>
+
+        <!-- Slide 39: Machine Learning -->
+        <div id="slide-39" class="slide">
+            <h1>Machine Learning & Neural Networks</h1>
+            <p><strong>Machine Learning:</strong> Algorithms that allow systems to learn patterns from data without being explicitly programmed.</p>
+            <div class="info-card">
+                <h3>Neural Networks</h3>
+                <p>A network of processing elements that approximate the human brain. They learn by example.</p>
+                <p><em>Example:</em> Training a network on thousands of past loan applications to recognize the patterns of a default.</p>
+            </div>
+        </div>
+
+        <!-- Slide 40: Predictive Modeling -->
+        <div id="slide-40" class="slide">
+            <h1>Predictive Modeling</h1>
+            <p>Moving from "What happened?" to "What will happen?"</p>
+            <ul>
+                <li>Uses statistics, data mining, and machine learning to build explanatory models.</li>
+                <li><strong>Application:</strong> Uber Surge Pricing.</li>
+                <li>Uber uses predictive models to forecast demand spikes in specific areas, adjusting prices proactively to balance supply (drivers) and demand.</li>
+            </ul>
+        </div>
+
+        <!-- Slide 41: Artificial Intelligence (AI) -->
+        <div id="slide-41" class="slide">
+            <h1>Artificial Intelligence (AI)</h1>
+            <p>The science of enabling information technologies to simulate human intelligence.</p>
+            <ul>
+                <li><strong>Capabilities:</strong> Reasoning, learning, seeing, hearing, feeling.</li>
+                <li><strong>Real-world AI:</strong> Not just science fiction. It's in banking (fraud detection), medicine (diagnosis), and engineering.</li>
+                <li><strong>Deep Learning:</strong> Advanced neural networks used for complex tasks like fighting "superbugs" (drug-resistant bacteria).</li>
+            </ul>
+        </div>
+
+        <!-- Slide 42: Intelligent Systems -->
+        <div id="slide-42" class="slide">
+            <h1>Intelligent Systems</h1>
+            <p>Systems composed of sensors, software, and computers embedded in machines.</p>
+            <div class="comparison-grid">
+                <div class="comparison-card">
+                    <h3>Robotics</h3>
+                    <p>collaborative robots work alongside humans. Drones monitor inventory in warehouses.</p>
+                </div>
+                <div class="comparison-card">
+                    <h3>Sensor-Driven Computing</h3>
+                    <p>Decreasing sensor costs (e.g., accelerometers < $0.50) enable massive data collection for AI analysis.</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 43: Intelligent Agents (Bots) -->
+        <div id="slide-43" class="slide">
+            <h1>Intelligent Agents (Bots)</h1>
+            <p>Programs that work in the background to perform specific services.</p>
+            <ul>
+                <li><strong>User Agents:</strong> Perform tasks like filling forms or sending reports (e.g., Siri, Cortana).</li>
+                <li><strong>Buyer Agents (Shopping Bots):</strong> Search the web for the best price.</li>
+                <li><strong>Monitoring Agents:</strong> Track inventory levels or competitor prices.</li>
+                <li><strong>Chatbots:</strong> Simulate human conversation for customer service.</li>
+            </ul>
+        </div>
+
+        <!-- Slide 44: Robotic Process Automation (RPA) -->
+        <div id="slide-44" class="slide">
+            <h1>Robotic Process Automation (RPA)</h1>
+            <p>A technique to automate repetitive organizational tasks.</p>
+            <div class="info-card">
+                <h3>How it works</h3>
+                <p>RPA monitors how a user performs a task (like copying data from an email to a spreadsheet) and learns to automate that execution. It frees up human workers for more high-value tasks.</p>
+            </div>
+        </div>
+
+        <!-- Slide 45: Knowledge Check 3 -->
+        <div id="slide-45" class="slide">
+            <h1>Knowledge Check</h1>
+            <h2>Which type of Intelligent Agent searches the web to find the best price for a product?</h2>
+            <ul>
+                <li>A) Data Mining Agent</li>
+                <li>B) User Agent</li>
+                <li>C) Buyer Agent (Shopping Bot)</li>
+                <li>D) Chatbot</li>
+            </ul>
+            <button class="reveal-answer-btn">Reveal Answer</button>
+            <div class="answer-explanation">
+                <div class="info-card">
+                    <h3>Correct Answer: C</h3>
+                    <p>Buyer Agents, also known as shopping bots, are designed to search multiple websites to find the best price or availability for a specific product requested by the user.</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 46: Knowledge Management -->
+        <div id="slide-46" class="slide">
+            <h1>Knowledge Management (KM)</h1>
+            <p>Data and Information are not enough. We need Knowledge.</p>
+            <div class="comparison-grid">
+                <div class="comparison-card">
+                    <h3>Data</h3>
+                    <p>Raw symbols (e.g., 45, 66).</p>
+                </div>
+                <div class="comparison-card">
+                    <h3>Information</h3>
+                    <p>Formatted data (e.g., 45 items sold).</p>
+                </div>
+                <div class="comparison-card">
+                    <h3>Knowledge</h3>
+                    <p>Understanding relationships, skills, and experience.</p>
+                </div>
+            </div>
+            <p><strong>KM Systems:</strong> Processes to gain the greatest value from knowledge assets.</p>
+        </div>
+
+        <!-- Slide 47: Tacit vs. Explicit Knowledge -->
+        <div id="slide-47" class="slide">
+            <h1>Tacit vs. Explicit Knowledge</h1>
+            <div class="two-panel-wrapper">
+                <div class="text-panel">
+                    <h2>Explicit Knowledge</h2>
+                    <p>Can be documented, archived, and codified. Stored in databases and manuals.</p>
+                    <h2>Tacit Knowledge</h2>
+                    <p>Stored in a person's mind. "Know-how," intuition, and experience. Hard to capture.</p>
+                    <p><strong>Best Practices:</strong> Effective procedures that are often tacit.</p>
+                </div>
+                <div class="image-panel" style="display: flex; align-items: center; justify-content: center;">
+                    <div class="mermaid">
+                        graph TD
+                            K[Knowledge Assets]
+                            K --> E[Explicit]
+                            K --> T[Tacit]
+                            
+                            E --> E1[Databases]
+                            E --> E2[Manuals]
+                            
+                            T --> T1[Skills]
+                            T --> T2[Experience]
+                            T --> T3[Intuition]
+                            
+                            style T fill:#fcd34d,stroke:#b45309
+                            style E fill:#93c5fd,stroke:#1d4ed8
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 48: KM Benefits and Challenges -->
+        <div id="slide-48" class="slide">
+            <h1>KM: Benefits and Challenges</h1>
+            <div class="comparison-grid">
+                <div class="comparison-card">
+                    <h3>Benefits</h3>
+                    <p>Enhanced innovation.</p>
+                    <p>Improved customer service.</p>
+                    <p>Employee retention.</p>
+                    <p>Streamlined operations.</p>
+                </div>
+                <div class="comparison-card">
+                    <h3>Challenges</h3>
+                    <p>Getting employee buy-in.</p>
+                    <p>Dealing with knowledge overload.</p>
+                    <p>Keeping knowledge current (obsolescence).</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 49: Social Network Analysis -->
+        <div id="slide-49" class="slide">
+            <h1>Social Network Analysis</h1>
+            <p>Employees often work in "islands" of knowledge.</p>
+            <div class="info-card">
+                <h3>Connecting the Islands</h3>
+                <p>Social network analysis maps contacts to discover connections or missing links (structural holes). It helps find experts and groups that should be collaborating but aren't.</p>
+            </div>
+            <p><strong>Knowledge Portals:</strong> Ways to share this knowledge (e.g., Intranets for employees, Extranets for suppliers).</p>
+        </div>
+
+        <!-- Slide 50: Geographic Information Systems (GIS) -->
+        <div id="slide-50" class="slide">
+            <h1>Geographic Information Systems (GIS)</h1>
+            <p>A system for creating, storing, analyzing, and managing geographically referenced data.</p>
+            <ul>
+                <li><strong>Location Analytics:</strong> Adding a spatial dimension to data.</li>
+                <li><strong>Example:</strong> Pairing population density and average income with a map to find the best location for a new restaurant.</li>
+                <li><strong>Everyday Use:</strong> Google Maps, Uber (matching riders and drivers).</li>
+            </ul>
+        </div>
+
+        <!-- Slide 51: GIS Layers -->
+        <div id="slide-51" class="slide">
+            <h1>GIS Layers</h1>
+            <p>GIS works by layering different types of data on a map.</p>
+            <div class="mermaid">
+                graph TD
+                    Map[Base Map]
+                    L1[Layer 1: Roads]
+                    L2[Layer 2: Customers]
+                    L3[Layer 3: Traffic]
+                    
+                    L3 --> L2
+                    L2 --> L1
+                    L1 --> Map
+                    
+                    style Map fill:#d1fae5,stroke:#065f46
+                    style L1 fill:#bfdbfe,stroke:#1e40af
+                    style L2 fill:#bfdbfe,stroke:#1e40af
+                    style L3 fill:#bfdbfe,stroke:#1e40af
+            </div>
+            <p>Users can toggle layers to answer specific questions (e.g., "Show me high-income customers near major highways").</p>
+        </div>
+
+        <!-- Slide 52: GIS Applications -->
+        <div id="slide-52" class="slide">
+            <h1>GIS Industry Applications</h1>
+            <div class="comparison-grid">
+                <div class="comparison-card">
+                    <h3>Retail</h3>
+                    <p>Site selection, analyzing trade areas, delivery routing.</p>
+                </div>
+                <div class="comparison-card">
+                    <h3>Government</h3>
+                    <p>Urban planning, zoning, law enforcement (crime heat maps).</p>
+                </div>
+                <div class="comparison-card">
+                    <h3>Disaster Response</h3>
+                    <p>Evacuation planning, identifying flood zones, tracking disease spread.</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 53: In-Class Assignment -->
+        <div id="slide-53" class="slide">
+            <h1>In-Class Assignment (30 Mins)</h1>
+            <h2>AI-Assisted Analytics Strategy</h2>
+            <p><strong>Scenario:</strong> You are a consultant for a struggling retail chain. They have massive amounts of sales data but don't use it.</p>
+            <p><strong>Task:</strong> Use ChatGPT or Gemini to draft a "Business Intelligence & Analytics Roadmap" for them.</p>
+            <div class="ai-assist-prompt">
+                <p><strong>Sample Prompts:</strong></p>
+                <ul>
+                    <li>"What are the top 5 KPIs a retail chain should track using a digital dashboard?"</li>
+                    <li>"Explain how a retailer can use association discovery to improve store layout. Give specific examples."</li>
+                    <li>"Draft a plan to implement a customer loyalty program using predictive modeling to prevent churn."</li>
+                </ul>
+            </div>
+            <p><strong>Output:</strong> Create a 1-page summary of your roadmap (Core KPIs, 1 Data Mining tactic, 1 AI application).</p>
+        </div>
+
+        <!-- Slide 54: Ethical Dilemma -->
+        <div id="slide-54" class="slide">
+            <h1>Ethical Dilemma: The Orwellian IoT</h1>
+            <p>IoT devices collect massive amounts of data: smart thermostats, fridges, even toilets.</p>
+            <ul>
+                <li><strong>The Fear:</strong> "Big Brother" surveillance. Data could end up with law enforcement, marketers, or hackers.</li>
+                <li><strong>Deepfakes:</strong> AI can create realistic fake videos (e.g., faked CEO voice authorizing a transfer).</li>
+                <li><strong>Question:</strong> How do we balance the convenience of smart devices with the right to privacy?</li>
+            </ul>
+        </div>
+
+        <!-- Slide 55: Industry Analysis: Healthcare -->
+        <div id="slide-55" class="slide">
+            <h1>Industry Analysis: Healthcare</h1>
+            <p>Big Data and AI are transforming healthcare.</p>
+            <ul>
+                <li><strong>Telemedicine:</strong> Remote diagnosis and surgery.</li>
+                <li><strong>Quantified Self:</strong> Using wearables (Fitbit, Apple Watch) to track health data.</li>
+                <li><strong>AI Diagnosis:</strong> Using visual analytics and machine learning to detect diseases in X-rays more accurately than humans.</li>
+                <li><strong>Drug Discovery:</strong> Using Deep Learning to find new antibiotics for "superbugs".</li>
+            </ul>
+        </div>
+
+        <!-- Slide 56: Key Takeaways -->
+        <div id="slide-56" class="slide">
+            <h1>Key Takeaways</h1>
+            <ul class="summary-list-check">
+                <li>Business Intelligence and Advanced Analytics are essential for surviving in a competitive, data-rich world.</li>
+                <li>Databases and Data Warehouses form the foundation for all analysis.</li>
+                <li>Visual Analytics combines human intuition with machine processing power.</li>
+                <li>Advanced Analytics (Mining, AI, ML) shifts focus from "what happened" to "what will happen" (predictive).</li>
+                <li>Knowledge Management and GIS provide specialized decision support for knowledge assets and spatial data.</li>
+            </ul>
+        </div>
+
+        <!-- Slide 57: Final Slide -->
+        <div id="slide-57" class="slide session-title-slide">
+            <div class="slide-content-wrapper">
+                <h1>Questions?</h1>
+                <h2>Open Discussion</h2>
+            </div>
+        </div>
+
+        <!-- FOOTER AND CONTROLS -->
+        <div class="slide-footer">
+            <button id="optionsBtn" class="options-button" title="Settings">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor">
+                    <path d="M10 3a1.5 1.5 0 110 3 1.5 1.5 0 010-3zM10 8.5a1.5 1.5 0 110 3 1.5 1.5 0 010-3zM11.5 14a1.5 1.5 0 10-3 0 1.5 1.5 0 003 0z" />
+                </svg>
+            </button>
+            <div class="footer-controls">
+                <button id="prevBtn" class="nav-button">Previous</button>
+                <span id="slideCounter" class="slide-counter">Slide 1 / 57</span>
+                <button id="nextBtn" class="nav-button">Next</button>
+            </div>
+            <div style="width: 40px;"></div> 
+        </div>
+
+        <!-- SETTINGS DRAWER -->
+        <div id="settingsDrawer">
+            <div class="drawer-section">
+                <h3>Theme</h3>
+                <div id="themeSwitcher" class="drawer-buttons-container"></div>
+            </div>
+            <div class="drawer-section">
+                <h3>Export</h3>
+                <div class="drawer-buttons-container">
+                    <button id="exportPdfBtn" class="drawer-button">Current Slide (PDF)</button>
+                    <button id="printAllBtn" class="drawer-button">All Slides (PDF)</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            // --- DOM Element References ---
+            const slides = document.querySelectorAll('.slide');
+            const prevBtn = document.getElementById('prevBtn');
+            const nextBtn = document.getElementById('nextBtn');
+            const slideCounter = document.getElementById('slideCounter');
+            const optionsBtn = document.getElementById('optionsBtn');
+            const settingsDrawer = document.getElementById('settingsDrawer');
+            const exportPdfBtn = document.getElementById('exportPdfBtn');
+            const printAllBtn = document.getElementById('printAllBtn');
+            const themeSwitcherContainer = document.getElementById('themeSwitcher');
+            const presentationContainer = document.querySelector('.presentation-container');
+            const slideFooter = document.querySelector('.slide-footer');
+
+            // --- State Variables ---
+            let currentSlideIndex = 0;
+            const totalSlides = 57; 
+            let footerTimeoutId = null;
+            
+            // --- Constants ---
+            const FOOTER_HIDE_DELAY = 3000;
+            const PDF_PAGE_WIDTH_IN = 11;
+            const PDF_PAGE_HEIGHT_IN = PDF_PAGE_WIDTH_IN * 9 / 16;
+
+            // --- THEME DATA ---
+            const themes = {
+                'Leaf Green': {
+                    '--bg-grad-start': '#f0fdf4', '--bg-grad-end': '#dcfce7', '--bg-grad-mid-1': '#f0fdf4', '--bg-grad-mid-2': '#dcfce7', '--bg-grad-mid-3': '#bbf7d0',
+                    '--text-primary': '#334155', '--header-main': '#166534', '--header-sub': '#15803d', '--border-header': '#86efac',
+                    '--nav-button-bg': '#16a34a', '--nav-button-hover-bg': '#15803d', '--info-card-border': '#22c55e', '--conclusion-border': '#22c55e',
+                    '--conclusion-text': '#166534', '--process-step-bg': '#f0fdf4', '--process-step-border': '#bbf7d0', '--step-number-bg': '#16a34a',
+                    '--inline-code-bg': '#dcfce7', '--inline-code-text': '#14532d', '--layer-box-bg': '#dcfce7', '--layer-box-border': '#86efac',
+                    '--flow-arrow-color': '#22c55e', '--scrollbar-thumb': '#4ade80', '--scrollbar-track': '#dcfce7'
+                },
+                'Original Purple': {
+                    '--bg-grad-start': '#f5f3ff', '--bg-grad-end': '#ddd6fe', '--bg-grad-mid-1': '#f5f3ff', '--bg-grad-mid-2': '#ede9fe', '--bg-grad-mid-3': '#ddd6fe',
+                    '--text-primary': '#334155', '--header-main': '#4338ca', '--header-sub': '#4f46e5', '--border-header': '#a5b4fc',
+                    '--nav-button-bg': '#4f46e5', '--nav-button-hover-bg': '#4338ca', '--info-card-border': '#6366f1', '--conclusion-border': '#6366f1',
+                    '--conclusion-text': '#4338ca', '--process-step-bg': '#eef2ff', '--process-step-border': '#c7d2fe', '--step-number-bg': '#4f46e5',
+                    '--inline-code-bg': '#eef2ff', '--inline-code-text': '#312e81', '--layer-box-bg': '#e0e7ff', '--layer-box-border': '#c7d2fe',
+                    '--flow-arrow-color': '#6366f1', '--scrollbar-thumb': '#a78bfa', '--scrollbar-track': '#ddd6fe'
+                },
+                'Ocean Blue': {
+                    '--bg-grad-start': '#f0f9ff', '--bg-grad-end': '#dbeafe', '--bg-grad-mid-1': '#f0f9ff', '--bg-grad-mid-2': '#e0f2fe', '--bg-grad-mid-3': '#bae6fd',
+                    '--text-primary': '#334155', '--header-main': '#0c4a6e', '--header-sub': '#0369a1', '--border-header': '#7dd3fc',
+                    '--nav-button-bg': '#0ea5e9', '--nav-button-hover-bg': '#0284c7', '--info-card-border': '#38bdf8', '--conclusion-border': '#38bdf8',
+                    '--conclusion-text': '#0c4a6e', '--process-step-bg': '#f0f9ff', '--process-step-border': '#bae6fd', '--step-number-bg': '#0ea5e9',
+                    '--inline-code-bg': '#e0f2fe', '--inline-code-text': '#075985', '--layer-box-bg': '#e0f2fe', '--layer-box-border': '#7dd3fc',
+                    '--flow-arrow-color': '#38bdf8', '--scrollbar-thumb': '#38bdf8', '--scrollbar-track': '#dbeafe'
+                },
+                'Slate Gray': {
+                    '--bg-grad-start': '#f8fafc', '--bg-grad-end': '#e2e8f0', '--bg-grad-mid-1': '#f8fafc', '--bg-grad-mid-2': '#f1f5f9', '--bg-grad-mid-3': '#e2e8f0',
+                    '--text-primary': '#334155', '--header-main': '#1e293b', '--header-sub': '#334155', '--border-header': '#94a3b8',
+                    '--nav-button-bg': '#475569', '--nav-button-hover-bg': '#334155', '--info-card-border': '#64748b', '--conclusion-border': '#64748b',
+                    '--conclusion-text': '#1e293b', '--process-step-bg': '#f8fafc', '--process-step-border': '#e2e8f0', '--step-number-bg': '#475569',
+                    '--inline-code-bg': '#f1f5f9', '--inline-code-text': '#1e293b', '--layer-box-bg': '#f1f5f9', '--layer-box-border': '#cbd5e1',
+                    '--flow-arrow-color': '#64748b', '--scrollbar-thumb': '#94a3b8', '--scrollbar-track': '#e2e8f0'
+                }
+            };
+
+            // --- Core Functions ---
+            function applyTheme(themeName) {
+                const theme = themes[themeName];
+                if (!theme) return;
+                for (const [key, value] of Object.entries(theme)) {
+                    document.documentElement.style.setProperty(key, value);
+                }
+                localStorage.setItem('presentationTheme', themeName);
+                document.querySelectorAll('.theme-button').forEach(btn => {
+                    btn.classList.toggle('active', btn.dataset.theme === themeName);
+                });
+            }
+
+            function populateThemeSwitcher() {
+                Object.keys(themes).forEach(themeName => {
+                    const button = document.createElement('button');
+                    button.className = 'drawer-button theme-button';
+                    button.textContent = themeName;
+                    button.dataset.theme = themeName;
+                    button.style.backgroundColor = themes[themeName]['--nav-button-bg'];
+                    button.addEventListener('click', () => applyTheme(themeName));
+                    themeSwitcherContainer.appendChild(button);
+                });
+            }
+            
+            function initializeMermaidDiagrams() {
+                document.querySelectorAll('.mermaid').forEach(el => {
+                    el.setAttribute('data-mermaid', el.innerHTML.trim());
+                });
+            }
+
+            function showSlide(index) {
+                if (index < 0 || index >= totalSlides) return;
+                slides.forEach((slide, i) => slide.classList.toggle('active', i === index));
+                const activeSlide = slides[index];
+                if (activeSlide) {
+                    activeSlide.scrollTop = 0;
+                    setTimeout(() => {
+                        if (window.mermaid) {
+                          try {
+                            activeSlide.querySelectorAll('.mermaid').forEach(el => {
+                                const code = el.getAttribute('data-mermaid');
+                                if (code) {
+                                    el.innerHTML = code;
+                                    el.removeAttribute('data-processed');
+                                }
+                            });
+                            mermaid.run({ nodes: activeSlide.querySelectorAll('.mermaid') });
+                          } catch (e) {
+                            console.error("Mermaid rendering error:", e);
+                            activeSlide.querySelectorAll('.mermaid').forEach(el => el.innerHTML = 'Error rendering diagram.');
+                          }
+                        }
+                    }, 50);
+                }
+                slideCounter.textContent = `Slide ${index + 1} / ${totalSlides}`;
+                prevBtn.disabled = index === 0;
+                nextBtn.disabled = index === totalSlides - 1;
+                settingsDrawer.classList.remove('active');
+                currentSlideIndex = index;
+            }
+
+            function nextSlide() { showSlide(currentSlideIndex + 1); }
+            function prevSlide() { showSlide(currentSlideIndex - 1); }
+            function toggleSettingsDrawer() { settingsDrawer.classList.toggle('active'); }
+            
+            // --- PDF and Print Functions ---
+            function exportCurrentSlideToPdf() {
+                const activeSlide = document.querySelector('.slide.active');
+                if (!activeSlide) return;
+
+                const drawer = document.getElementById('settingsDrawer');
+                const originalStyles = {
+                    footerClassList: Array.from(slideFooter.classList), footerInlineDisplay: slideFooter.style.display,
+                    drawerDisplay: drawer.style.display, drawerTransform: drawer.style.transform,
+                    slideOverflow: activeSlide.style.overflowY, slideHeight: activeSlide.style.height, slideAspectRatio: activeSlide.style.aspectRatio
+                };
+                
+                exportPdfBtn.disabled = true; printAllBtn.disabled = true; exportPdfBtn.textContent = 'Exporting...'; optionsBtn.disabled = true;
+                if (footerTimeoutId) { clearTimeout(footerTimeoutId); footerTimeoutId = null; }
+                slideFooter.style.display = 'none'; drawer.style.display = 'none'; drawer.classList.remove('active');
+
+                activeSlide.style.overflowY = 'visible'; activeSlide.style.height = 'auto'; activeSlide.style.aspectRatio = 'auto';
+
+                const slideNumber = currentSlideIndex + 1;
+                const filename = `IS_Today_Ch6_Slide_${slideNumber}.pdf`;
+                const opt = {
+                    margin: [0.1, 0.1, 0.1, 0.1],
+                    filename: filename,
+                    image: { type: 'jpeg', quality: 0.98 },
+                    html2canvas: { scale: 2.5, useCORS: true, logging: false, scrollY: 0 },
+                    jsPDF: { unit: 'in', format: [PDF_PAGE_WIDTH_IN, PDF_PAGE_HEIGHT_IN], orientation: 'landscape' }
+                };
+                
+                html2pdf().set(opt).from(activeSlide).save().catch(err => {
+                    console.error('PDF export error:', err);
+                }).finally(() => {
+                    slideFooter.style.display = originalStyles.footerInlineDisplay;
+                    slideFooter.className = '';
+                    originalStyles.footerClassList.forEach(cls => slideFooter.classList.add(cls));
+                    drawer.style.display = originalStyles.drawerDisplay;
+                    drawer.style.transform = originalStyles.drawerTransform;
+                    activeSlide.style.overflowY = originalStyles.slideOverflow;
+                    activeSlide.style.height = originalStyles.slideHeight;
+                    activeSlide.style.aspectRatio = originalStyles.slideAspectRatio;
+                    exportPdfBtn.disabled = false;
+                    printAllBtn.disabled = false;
+                    exportPdfBtn.textContent = 'Current Slide (PDF)';
+                    optionsBtn.disabled = false;
+                });
+            }
+
+            async function triggerPrintAllSlides() {
+                settingsDrawer.classList.remove('active');
+                if (footerTimeoutId) { clearTimeout(footerTimeoutId); footerTimeoutId = null; }
+                slideFooter.classList.remove('show-footer');
+                
+                if(window.mermaid) {
+                    try {
+                        await mermaid.run({ nodes: document.querySelectorAll('.mermaid') });
+                    } catch(e) {
+                        console.error("Mermaid printing error:", e);
+                    }
+                }
+                
+                window.print();
+            }
+
+            // --- Event Listeners ---
+            prevBtn.addEventListener('click', prevSlide);
+            nextBtn.addEventListener('click', nextSlide);
+            optionsBtn.addEventListener('click', toggleSettingsDrawer);
+            exportPdfBtn.addEventListener('click', exportCurrentSlideToPdf);
+            printAllBtn.addEventListener('click', triggerPrintAllSlides);
+
+            document.querySelectorAll('.reveal-answer-btn').forEach(button => {
+                button.addEventListener('click', () => {
+                    const explanation = button.nextElementSibling;
+                    if (explanation && explanation.classList.contains('answer-explanation')) {
+                        explanation.style.display = 'block';
+                        button.style.display = 'none';
+                    }
+                });
+            });
+            
+            // --- Initial Setup ---
+            mermaid.initialize({ startOnLoad: false, theme: 'base', themeVariables: {
+                'primaryColor': '#f8fafc', 'primaryTextColor': '#334155', 'lineColor': '#475569',
+                'textColor': '#334155', 'fontSize': '16px',
+            }});
+            
+            initializeMermaidDiagrams();
+            populateThemeSwitcher();
+            const savedTheme = localStorage.getItem('presentationTheme') || 'Original Purple';
+            applyTheme(savedTheme);
+            showSlide(currentSlideIndex);
+
+            // --- Keyboard and Mouse Listeners ---
+            document.addEventListener('keydown', (e) => {
+                if (e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA') return;
+                if (e.key === 'ArrowRight' || e.key === ' ' || e.key === 'PageDown') nextSlide();
+                if (e.key === 'ArrowLeft' || e.key === 'PageUp') prevSlide();
+                if (e.key === 'Escape') settingsDrawer.classList.remove('active');
+            });
+            presentationContainer.addEventListener('mousemove', () => {
+                 if (footerTimeoutId) clearTimeout(footerTimeoutId);
+                 slideFooter.classList.add('show-footer');
+                 footerTimeoutId = setTimeout(() => slideFooter.classList.remove('show-footer'), FOOTER_HIDE_DELAY);
+            });
+            presentationContainer.addEventListener('mouseleave', () => { if (footerTimeoutId) clearTimeout(footerTimeoutId); slideFooter.classList.remove('show-footer'); });
+            document.addEventListener('click', (e) => {
+                if (settingsDrawer.classList.contains('active') && !settingsDrawer.contains(e.target) && !optionsBtn.contains(e.target)) {
+                    settingsDrawer.classList.remove('active');
+                }
+            });
+        });
+    </script>
+</body>
+</html>

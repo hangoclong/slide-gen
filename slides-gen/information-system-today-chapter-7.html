@@ -1,0 +1,1007 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Chapter 7: Enhancing Business Processes Using Enterprise Information Systems</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Roboto+Mono&display=swap" rel="stylesheet">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js" integrity="sha512-GsLlZN/3F2ErC5ifS5QtgpiJtWd43JWSuIgh7mbzZ8zBps+dvLusV+eNQATqgA/HdeKFVgA5v3S/cIrLF7QnIg==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    <script src="https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.min.js"></script>
+    <style>
+        :root {
+            --bg-grad-start: #f5f3ff;
+            --bg-grad-end: #ddd6fe;
+            --bg-grad-mid-1: #f5f3ff;
+            --bg-grad-mid-2: #ede9fe;
+            --bg-grad-mid-3: #ddd6fe;
+            --text-primary: #334155;
+            --header-main: #4338ca;
+            --header-sub: #4f46e5;
+            --border-header: #a5b4fc;
+            --nav-button-bg: #4f46e5;
+            --nav-button-hover-bg: #4338ca;
+            --info-card-border: #6366f1;
+            --conclusion-border: #6366f1;
+            --conclusion-text: #4338ca;
+            --process-step-bg: #eef2ff;
+            --process-step-border: #c7d2fe;
+            --step-number-bg: #4f46e5;
+            --inline-code-bg: #eef2ff;
+            --inline-code-text: #312e81;
+            --layer-box-bg: #e0e7ff;
+            --layer-box-border: #c7d2fe;
+            --flow-arrow-color: #6366f1;
+            --scrollbar-thumb: #a78bfa;
+            --scrollbar-track: #ddd6fe;
+        }
+
+        /* --- Base and Layout --- */
+        html, body { height: 100%; margin: 0; padding: 0; overflow: hidden; }
+        body { display: flex; justify-content: center; align-items: center; background: linear-gradient(135deg, var(--bg-grad-start) 0%, var(--bg-grad-end) 100%); font-family: 'Poppins', sans-serif; color: var(--text-primary); transition: background 0.3s ease; }
+        .presentation-container { position: relative; aspect-ratio: 16 / 9; width: 100%; height: auto; max-width: 100vw; max-height: 100vh; background-color: var(--bg-grad-start); box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1), 0 4px 10px rgba(0, 0, 0, 0.05); border-radius: 8px; display: flex; flex-direction: column; overflow: hidden; }
+        @media (min-aspect-ratio: 16/9) { .presentation-container { width: auto; height: 100%; } }
+
+        /* --- Slide Styling --- */
+        .slide { flex-grow: 1; padding: clamp(1.8rem, 3.5vh, 2.8rem) clamp(2.2rem, 4.5vw, 4.0rem); padding-bottom: calc(clamp(1.8rem, 3.5vh, 2.8rem) + 55px); overflow-y: auto; display: none; flex-direction: column; line-height: 1.7; scrollbar-width: thin; scrollbar-color: var(--scrollbar-thumb) var(--scrollbar-track); position: relative; background-color: var(--bg-grad-start); background-image: linear-gradient(160deg, var(--bg-grad-mid-1) 0%, var(--bg-grad-mid-2) 30%, var(--bg-grad-mid-3) 70%, var(--bg-grad-end) 100%); aspect-ratio: 16 / 9; height: 100%; box-sizing: border-box; transition: background-image 0.3s ease; }
+        .slide::-webkit-scrollbar { width: 8px; }
+        .slide::-webkit-scrollbar-track { background: var(--scrollbar-track); border-radius: 4px; }
+        .slide::-webkit-scrollbar-thumb { background-color: var(--scrollbar-thumb); border-radius: 4px; border: 2px solid var(--scrollbar-track); }
+        .slide.active { display: flex; }
+
+        /* --- Footer and Controls --- */
+        .slide-footer { position: absolute; bottom: 0; left: 0; width: 100%; z-index: 15; background-color: rgba(248, 250, 252, 0.85); backdrop-filter: blur(4px); border-top: 1px solid rgba(209, 213, 219, 0.5); padding: clamp(0.2rem, 0.4vh, 0.3rem) clamp(1rem, 2vw, 2rem); display: flex; justify-content: space-between; align-items: center; opacity: 0; visibility: hidden; transition: opacity 0.3s ease-in-out, visibility 0.3s ease-in-out; pointer-events: none; }
+        .slide-footer.show-footer { opacity: 1; visibility: visible; pointer-events: auto; }
+        .footer-controls { display: flex; align-items: center; gap: clamp(0.6rem, 1.1vw, 1.1rem); }
+        .nav-button, .options-button, .reveal-answer-btn { padding: clamp(0.25rem, 0.5vh, 0.4rem) clamp(0.9rem, 1.3vw, 1.3rem); background-color: var(--nav-button-bg); color: white; border-radius: 4px; text-decoration: none; font-size: clamp(0.8rem, 1.3vh, 0.9rem); font-weight: 500; transition: background-color 0.2s ease-in-out, opacity 0.2s ease-in-out, box-shadow 0.2s ease-in-out; border: none; cursor: pointer; line-height: 1.4; }
+        .nav-button:hover:not(:disabled), .options-button:hover, .reveal-answer-btn:hover { background-color: var(--nav-button-hover-bg); box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1); }
+        .nav-button:disabled { background-color: #d1d5db; color: #6b7280; cursor: not-allowed; opacity: 0.8; box-shadow: none; }
+        .options-button { background-color: #64748b; padding: clamp(0.25rem, 0.5vh, 0.4rem); line-height: 0; }
+        .options-button:hover { background-color: #475569; }
+        .options-button svg { width: clamp(1.0rem, 1.6vh, 1.2rem); height: clamp(1.0rem, 1.6vh, 1.2rem); fill: white; }
+
+        /* --- Settings/Export Drawer Menu --- */
+        #settingsDrawer { position: absolute; bottom: 0; left: 0; width: 100%; background-color: #ffffff; border-top: 1px solid #e2e8f0; box-shadow: 0 -4px 12px rgba(0, 0, 0, 0.1); padding: clamp(1rem, 2vh, 1.5rem) clamp(1.5rem, 3vw, 2rem); transform: translateY(100%); transition: transform 0.3s ease-in-out; z-index: 25; }
+        #settingsDrawer.active { transform: translateY(0); }
+        .drawer-section { margin-bottom: 1rem; }
+        .drawer-section:last-child { margin-bottom: 0; }
+        .drawer-section h3 { font-size: 1rem; font-weight: 600; color: #475569; margin-bottom: 0.75rem; text-align: center; }
+        .drawer-buttons-container { display: flex; justify-content: center; align-items: center; gap: clamp(0.6rem, 1.1vw, 1.1rem); flex-wrap: wrap; }
+        .drawer-button { padding: clamp(0.6rem, 1.1vh, 0.8rem) clamp(1.1rem, 1.6vw, 1.6rem); background-color: #16a34a; color: white; border: none; border-radius: 4px; font-size: clamp(0.95rem, 1.6vh, 1.05rem); font-weight: 500; cursor: pointer; transition: background-color 0.2s ease, opacity 0.2s ease; }
+        .drawer-button:hover:not(:disabled) { background-color: #15803d; }
+        .drawer-button:disabled { background-color: #9ca3af; cursor: not-allowed; opacity: 0.7; }
+        .theme-button { border: 2px solid transparent; }
+        .theme-button.active { border-color: var(--header-main); box-shadow: 0 0 0 2px var(--header-main); }
+
+        /* --- Content Styling --- */
+        .two-panel-wrapper { display: flex; width: 100%; height: 100%; align-items: stretch; }
+        .two-panel-wrapper.image-right { flex-direction: row-reverse; }
+        .image-panel { flex: 0 0 33%; position: relative; }
+        .image-panel img { position: absolute; top: 0; left: 0; width: 100%; height: 100%; object-fit: cover; border-radius: 20px; }
+        .text-panel { flex: 1 1 67%; padding: clamp(1.8rem, 3.5vh, 2.8rem) clamp(2.2rem, 4.5vw, 4.0rem); box-sizing: border-box; overflow-y: auto; }
+        .slide h1 { color: var(--header-main); font-size: clamp(2.5em, 4.0vw, 3.5em); font-weight: 700; margin-bottom: 1.4rem; padding-bottom: 0.6rem; line-height: 1.35; border-bottom: 3px solid var(--border-header); }
+        .slide.session-title-slide h1 { font-size: clamp(3.2em, 4.8vw, 4.5em); border-bottom: none; margin-bottom: 1.2rem; color: var(--header-main); }
+        .slide.session-title-slide h2 { font-size: clamp(1.7em, 2.8vw, 2.5em); font-weight: 400; margin-bottom: 1.0rem; color: var(--header-sub); }
+        .slide.session-title-slide .slide-content-wrapper { display: flex; flex-direction: column; justify-content: center; align-items: center; text-align: center; height: 100%; }
+        .slide h2 { color: var(--header-sub); font-size: clamp(1.6em, 2.4vw, 2.2em); font-weight: 600; margin-top: 1.8rem; margin-bottom: 1rem; }
+        .slide p, .slide ul, .slide ol { color: var(--text-primary); margin-bottom: 1rem; font-size: clamp(1.0em, 1.5vw, 1.3em); line-height: 1.8; }
+        .slide ul, .slide ol { margin-left: 1.8rem; margin-bottom: 1rem; }
+        .slide ul { list-style-type: disc; }
+        .slide ol { list-style-type: decimal; }
+        .slide li { margin-bottom: 0.8rem; }
+        .slide pre { background-color: #1e293b; color: #f8fafc; border: 1px solid #334155; padding: 0.9rem; border-radius: 6px; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word; font-family: 'Roboto Mono', 'Courier New', Courier, monospace; font-size: clamp(0.85em, 1.1vw, 1.0em); margin-top: 0.6rem; margin-bottom: 1.1rem; line-height: 1.5; }
+        .slide code { font-family: 'Roboto Mono', 'Courier New', Courier, monospace; }
+        .slide code.inline { background-color: var(--inline-code-bg); color: var(--inline-code-text); padding: 0.2em 0.5em; border-radius: 4px; font-size: 0.95em; white-space: normal; }
+        .slide .conclusion { font-weight: 600; margin-top: 1.4rem; border-left: 4px solid var(--conclusion-border); padding-left: 0.9rem; color: var(--conclusion-text); font-size: clamp(1.0em, 1.5vw, 1.3em); }
+        .info-card { background-color: #fff; border-radius: 8px; padding: clamp(0.9rem, 1.6vh, 1.3rem); box-shadow: 0 2px 4px rgba(0,0,0,0.05); border-left: 4px solid var(--info-card-border); margin-bottom: 0.9rem; }
+        .comparison-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: clamp(1rem, 2vw, 1.5rem); margin-top: 1.2rem; }
+        .comparison-card { background-color: #f8fafc; border: 1px solid #e2e8f0; border-radius: 8px; padding: clamp(0.9rem, 1.6vh, 1.3rem); }
+        .comparison-card h3 { font-weight: 600; color: var(--header-main); margin-bottom: 0.6rem; text-align: center; border-bottom: 2px solid var(--border-header); padding-bottom: 0.4rem; font-size: clamp(1.15em, 1.75vw, 1.55em); }
+        .process-step { display: flex; align-items: center; margin-bottom: 0.9rem; background-color: var(--process-step-bg); padding: 0.7rem; border-radius: 6px; border: 1px solid var(--process-step-border); }
+        .step-number { background-color: var(--step-number-bg); color: white; border-radius: 50%; width: clamp(26px, 3.2vh, 32px); height: clamp(26px, 3.2vh, 32px); display: inline-flex; justify-content: center; align-items: center; font-weight: 600; margin-right: 0.9rem; flex-shrink: 0; font-size: clamp(0.85em, 1.25vh, 0.95em); }
+        .slide .highlight { color: #dc2626; font-weight: 700; }
+        .slide .highlight-green { color: #16a34a; font-weight: 600; }
+        .summary-list-check li::before { content: '✔'; margin-right: 0.8rem; color: #16a34a; }
+        .ai-assist-prompt { background-color: #ecfdf5; border-left: 4px solid #10b981; padding: 0.8rem; margin-top: 1rem; border-radius: 4px; }
+        .ai-assist-prompt strong { color: #047857; }
+        .mermaid { background-color: #f8fafc; border: 1px solid #e2e8f0; border-radius: 8px; padding: 1rem; margin-top: 1rem; display: flex; justify-content: center; align-items: center; min-height: 150px; }
+        .answer-explanation { display: none; margin-top: 1rem; }
+
+        /* --- STYLES FOR PRINTING --- */
+        @media print {
+            .slide-footer, #settingsDrawer, .options-button, .nav-button, .slide-counter, .reveal-answer-btn { display: none !important; }
+            body { background: none !important; display: block !important; height: auto !important; overflow: visible !important; font-size: 10pt; }
+            .presentation-container { width: 100% !important; height: auto !important; max-width: none !important; max-height: none !important; box-shadow: none !important; border-radius: 0 !important; overflow: visible !important; aspect-ratio: auto !important; background-color: transparent !important; }
+            .slide { display: flex !important; flex-direction: column !important; width: 100% !important; height: 100vh !important; overflow: hidden !important; page-break-before: always !important; page-break-inside: avoid !important; padding: 0.5in !important; margin: 0 !important; border: none !important; box-shadow: none !important; aspect-ratio: auto !important; background-color: var(--bg-grad-start) !important; background-image: linear-gradient(160deg, var(--bg-grad-mid-1) 0%, var(--bg-grad-mid-2) 30%, var(--bg-grad-mid-3) 70%, var(--bg-grad-end) 100%) !important; -webkit-print-color-adjust: exact !important; print-color-adjust: exact !important; }
+            .slide:first-child { page-break-before: auto !important; }
+            .slide h1 { font-size: 18pt !important; }
+            .slide h2 { font-size: 14pt !important; }
+            .slide p, .slide ul, .slide ol, .slide li { font-size: 11pt !important; line-height: 1.4 !important; }
+            .slide code.inline, .slide pre code { font-size: 10pt !important; }
+            .slide pre { padding: 0.5rem !important; }
+            .info-card, .comparison-card, .process-step, .ai-assist-prompt { background-color: #fff !important; border-color: #ccc !important; box-shadow: none !important; }
+            .step-number { background-color: #ccc !important; color: #000 !important; }
+            .comparison-grid { grid-template-columns: 1fr !important; }
+            .mermaid { background-color: #f8fafc !important; -webkit-print-color-adjust: exact !important; print-color-adjust: exact !important; }
+            .mermaid svg { max-width: 100%; height: auto; }
+        }
+        @page { size: landscape; margin: 0.5in; }
+    </style>
+</head>
+<body>
+    <div class="presentation-container">
+
+        <!-- Slide 1: Title Slide -->
+        <div id="slide-1" class="slide active session-title-slide">
+            <div class="slide-content-wrapper">
+                <h1>Information Systems Today</h1>
+                <h2>Enhancing Business Processes Using Enterprise Information Systems</h2>
+                <p class="instructor-info" style="margin-top: 2rem;">Chapter 7</p>
+                <p class="instructor-info" style="margin-top: 2rem;">Instructor: N. Long Ha (PhD)</p>
+                <p class="instructor-info" style="margin-top: 2rem;">University of Economics, Hue University</p>
+            </div>
+        </div>
+
+        <!-- Slide 2: Learning Objectives -->
+        <div id="slide-2" class="slide">
+            <h1>Learning Objectives</h1>
+            <ol>
+                <li>Explain core business processes that are common in organizations.</li>
+                <li>Describe what enterprise systems are and how they have evolved.</li>
+                <li>Describe enterprise resource planning systems and how they help to improve internal business processes.</li>
+                <li>Understand and utilize the keys to successfully implementing enterprise systems.</li>
+            </ol>
+        </div>
+
+        <!-- Slide 3: Preview: Integrating the Enterprise -->
+        <div id="slide-3" class="slide">
+            <h1>Preview: Integrating the Enterprise</h1>
+            <p>To succeed in today's competitive world, companies need systems that span the entire organization.</p>
+            <div class="info-card">
+                <h3>Enterprise Systems</h3>
+                <p>Information systems that integrate business activities across departmental boundaries. They increase coordination, streamline operations, and improve responsiveness to customers.</p>
+            </div>
+            <p>This chapter focuses on <strong>internally focused</strong> systems. Chapter 8 will cover systems that span multiple organizations (externally focused).</p>
+        </div>
+
+        <!-- Slide 4: Managing in the Digital World: Amazon -->
+        <div id="slide-4" class="slide">
+            <h1>Case Study: Amazon</h1>
+            <p>Amazon has transformed from an online bookseller to an "everything store" by mastering enterprise-wide information systems.</p>
+            <ul>
+                <li><strong>Optimization:</strong> Amazon uses IS to optimize processes from acquiring goods to delivering packages (sometimes by drone!).</li>
+                <li><strong>Integration:</strong> It manages fulfillment for thousands of small businesses, turning warehousing into a revenue stream.</li>
+                <li><strong>Innovation:</strong> AWS (Amazon Web Services) allows other companies to run their enterprise systems in the cloud.</li>
+            </ul>
+        </div>
+
+        <!-- Slide 5: Core Business Processes -->
+        <div id="slide-5" class="slide">
+            <h1>Core Business Processes</h1>
+            <p>Traditionally, companies are organized into functional areas (Marketing, Accounting, Manufacturing). However, business processes cross these boundaries.</p>
+            <div class="info-card">
+                <h3>The Customer's View</h3>
+                <p>Customers don't care about departments; they care about results. Business processes should be viewed as a series of value-added activities from the customer's perspective.</p>
+            </div>
+            <p>We will examine three core revenue-generating processes.</p>
+        </div>
+
+        <!-- Slide 6: Order-to-Cash Process -->
+        <div id="slide-6" class="slide">
+            <h1>1. Order-to-Cash</h1>
+            <p>The process of selling goods or services and collecting revenue.</p>
+            <div class="two-panel-wrapper">
+                <div class="text-panel">
+                    <p><strong>Key Steps:</strong></p>
+                    <ol>
+                        <li>Create Customer Record</li>
+                        <li>Check Credit</li>
+                        <li>Create Order</li>
+                        <li>Allocate Stock</li>
+                        <li>Pick, Pack, Ship</li>
+                        <li>Invoice & Collect Payment</li>
+                    </ol>
+                    <p><em>Inefficiencies here lead to lost sales and unhappy customers.</em></p>
+                </div>
+                <div class="image-panel" style="display: flex; align-items: center; justify-content: center;">
+                    <div class="mermaid">
+                        graph TD
+                            A[Sales: Create Order] --> B[Accounting: Check Credit]
+                            B --> C[Warehouse: Allocate Stock]
+                            C --> D[Warehouse: Pick, Pack, Ship]
+                            D --> E[Accounting: Invoice]
+                            E --> F[Accounting: Collect Payment]
+                            
+                            style A fill:#e0f2fe,stroke:#0ea5e9
+                            style B fill:#eef2ff,stroke:#4f46e5
+                            style C fill:#dbeafe,stroke:#4338ca
+                            style D fill:#dbeafe,stroke:#4338ca
+                            style E fill:#eef2ff,stroke:#4f46e5
+                            style F fill:#eef2ff,stroke:#4f46e5
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 7: Procure-to-Pay Process -->
+        <div id="slide-7" class="slide">
+            <h1>2. Procure-to-Pay</h1>
+            <p>The process of ordering goods or services and paying for them.</p>
+            <div class="two-panel-wrapper image-right">
+                <div class="text-panel">
+                    <p><strong>Key Steps:</strong></p>
+                    <ol>
+                        <li>Negotiate Price & Terms</li>
+                        <li>Issue Purchase Order</li>
+                        <li>Receive Goods</li>
+                        <li>Receive Invoice</li>
+                        <li>Settle Payment</li>
+                    </ol>
+                    <p><em>Effective procurement reduces costs and builds strong supplier relationships.</em></p>
+                </div>
+                <div class="image-panel" style="display: flex; align-items: center; justify-content: center;">
+                    <div class="mermaid">
+                        graph TD
+                            A[Supply Chain: Negotiate] --> B[Purchasing: Create PO]
+                            B --> C[Warehouse: Receive Goods]
+                            C --> D[Accounting: Receive Invoice]
+                            D --> E[Accounting: Settle Payment]
+                            
+                            style A fill:#d1fae5,stroke:#059669
+                            style B fill:#e0f2fe,stroke:#0ea5e9
+                            style C fill:#dbeafe,stroke:#4338ca
+                            style D fill:#eef2ff,stroke:#4f46e5
+                            style E fill:#eef2ff,stroke:#4f46e5
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 8: Make-to-Stock vs. Make-to-Order -->
+        <div id="slide-8" class="slide">
+            <h1>3. Make-to-Stock vs. Make-to-Order</h1>
+            <p>The processes associated with producing goods.</p>
+            <div class="comparison-grid">
+                <div class="comparison-card">
+                    <h3>Make-to-Stock (Push)</h3>
+                    <p>Goods are produced based on forecasts and stocked in a warehouse.</p>
+                    <p><em>Example: Televisions, Home Appliances.</em></p>
+                </div>
+                <div class="comparison-card">
+                    <h3>Make-to-Order (Pull)</h3>
+                    <p>Manufacturing starts only after an order is received.</p>
+                    <p><em>Example: Dell Computers, Commercial Aircraft.</em></p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 9: Mermaid: Production Processes -->
+        <div id="slide-9" class="slide">
+            <h1>Visualizing Production Processes</h1>
+            <div class="mermaid">
+                graph TD
+                    subgraph Make-to-Stock
+                    A[Forecast Demand] --> B[Procure Inputs]
+                    B --> C[Produce Goods]
+                    C --> D[Stock Inventory]
+                    D --> E[Customer Order]
+                    end
+                    
+                    subgraph Make-to-Order
+                    F[Customer Order] --> G[Procure Inputs]
+                    G --> H[Produce Goods]
+                    H --> I[Deliver to Customer]
+                    end
+                    
+                    style A fill:#e0f2fe,stroke:#0ea5e9
+                    style F fill:#fce7f3,stroke:#d97706
+            </div>
+        </div>
+
+        <!-- Slide 10: Supply Chains -->
+        <div id="slide-10" class="slide">
+            <h1>Supply Chains</h1>
+            <p>Core processes enable the creation of supply chains.</p>
+            <div class="info-card">
+                <h3>Analogy: A River</h3>
+                <p>Raw materials start at the source and move downstream toward the end customer. At each step, value is added.</p>
+            </div>
+            <ul>
+                <li><strong>Upstream:</strong> Flow from suppliers to the organization.</li>
+                <li><strong>Downstream:</strong> Flow from the organization to customers.</li>
+            </ul>
+        </div>
+
+        <!-- Slide 11: The Value Chain Framework -->
+        <div id="slide-11" class="slide">
+            <h1>The Value Chain Framework</h1>
+            <p>Information systems improve effectiveness (value) and efficiency (cost) of the value chain.</p>
+            <div class="mermaid">
+                graph TD
+                    subgraph Support_Activities [Support Activities]
+                        direction TB
+                        Admin[Administration]
+                        HR[Human Resources]
+                        Tech[Tech Development]
+                        Proc[Procurement]
+                    end
+                    
+                    subgraph Core_Activities [Core Activities]
+                        direction LR
+                        In[Inbound Logistics] --> Ops[Operations]
+                        Ops --> Out[Outbound Logistics]
+                        Out --> Mkt[Marketing & Sales]
+                        Mkt --> Svc[Service]
+                    end
+                    
+                    Support_Activities ~~~ Core_Activities
+                    
+                    style Core_Activities fill:#e0e7ff,stroke:#4338ca,color:#1e3a8a
+                    style Support_Activities fill:#f3f4f6,stroke:#64748b,color:#334155
+            </div>
+        </div>
+
+        <!-- Slide 12: Core Activities: Logistics & Operations -->
+        <div id="slide-12" class="slide">
+            <h1>Core Activities: Logistics & Operations</h1>
+            <div class="comparison-grid">
+                <div class="comparison-card">
+                    <h3>Inbound Logistics</h3>
+                    <p>Receiving and stocking raw materials, parts, and products. Crucial for the procure-to-pay process.</p>
+                </div>
+                <div class="comparison-card">
+                    <h3>Operations & Manufacturing</h3>
+                    <p>Transforming inputs into outputs. Order processing (Amazon) or assembly (Dell).</p>
+                </div>
+                <div class="comparison-card">
+                    <h3>Outbound Logistics</h3>
+                    <p>Distribution of end products. Picking, packing, and shipping to the customer.</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 13: Core Activities: Marketing & Service -->
+        <div id="slide-13" class="slide">
+            <h1>Core Activities: Marketing & Service</h1>
+            <ul>
+                <li><strong>Marketing & Sales:</strong> Presales activities. Creating marketing literature, pricing, and communicating with customers (e.g., website, social media).</li>
+                <li><strong>Customer Service:</strong> Post-sales activities. Answering questions, tracking orders, and handling returns. Self-service portals (Amazon) reduce costs.</li>
+            </ul>
+        </div>
+
+        <!-- Slide 14: Support Activities -->
+        <div id="slide-14" class="slide">
+            <h1>Support Activities</h1>
+            <p>Activities that enable the core activities to take place.</p>
+            <ul>
+                <li><strong>Administration:</strong> Day-to-day orchestration of operations.</li>
+                <li><strong>Infrastructure:</strong> Buildings, machinery, and IS components (networks, databases).</li>
+                <li><strong>Human Resources:</strong> Hiring, training, payroll, and benefits.</li>
+                <li><strong>Technology Development:</strong> Designing and developing applications to support the business.</li>
+                <li><strong>Procurement:</strong> Purchasing goods and services required as inputs.</li>
+            </ul>
+        </div>
+
+        <!-- Slide 15: Knowledge Check 1 -->
+        <div id="slide-15" class="slide">
+            <h1>Knowledge Check</h1>
+            <h2>Which of the following is a Core Activity in the value chain?</h2>
+            <ul>
+                <li>A) Human Resources</li>
+                <li>B) Technology Development</li>
+                <li>C) Operations and Manufacturing</li>
+                <li>D) Procurement</li>
+            </ul>
+            <button class="reveal-answer-btn">Reveal Answer</button>
+            <div class="answer-explanation">
+                <div class="info-card">
+                    <h3>Correct Answer: C</h3>
+                    <p>Operations and Manufacturing is a core activity involving the transformation of inputs into outputs. The others are support activities.</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 16: Value Systems -->
+        <div id="slide-16" class="slide">
+            <h1>Value Systems</h1>
+            <p>Companies connect their internal value chains to form a <strong>Value System</strong>.</p>
+            <div class="mermaid">
+                graph LR
+                    Supplier[Supplier Value Chain] --> Company[Company Value Chain]
+                    Company --> Customer[Customer Value Chain]
+                    
+                    style Supplier fill:#dbeafe,stroke:#4338ca
+                    style Company fill:#c7d2fe,stroke:#4338ca,stroke-width:2px
+                    style Customer fill:#dbeafe,stroke:#4338ca
+            </div>
+            <p>Information flows from one company's value chain to another's, creating a "river of information."</p>
+        </div>
+
+        <!-- Slide 17: The Rise of Enterprise Systems -->
+        <div id="slide-17" class="slide">
+            <h1>The Rise of Enterprise Systems</h1>
+            <p>Historically, companies used <strong>Standalone Applications</strong> for specific departments (e.g., a separate system for Accounting and Warehouse).</p>
+            <div class="info-card">
+                <h3>The Problem: Silos</h3>
+                <p>Standalone systems do not communicate. Information is re-entered manually, leading to errors, redundancy, and inefficiency.</p>
+            </div>
+            <p>These older, disconnected systems are often called <strong>Legacy Systems</strong>.</p>
+        </div>
+
+        <!-- Slide 18: Enterprise Systems Solution -->
+        <div id="slide-18" class="slide">
+            <h1>The Enterprise System Solution</h1>
+            <p>An integrated suite of business applications for virtually every business process.</p>
+            <div class="two-panel-wrapper">
+                <div class="text-panel">
+                    <p><strong>Key Features:</strong></p>
+                    <ul>
+                        <li><strong>Central Database:</strong> One repository for all data.</li>
+                        <li><strong>Common Interface:</strong> Same look and feel across modules.</li>
+                        <li><strong>Data Sharing:</strong> Information entered in one module is immediately available to all others.</li>
+                    </ul>
+                </div>
+                <div class="image-panel" style="display: flex; align-items: center; justify-content: center;">
+                    <div class="mermaid">
+                        graph TD
+                            DB[(Central Database)]
+                            Fin[Finance] --> DB
+                            HR[HR] --> DB
+                            Sales[Sales] --> DB
+                            Ops[Ops] --> DB
+                            
+                            DB --> Fin
+                            DB --> HR
+                            DB --> Sales
+                            DB --> Ops
+                            
+                            style DB fill:#fcd34d,stroke:#b45309,stroke-width:2px
+                            style Fin fill:#e0f2fe,stroke:#0ea5e9
+                            style HR fill:#e0f2fe,stroke:#0ea5e9
+                            style Sales fill:#e0f2fe,stroke:#0ea5e9
+                            style Ops fill:#e0f2fe,stroke:#0ea5e9
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 19: Internally vs. Externally Focused Systems -->
+        <div id="slide-19" class="slide">
+            <h1>Supporting Business Processes</h1>
+            <div class="comparison-grid">
+                <div class="comparison-card">
+                    <h3>Internally Focused Systems</h3>
+                    <p>Support functional areas and decision making <em>within</em> the organization.</p>
+                    <p>Value is added at each link in the internal chain.</p>
+                </div>
+                <div class="comparison-card">
+                    <h3>Externally Focused Systems</h3>
+                    <p>Streamline communication with customers, suppliers, and partners <em>outside</em> the boundary.</p>
+                    <p><strong>Interorganizational Systems</strong> (IOS).</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 20: Packaged vs. Custom Software -->
+        <div id="slide-20" class="slide">
+            <h1>Software Types: Packaged vs. Custom</h1>
+            <ul>
+                <li><strong>Packaged (Off-the-Shelf):</strong> Written by vendors for many users. Cost-effective but may not fit unique needs perfectly.</li>
+                <li><strong>Custom Software:</strong> Designed exclusively for a specific organization. Expensive but tailored to unique requirements.</li>
+            </ul>
+            <div class="info-card">
+                <h3>Modules</h3>
+                <p>Enterprise systems are designed around modules (components) that replace legacy systems (e.g., a Finance module, an HR module).</p>
+            </div>
+        </div>
+
+        <!-- Slide 21: Customization vs. Best Practices -->
+        <div id="slide-21" class="slide">
+            <h1>Configuration and Customization</h1>
+            <ul>
+                <li><strong>Vanilla Version:</strong> The standard features out of the box.</li>
+                <li><strong>Customization:</strong> Changing the software code to fit local needs. Can be costly and hard to upgrade.</li>
+                <li><strong>Best Practices:</strong> Industry-standard processes built into the software.</li>
+            </ul>
+            <p class="conclusion">Organizations are often encouraged to adapt their processes to the software's "Best Practices" rather than customizing the software.</p>
+        </div>
+
+        <!-- Slide 22: Business Process Management (BPM) -->
+        <div id="slide-22" class="slide">
+            <h1>Business Process Management (BPM)</h1>
+            <p>A systematic approach to improving business processes. Often accompanies ERP implementation.</p>
+            <p><strong>Steps:</strong></p>
+            <ol>
+                <li>Develop a vision.</li>
+                <li>Identify critical processes.</li>
+                <li>Understand and measure existing processes.</li>
+                <li>Identify IT levers for improvement.</li>
+                <li>Design and implement new processes.</li>
+            </ol>
+        </div>
+
+        <!-- Slide 23: ERP Systems -->
+        <div id="slide-23" class="slide">
+            <h1>Enterprise Resource Planning (ERP)</h1>
+            <p>Applications that integrate business activities across departmental boundaries.</p>
+            <div class="info-card">
+                <h3>Evolution</h3>
+                <p>Evolved from Material Requirements Planning (MRP) in manufacturing.</p>
+                <p><strong>Key Term:</strong> "Enterprise" - serving the whole organization.</p>
+            </div>
+            <p>Leading vendors: SAP, Oracle, Microsoft, Sage, Infor.</p>
+        </div>
+
+        <!-- Slide 24: ERP Components -->
+        <div id="slide-24" class="slide">
+            <h1>ERP Components</h1>
+            <div class="mermaid">
+                graph TD
+                    ERP[ERP System]
+                    Core[Core Components]
+                    Ext[Extended Components]
+                    
+                    ERP --> Core
+                    ERP --> Ext
+                    
+                    Core --> Fin[Financial Mgmt]
+                    Core --> Ops[Operations Mgmt]
+                    Core --> HR[HR Mgmt]
+                    
+                    Ext --> SCM[Supply Chain Mgmt]
+                    Ext --> CRM[Customer Relationship Mgmt]
+                    
+                    style Core fill:#bfdbfe,stroke:#1d4ed8
+                    style Ext fill:#fbcfe8,stroke:#be185d
+            </div>
+        </div>
+
+        <!-- Slide 25: ERP Core Components -->
+        <div id="slide-25" class="slide">
+            <h1>ERP Core Components</h1>
+            <p>Support internal activities:</p>
+            <ul>
+                <li><strong>Financial Management:</strong> Accounting, reporting, performance management, corporate governance.</li>
+                <li><strong>Operations Management:</strong> Simplifies, standardizes, and automates logistics, production, and sales.</li>
+                <li><strong>Human Resource Management:</strong> Recruitment, payroll, performance reviews, benefits.</li>
+            </ul>
+        </div>
+
+        <!-- Slide 26: Enabling Processes with ERP -->
+        <div id="slide-26" class="slide">
+            <h1>Enabling Processes with ERP</h1>
+            <p>ERP modules work together to support cross-functional processes.</p>
+            <div class="comparison-grid">
+                <div class="comparison-card">
+                    <h3>Order-to-Cash</h3>
+                    <p>Sales module captures order -> Warehouse module allocates stock -> Finance module sends invoice.</p>
+                </div>
+                <div class="comparison-card">
+                    <h3>Procure-to-Pay</h3>
+                    <p>Supply chain module creates PO -> Warehouse receives goods -> Finance pays invoice.</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 27: Knowledge Check 2 -->
+        <div id="slide-27" class="slide">
+            <h1>Knowledge Check</h1>
+            <h2>Which of the following is considered an ERP "Extended Component"?</h2>
+            <ul>
+                <li>A) Financial Management</li>
+                <li>B) Human Resource Management</li>
+                <li>C) Customer Relationship Management (CRM)</li>
+                <li>D) Operations Management</li>
+            </ul>
+            <button class="reveal-answer-btn">Reveal Answer</button>
+            <div class="answer-explanation">
+                <div class="info-card">
+                    <h3>Correct Answer: C</h3>
+                    <p>CRM focuses on external activities (dealing with customers), making it an extended component. Financial, HR, and Operations are core internal components.</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 28: ERP Implementation Success -->
+        <div id="slide-28" class="slide">
+            <h1>Achieving Enterprise System Success</h1>
+            <p>ERP implementations are complex, costly, and risky. Success requires more than just technology.</p>
+            <div class="info-card">
+                <h3>Top Recommendations</h3>
+                <ol>
+                    <li>Secure Executive Sponsorship.</li>
+                    <li>Get Help from Outside Experts.</li>
+                    <li>Thoroughly Train Users.</li>
+                    <li>Take a Multidisciplinary Approach.</li>
+                    <li>Evolve the Implementation.</li>
+                </ol>
+            </div>
+        </div>
+
+        <!-- Slide 29: Secure Executive Sponsorship -->
+        <div id="slide-29" class="slide">
+            <h1>1. Secure Executive Sponsorship</h1>
+            <p>The primary reason for failure is lack of top-level support.</p>
+            <ul>
+                <li>Executives have the authority to distribute resources.</li>
+                <li>They can authorize necessary changes to business processes.</li>
+                <li>If executives don't prioritize the project, neither will the users.</li>
+            </ul>
+        </div>
+
+        <!-- Slide 30: Training and Expertise -->
+        <div id="slide-30" class="slide">
+            <h1>Expertise and Training</h1>
+            <div class="comparison-grid">
+                <div class="comparison-card">
+                    <h3>Outside Experts</h3>
+                    <p>ERP systems are complex. Consultants help define requirements and train staff. But don't rely solely on vendor salespeople.</p>
+                </div>
+                <div class="comparison-card">
+                    <h3>Train Users</h3>
+                    <p>Often overlooked and under-budgeted. Users must learn new software AND new business processes. Lack of training leads to productivity drops.</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 31: Costs of Enterprise Systems -->
+        <div id="slide-31" class="slide">
+            <h1>Costs of Enterprise Systems</h1>
+            <p>Total Cost of Ownership (TCO) includes much more than just the software license.</p>
+            <div class="mermaid">
+                graph TD
+                    TCO[Total Cost of Ownership]
+                    TCO --> Soft[Software/Hardware Costs]
+                    TCO --> Maint[Maintenance/Support]
+                    TCO --> Consult[Consulting Fees]
+                    TCO --> Train[Training & Travel]
+                    TCO --> Process[BPM Studies]
+                    
+                    style TCO fill:#fca5a5,stroke:#991b1b,stroke-width:2px
+            </div>
+            <p>Underestimating these costs leads to budget overruns.</p>
+        </div>
+
+        <!-- Slide 32: Security Matters: Updates -->
+        <div id="slide-32" class="slide">
+            <h1>Security Matters: To Update or Not?</h1>
+            <p>ERP systems often handle critical data. Keeping them updated is essential for security.</p>
+            <ul>
+                <li><strong>The Problem:</strong> Updates can break customizations.</li>
+                <li><strong>The Risk:</strong> Running outdated software leaves the organization vulnerable to hackers (e.g., the Oracle vulnerability that allowed fraudulent payments).</li>
+                <li><strong>Best Practice:</strong> Regularly apply patches and minimize customization to make updates easier.</li>
+            </ul>
+        </div>
+
+        <!-- Slide 33: Future Trends: Cloud ERP -->
+        <div id="slide-33" class="slide">
+            <h1>Future Trends: Cloud ERP</h1>
+            <p>Organizations are moving away from large, in-house on-premise systems.</p>
+            <div class="info-card">
+                <h3>Software as a Service (SaaS)</h3>
+                <p>Cloud-based ERP allows for scalability, agility, and reduced capital costs. It is especially popular for small and mid-sized businesses.</p>
+            </div>
+            <p><strong>Two-Tier ERP:</strong> Running a legacy on-premise system at HQ but nimble cloud ERPs at subsidiaries.</p>
+        </div>
+
+        <!-- Slide 34: Future Trends: Mobile ERP -->
+        <div id="slide-34" class="slide">
+            <h1>Future Trends: Mobile ERP</h1>
+            <p>Accessing ERP data on the go.</p>
+            <ul>
+                <li><strong>Real-time Management:</strong> Manage the business from anywhere.</li>
+                <li><strong>Service Quality:</strong> Remote workers have instant access to customer info.</li>
+                <li><strong>Data Accuracy:</strong> Capture data in the field (e.g., using sensors or mobile forms) rather than re-keying it later.</li>
+            </ul>
+        </div>
+
+        <!-- Slide 35: In-Class Assignment -->
+        <div id="slide-35" class="slide">
+            <h1>In-Class Assignment (30 Mins)</h1>
+            <h2>Selecting an ERP System</h2>
+            <p><strong>Scenario:</strong> You are the CIO of a mid-sized manufacturing company expanding into 3 new countries. Your current accounting software is outdated.</p>
+            <p><strong>Task:</strong> Use ChatGPT or Gemini to evaluate options.</p>
+            <div class="ai-assist-prompt">
+                <p><strong>Sample Prompts:</strong></p>
+                <ul>
+                    <li>"Compare SAP S/4HANA Cloud vs. Microsoft Dynamics 365 for a mid-sized manufacturing firm. List pros and cons."</li>
+                    <li>"What are the key risks of implementing a cloud ERP for a manufacturing company?"</li>
+                    <li>"Draft a 5-step implementation plan for rolling out a new ERP system in 3 countries simultaneously."</li>
+                </ul>
+            </div>
+            <p><strong>Output:</strong> Recommend a system (Cloud vs On-Premise) and list 3 key risks to watch out for.</p>
+        </div>
+
+        <!-- Slide 36: Key Takeaways -->
+        <div id="slide-36" class="slide">
+            <h1>Key Takeaways</h1>
+            <ul class="summary-list-check">
+                <li>Business processes (Order-to-Cash, Procure-to-Pay) cross functional boundaries.</li>
+                <li>Enterprise systems integrate data and processes into a single system, eliminating silos.</li>
+                <li>ERP systems have Core (internal) and Extended (external) components.</li>
+                <li>Successful implementation requires executive support, training, and following best practices.</li>
+                <li>The future of ERP is in the Cloud and Mobile access.</li>
+            </ul>
+        </div>
+
+        <!-- Slide 37: Final Slide -->
+        <div id="slide-37" class="slide session-title-slide">
+            <div class="slide-content-wrapper">
+                <h1>Questions?</h1>
+                <h2>Open Discussion</h2>
+            </div>
+        </div>
+
+        <!-- FOOTER AND CONTROLS -->
+        <div class="slide-footer">
+            <button id="optionsBtn" class="options-button" title="Settings">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor">
+                    <path d="M10 3a1.5 1.5 0 110 3 1.5 1.5 0 010-3zM10 8.5a1.5 1.5 0 110 3 1.5 1.5 0 010-3zM11.5 14a1.5 1.5 0 10-3 0 1.5 1.5 0 003 0z" />
+                </svg>
+            </button>
+            <div class="footer-controls">
+                <button id="prevBtn" class="nav-button">Previous</button>
+                <span id="slideCounter" class="slide-counter">Slide 1 / 37</span>
+                <button id="nextBtn" class="nav-button">Next</button>
+            </div>
+            <div style="width: 40px;"></div> 
+        </div>
+
+        <!-- SETTINGS DRAWER -->
+        <div id="settingsDrawer">
+            <div class="drawer-section">
+                <h3>Theme</h3>
+                <div id="themeSwitcher" class="drawer-buttons-container"></div>
+            </div>
+            <div class="drawer-section">
+                <h3>Export</h3>
+                <div class="drawer-buttons-container">
+                    <button id="exportPdfBtn" class="drawer-button">Current Slide (PDF)</button>
+                    <button id="printAllBtn" class="drawer-button">All Slides (PDF)</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            // --- DOM Element References ---
+            const slides = document.querySelectorAll('.slide');
+            const prevBtn = document.getElementById('prevBtn');
+            const nextBtn = document.getElementById('nextBtn');
+            const slideCounter = document.getElementById('slideCounter');
+            const optionsBtn = document.getElementById('optionsBtn');
+            const settingsDrawer = document.getElementById('settingsDrawer');
+            const exportPdfBtn = document.getElementById('exportPdfBtn');
+            const printAllBtn = document.getElementById('printAllBtn');
+            const themeSwitcherContainer = document.getElementById('themeSwitcher');
+            const presentationContainer = document.querySelector('.presentation-container');
+            const slideFooter = document.querySelector('.slide-footer');
+
+            // --- State Variables ---
+            let currentSlideIndex = 0;
+            const totalSlides = 37; 
+            let footerTimeoutId = null;
+            
+            // --- Constants ---
+            const FOOTER_HIDE_DELAY = 3000;
+            const PDF_PAGE_WIDTH_IN = 11;
+            const PDF_PAGE_HEIGHT_IN = PDF_PAGE_WIDTH_IN * 9 / 16;
+
+            // --- THEME DATA ---
+            const themes = {
+                'Leaf Green': {
+                    '--bg-grad-start': '#f0fdf4', '--bg-grad-end': '#dcfce7', '--bg-grad-mid-1': '#f0fdf4', '--bg-grad-mid-2': '#dcfce7', '--bg-grad-mid-3': '#bbf7d0',
+                    '--text-primary': '#334155', '--header-main': '#166534', '--header-sub': '#15803d', '--border-header': '#86efac',
+                    '--nav-button-bg': '#16a34a', '--nav-button-hover-bg': '#15803d', '--info-card-border': '#22c55e', '--conclusion-border': '#22c55e',
+                    '--conclusion-text': '#166534', '--process-step-bg': '#f0fdf4', '--process-step-border': '#bbf7d0', '--step-number-bg': '#16a34a',
+                    '--inline-code-bg': '#dcfce7', '--inline-code-text': '#14532d', '--layer-box-bg': '#dcfce7', '--layer-box-border': '#86efac',
+                    '--flow-arrow-color': '#22c55e', '--scrollbar-thumb': '#4ade80', '--scrollbar-track': '#dcfce7'
+                },
+                'Original Purple': {
+                    '--bg-grad-start': '#f5f3ff', '--bg-grad-end': '#ddd6fe', '--bg-grad-mid-1': '#f5f3ff', '--bg-grad-mid-2': '#ede9fe', '--bg-grad-mid-3': '#ddd6fe',
+                    '--text-primary': '#334155', '--header-main': '#4338ca', '--header-sub': '#4f46e5', '--border-header': '#a5b4fc',
+                    '--nav-button-bg': '#4f46e5', '--nav-button-hover-bg': '#4338ca', '--info-card-border': '#6366f1', '--conclusion-border': '#6366f1',
+                    '--conclusion-text': '#4338ca', '--process-step-bg': '#eef2ff', '--process-step-border': '#c7d2fe', '--step-number-bg': '#4f46e5',
+                    '--inline-code-bg': '#eef2ff', '--inline-code-text': '#312e81', '--layer-box-bg': '#e0e7ff', '--layer-box-border': '#c7d2fe',
+                    '--flow-arrow-color': '#6366f1', '--scrollbar-thumb': '#a78bfa', '--scrollbar-track': '#ddd6fe'
+                },
+                'Ocean Blue': {
+                    '--bg-grad-start': '#f0f9ff', '--bg-grad-end': '#dbeafe', '--bg-grad-mid-1': '#f0f9ff', '--bg-grad-mid-2': '#e0f2fe', '--bg-grad-mid-3': '#bae6fd',
+                    '--text-primary': '#334155', '--header-main': '#0c4a6e', '--header-sub': '#0369a1', '--border-header': '#7dd3fc',
+                    '--nav-button-bg': '#0ea5e9', '--nav-button-hover-bg': '#0284c7', '--info-card-border': '#38bdf8', '--conclusion-border': '#38bdf8',
+                    '--conclusion-text': '#0c4a6e', '--process-step-bg': '#f0f9ff', '--process-step-border': '#bae6fd', '--step-number-bg': '#0ea5e9',
+                    '--inline-code-bg': '#e0f2fe', '--inline-code-text': '#075985', '--layer-box-bg': '#e0f2fe', '--layer-box-border': '#7dd3fc',
+                    '--flow-arrow-color': '#38bdf8', '--scrollbar-thumb': '#38bdf8', '--scrollbar-track': '#dbeafe'
+                },
+                'Slate Gray': {
+                    '--bg-grad-start': '#f8fafc', '--bg-grad-end': '#e2e8f0', '--bg-grad-mid-1': '#f8fafc', '--bg-grad-mid-2': '#f1f5f9', '--bg-grad-mid-3': '#e2e8f0',
+                    '--text-primary': '#334155', '--header-main': '#1e293b', '--header-sub': '#334155', '--border-header': '#94a3b8',
+                    '--nav-button-bg': '#475569', '--nav-button-hover-bg': '#334155', '--info-card-border': '#64748b', '--conclusion-border': '#64748b',
+                    '--conclusion-text': '#1e293b', '--process-step-bg': '#f8fafc', '--process-step-border': '#e2e8f0', '--step-number-bg': '#475569',
+                    '--inline-code-bg': '#f1f5f9', '--inline-code-text': '#1e293b', '--layer-box-bg': '#f1f5f9', '--layer-box-border': '#cbd5e1',
+                    '--flow-arrow-color': '#64748b', '--scrollbar-thumb': '#94a3b8', '--scrollbar-track': '#e2e8f0'
+                }
+            };
+
+            // --- Core Functions ---
+            function applyTheme(themeName) {
+                const theme = themes[themeName];
+                if (!theme) return;
+                for (const [key, value] of Object.entries(theme)) {
+                    document.documentElement.style.setProperty(key, value);
+                }
+                localStorage.setItem('presentationTheme', themeName);
+                document.querySelectorAll('.theme-button').forEach(btn => {
+                    btn.classList.toggle('active', btn.dataset.theme === themeName);
+                });
+            }
+
+            function populateThemeSwitcher() {
+                Object.keys(themes).forEach(themeName => {
+                    const button = document.createElement('button');
+                    button.className = 'drawer-button theme-button';
+                    button.textContent = themeName;
+                    button.dataset.theme = themeName;
+                    button.style.backgroundColor = themes[themeName]['--nav-button-bg'];
+                    button.addEventListener('click', () => applyTheme(themeName));
+                    themeSwitcherContainer.appendChild(button);
+                });
+            }
+            
+            function initializeMermaidDiagrams() {
+                document.querySelectorAll('.mermaid').forEach(el => {
+                    el.setAttribute('data-mermaid', el.innerHTML.trim());
+                });
+            }
+
+            function showSlide(index) {
+                if (index < 0 || index >= totalSlides) return;
+                slides.forEach((slide, i) => slide.classList.toggle('active', i === index));
+                const activeSlide = slides[index];
+                if (activeSlide) {
+                    activeSlide.scrollTop = 0;
+                    setTimeout(() => {
+                        if (window.mermaid) {
+                          try {
+                            activeSlide.querySelectorAll('.mermaid').forEach(el => {
+                                const code = el.getAttribute('data-mermaid');
+                                if (code) {
+                                    el.innerHTML = code;
+                                    el.removeAttribute('data-processed');
+                                }
+                            });
+                            mermaid.run({ nodes: activeSlide.querySelectorAll('.mermaid') });
+                          } catch (e) {
+                            console.error("Mermaid rendering error:", e);
+                            activeSlide.querySelectorAll('.mermaid').forEach(el => el.innerHTML = 'Error rendering diagram.');
+                          }
+                        }
+                    }, 50);
+                }
+                slideCounter.textContent = `Slide ${index + 1} / ${totalSlides}`;
+                prevBtn.disabled = index === 0;
+                nextBtn.disabled = index === totalSlides - 1;
+                settingsDrawer.classList.remove('active');
+                currentSlideIndex = index;
+            }
+
+            function nextSlide() { showSlide(currentSlideIndex + 1); }
+            function prevSlide() { showSlide(currentSlideIndex - 1); }
+            function toggleSettingsDrawer() { settingsDrawer.classList.toggle('active'); }
+            
+            // --- PDF and Print Functions ---
+            function exportCurrentSlideToPdf() {
+                const activeSlide = document.querySelector('.slide.active');
+                if (!activeSlide) return;
+
+                const drawer = document.getElementById('settingsDrawer');
+                const originalStyles = {
+                    footerClassList: Array.from(slideFooter.classList), footerInlineDisplay: slideFooter.style.display,
+                    drawerDisplay: drawer.style.display, drawerTransform: drawer.style.transform,
+                    slideOverflow: activeSlide.style.overflowY, slideHeight: activeSlide.style.height, slideAspectRatio: activeSlide.style.aspectRatio
+                };
+                
+                exportPdfBtn.disabled = true; printAllBtn.disabled = true; exportPdfBtn.textContent = 'Exporting...'; optionsBtn.disabled = true;
+                if (footerTimeoutId) { clearTimeout(footerTimeoutId); footerTimeoutId = null; }
+                slideFooter.style.display = 'none'; drawer.style.display = 'none'; drawer.classList.remove('active');
+
+                activeSlide.style.overflowY = 'visible'; activeSlide.style.height = 'auto'; activeSlide.style.aspectRatio = 'auto';
+
+                const slideNumber = currentSlideIndex + 1;
+                const filename = `IS_Today_Ch7_Slide_${slideNumber}.pdf`;
+                const opt = {
+                    margin: [0.1, 0.1, 0.1, 0.1],
+                    filename: filename,
+                    image: { type: 'jpeg', quality: 0.98 },
+                    html2canvas: { scale: 2.5, useCORS: true, logging: false, scrollY: 0 },
+                    jsPDF: { unit: 'in', format: [PDF_PAGE_WIDTH_IN, PDF_PAGE_HEIGHT_IN], orientation: 'landscape' }
+                };
+                
+                html2pdf().set(opt).from(activeSlide).save().catch(err => {
+                    console.error('PDF export error:', err);
+                }).finally(() => {
+                    slideFooter.style.display = originalStyles.footerInlineDisplay;
+                    slideFooter.className = '';
+                    originalStyles.footerClassList.forEach(cls => slideFooter.classList.add(cls));
+                    drawer.style.display = originalStyles.drawerDisplay;
+                    drawer.style.transform = originalStyles.drawerTransform;
+                    activeSlide.style.overflowY = originalStyles.slideOverflow;
+                    activeSlide.style.height = originalStyles.slideHeight;
+                    activeSlide.style.aspectRatio = originalStyles.slideAspectRatio;
+                    exportPdfBtn.disabled = false;
+                    printAllBtn.disabled = false;
+                    exportPdfBtn.textContent = 'Current Slide (PDF)';
+                    optionsBtn.disabled = false;
+                });
+            }
+
+            async function triggerPrintAllSlides() {
+                settingsDrawer.classList.remove('active');
+                if (footerTimeoutId) { clearTimeout(footerTimeoutId); footerTimeoutId = null; }
+                slideFooter.classList.remove('show-footer');
+                
+                if(window.mermaid) {
+                    try {
+                        await mermaid.run({ nodes: document.querySelectorAll('.mermaid') });
+                    } catch(e) {
+                        console.error("Mermaid printing error:", e);
+                    }
+                }
+                
+                window.print();
+            }
+
+            // --- Event Listeners ---
+            prevBtn.addEventListener('click', prevSlide);
+            nextBtn.addEventListener('click', nextSlide);
+            optionsBtn.addEventListener('click', toggleSettingsDrawer);
+            exportPdfBtn.addEventListener('click', exportCurrentSlideToPdf);
+            printAllBtn.addEventListener('click', triggerPrintAllSlides);
+
+            document.querySelectorAll('.reveal-answer-btn').forEach(button => {
+                button.addEventListener('click', () => {
+                    const explanation = button.nextElementSibling;
+                    if (explanation && explanation.classList.contains('answer-explanation')) {
+                        explanation.style.display = 'block';
+                        button.style.display = 'none';
+                    }
+                });
+            });
+            
+            // --- Initial Setup ---
+            mermaid.initialize({ startOnLoad: false, theme: 'base', themeVariables: {
+                'primaryColor': '#f8fafc', 'primaryTextColor': '#334155', 'lineColor': '#475569',
+                'textColor': '#334155', 'fontSize': '16px',
+            }});
+            
+            initializeMermaidDiagrams();
+            populateThemeSwitcher();
+            const savedTheme = localStorage.getItem('presentationTheme') || 'Original Purple';
+            applyTheme(savedTheme);
+            showSlide(currentSlideIndex);
+
+            // --- Keyboard and Mouse Listeners ---
+            document.addEventListener('keydown', (e) => {
+                if (e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA') return;
+                if (e.key === 'ArrowRight' || e.key === ' ' || e.key === 'PageDown') nextSlide();
+                if (e.key === 'ArrowLeft' || e.key === 'PageUp') prevSlide();
+                if (e.key === 'Escape') settingsDrawer.classList.remove('active');
+            });
+            presentationContainer.addEventListener('mousemove', () => {
+                 if (footerTimeoutId) clearTimeout(footerTimeoutId);
+                 slideFooter.classList.add('show-footer');
+                 footerTimeoutId = setTimeout(() => slideFooter.classList.remove('show-footer'), FOOTER_HIDE_DELAY);
+            });
+            presentationContainer.addEventListener('mouseleave', () => { if (footerTimeoutId) clearTimeout(footerTimeoutId); slideFooter.classList.remove('show-footer'); });
+            document.addEventListener('click', (e) => {
+                if (settingsDrawer.classList.contains('active') && !settingsDrawer.contains(e.target) && !optionsBtn.contains(e.target)) {
+                    settingsDrawer.classList.remove('active');
+                }
+            });
+        });
+    </script>
+</body>
+</html>

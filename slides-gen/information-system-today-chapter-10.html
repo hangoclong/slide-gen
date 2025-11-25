@@ -1,0 +1,1176 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Chapter 10: Securing Information Systems</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Roboto+Mono&display=swap" rel="stylesheet">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js" integrity="sha512-GsLlZN/3F2ErC5ifS5QtgpiJtWd43JWSuIgh7mbzZ8zBps+dvLusV+eNQATqgA/HdeKFVgA5v3S/cIrLF7QnIg==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    <script src="https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.min.js"></script>
+    <style>
+        :root {
+            --bg-grad-start: #f5f3ff;
+            --bg-grad-end: #ddd6fe;
+            --bg-grad-mid-1: #f5f3ff;
+            --bg-grad-mid-2: #ede9fe;
+            --bg-grad-mid-3: #ddd6fe;
+            --text-primary: #334155;
+            --header-main: #4338ca;
+            --header-sub: #4f46e5;
+            --border-header: #a5b4fc;
+            --nav-button-bg: #4f46e5;
+            --nav-button-hover-bg: #4338ca;
+            --info-card-border: #6366f1;
+            --conclusion-border: #6366f1;
+            --conclusion-text: #4338ca;
+            --process-step-bg: #eef2ff;
+            --process-step-border: #c7d2fe;
+            --step-number-bg: #4f46e5;
+            --inline-code-bg: #eef2ff;
+            --inline-code-text: #312e81;
+            --layer-box-bg: #e0e7ff;
+            --layer-box-border: #c7d2fe;
+            --flow-arrow-color: #6366f1;
+            --scrollbar-thumb: #a78bfa;
+            --scrollbar-track: #ddd6fe;
+        }
+
+        /* --- Base and Layout --- */
+        html, body { height: 100%; margin: 0; padding: 0; overflow: hidden; }
+        body { display: flex; justify-content: center; align-items: center; background: linear-gradient(135deg, var(--bg-grad-start) 0%, var(--bg-grad-end) 100%); font-family: 'Poppins', sans-serif; color: var(--text-primary); transition: background 0.3s ease; }
+        .presentation-container { position: relative; aspect-ratio: 16 / 9; width: 100%; height: auto; max-width: 100vw; max-height: 100vh; background-color: var(--bg-grad-start); box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1), 0 4px 10px rgba(0, 0, 0, 0.05); border-radius: 8px; display: flex; flex-direction: column; overflow: hidden; }
+        @media (min-aspect-ratio: 16/9) { .presentation-container { width: auto; height: 100%; } }
+
+        /* --- Slide Styling --- */
+        .slide { flex-grow: 1; padding: clamp(1.8rem, 3.5vh, 2.8rem) clamp(2.2rem, 4.5vw, 4.0rem); padding-bottom: calc(clamp(1.8rem, 3.5vh, 2.8rem) + 55px); overflow-y: auto; display: none; flex-direction: column; line-height: 1.7; scrollbar-width: thin; scrollbar-color: var(--scrollbar-thumb) var(--scrollbar-track); position: relative; background-color: var(--bg-grad-start); background-image: linear-gradient(160deg, var(--bg-grad-mid-1) 0%, var(--bg-grad-mid-2) 30%, var(--bg-grad-mid-3) 70%, var(--bg-grad-end) 100%); aspect-ratio: 16 / 9; height: 100%; box-sizing: border-box; transition: background-image 0.3s ease; }
+        .slide::-webkit-scrollbar { width: 8px; }
+        .slide::-webkit-scrollbar-track { background: var(--scrollbar-track); border-radius: 4px; }
+        .slide::-webkit-scrollbar-thumb { background-color: var(--scrollbar-thumb); border-radius: 4px; border: 2px solid var(--scrollbar-track); }
+        .slide.active { display: flex; }
+
+        /* --- Footer and Controls --- */
+        .slide-footer { position: absolute; bottom: 0; left: 0; width: 100%; z-index: 15; background-color: rgba(248, 250, 252, 0.85); backdrop-filter: blur(4px); border-top: 1px solid rgba(209, 213, 219, 0.5); padding: clamp(0.2rem, 0.4vh, 0.3rem) clamp(1rem, 2vw, 2rem); display: flex; justify-content: space-between; align-items: center; opacity: 0; visibility: hidden; transition: opacity 0.3s ease-in-out, visibility 0.3s ease-in-out; pointer-events: none; }
+        .slide-footer.show-footer { opacity: 1; visibility: visible; pointer-events: auto; }
+        .footer-controls { display: flex; align-items: center; gap: clamp(0.6rem, 1.1vw, 1.1rem); }
+        .nav-button, .options-button, .reveal-answer-btn { padding: clamp(0.25rem, 0.5vh, 0.4rem) clamp(0.9rem, 1.3vw, 1.3rem); background-color: var(--nav-button-bg); color: white; border-radius: 4px; text-decoration: none; font-size: clamp(0.8rem, 1.3vh, 0.9rem); font-weight: 500; transition: background-color 0.2s ease-in-out, opacity 0.2s ease-in-out, box-shadow 0.2s ease-in-out; border: none; cursor: pointer; line-height: 1.4; }
+        .nav-button:hover:not(:disabled), .options-button:hover, .reveal-answer-btn:hover { background-color: var(--nav-button-hover-bg); box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1); }
+        .nav-button:disabled { background-color: #d1d5db; color: #6b7280; cursor: not-allowed; opacity: 0.8; box-shadow: none; }
+        .options-button { background-color: #64748b; padding: clamp(0.25rem, 0.5vh, 0.4rem); line-height: 0; }
+        .options-button:hover { background-color: #475569; }
+        .options-button svg { width: clamp(1.0rem, 1.6vh, 1.2rem); height: clamp(1.0rem, 1.6vh, 1.2rem); fill: white; }
+
+        /* --- Settings/Export Drawer Menu --- */
+        #settingsDrawer { position: absolute; bottom: 0; left: 0; width: 100%; background-color: #ffffff; border-top: 1px solid #e2e8f0; box-shadow: 0 -4px 12px rgba(0, 0, 0, 0.1); padding: clamp(1rem, 2vh, 1.5rem) clamp(1.5rem, 3vw, 2rem); transform: translateY(100%); transition: transform 0.3s ease-in-out; z-index: 25; }
+        #settingsDrawer.active { transform: translateY(0); }
+        .drawer-section { margin-bottom: 1rem; }
+        .drawer-section:last-child { margin-bottom: 0; }
+        .drawer-section h3 { font-size: 1rem; font-weight: 600; color: #475569; margin-bottom: 0.75rem; text-align: center; }
+        .drawer-buttons-container { display: flex; justify-content: center; align-items: center; gap: clamp(0.6rem, 1.1vw, 1.1rem); flex-wrap: wrap; }
+        .drawer-button { padding: clamp(0.6rem, 1.1vh, 0.8rem) clamp(1.1rem, 1.6vw, 1.6rem); background-color: #16a34a; color: white; border: none; border-radius: 4px; font-size: clamp(0.95rem, 1.6vh, 1.05rem); font-weight: 500; cursor: pointer; transition: background-color 0.2s ease, opacity 0.2s ease; }
+        .drawer-button:hover:not(:disabled) { background-color: #15803d; }
+        .drawer-button:disabled { background-color: #9ca3af; cursor: not-allowed; opacity: 0.7; }
+        .theme-button { border: 2px solid transparent; }
+        .theme-button.active { border-color: var(--header-main); box-shadow: 0 0 0 2px var(--header-main); }
+
+        /* --- Content Styling --- */
+
+        .two-panel-wrapper {
+            display: flex;
+            width: 100%;
+            height: 100%;
+            align-items: stretch;
+        }
+        .two-panel-wrapper.image-right {
+            flex-direction: row-reverse;
+        }
+        .image-panel {
+            flex: 0 0 33%;
+            position: relative;
+        }
+        .image-panel img {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            border-radius: 20px;
+        }
+        /* Fallback for when no image is available - using a gradient/chart background */
+        .image-panel .visual-content {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            border-radius: 20px;
+            background: linear-gradient(135deg, #e0e7ff 0%, #c7d2fe 100%);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 1rem;
+        }
+        
+        .text-panel {
+            flex: 1 1 67%;
+            padding: clamp(1.8rem, 3.5vh, 2.8rem) clamp(2.2rem, 4.5vw, 4.0rem);
+            box-sizing: border-box;
+            overflow-y: auto;
+        }
+
+        .slide h1 { color: var(--header-main); font-size: clamp(2.5em, 4.0vw, 3.5em); font-weight: 700; margin-bottom: 1.4rem; padding-bottom: 0.6rem; line-height: 1.35; border-bottom: 3px solid var(--border-header); }
+        .slide.session-title-slide h1 { font-size: clamp(3.2em, 4.8vw, 4.5em); border-bottom: none; margin-bottom: 1.2rem; color: var(--header-main); }
+        .slide.session-title-slide h2 { font-size: clamp(1.7em, 2.8vw, 2.5em); font-weight: 400; margin-bottom: 1.0rem; color: var(--header-sub); }
+        .slide.session-title-slide .slide-content-wrapper { display: flex; flex-direction: column; justify-content: center; align-items: center; text-align: center; height: 100%; }
+        .slide h2 { color: var(--header-sub); font-size: clamp(1.6em, 2.4vw, 2.2em); font-weight: 600; margin-top: 1.8rem; margin-bottom: 1rem; }
+        .slide p, .slide ul, .slide ol { color: var(--text-primary); margin-bottom: 1rem; font-size: clamp(1.0em, 1.5vw, 1.3em); line-height: 1.8; }
+        .slide ul, .slide ol { margin-left: 1.8rem; margin-bottom: 1rem; }
+        .slide ul { list-style-type: disc; }
+        .slide ol { list-style-type: decimal; }
+        .slide li { margin-bottom: 0.8rem; }
+        .slide pre { background-color: #1e293b; color: #f8fafc; border: 1px solid #334155; padding: 0.9rem; border-radius: 6px; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word; font-family: 'Roboto Mono', 'Courier New', Courier, monospace; font-size: clamp(0.85em, 1.1vw, 1.0em); margin-top: 0.6rem; margin-bottom: 1.1rem; line-height: 1.5; }
+        .slide code { font-family: 'Roboto Mono', 'Courier New', Courier, monospace; }
+        .slide code.inline { background-color: var(--inline-code-bg); color: var(--inline-code-text); padding: 0.2em 0.5em; border-radius: 4px; font-size: 0.95em; white-space: normal; }
+        .slide .conclusion { font-weight: 600; margin-top: 1.4rem; border-left: 4px solid var(--conclusion-border); padding-left: 0.9rem; color: var(--conclusion-text); font-size: clamp(1.0em, 1.5vw, 1.3em); }
+        .info-card { background-color: #fff; border-radius: 8px; padding: clamp(0.9rem, 1.6vh, 1.3rem); box-shadow: 0 2px 4px rgba(0,0,0,0.05); border-left: 4px solid var(--info-card-border); margin-bottom: 0.9rem; }
+        .comparison-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: clamp(1rem, 2vw, 1.5rem); margin-top: 1.2rem; }
+        .comparison-card { background-color: #f8fafc; border: 1px solid #e2e8f0; border-radius: 8px; padding: clamp(0.9rem, 1.6vh, 1.3rem); }
+        .comparison-card h3 { font-weight: 600; color: var(--header-main); margin-bottom: 0.6rem; text-align: center; border-bottom: 2px solid var(--border-header); padding-bottom: 0.4rem; font-size: clamp(1.15em, 1.75vw, 1.55em); }
+        .process-step { display: flex; align-items: center; margin-bottom: 0.9rem; background-color: var(--process-step-bg); padding: 0.7rem; border-radius: 6px; border: 1px solid var(--process-step-border); }
+        .step-number { background-color: var(--step-number-bg); color: white; border-radius: 50%; width: clamp(26px, 3.2vh, 32px); height: clamp(26px, 3.2vh, 32px); display: inline-flex; justify-content: center; align-items: center; font-weight: 600; margin-right: 0.9rem; flex-shrink: 0; font-size: clamp(0.85em, 1.25vh, 0.95em); }
+        .slide .highlight { color: #dc2626; font-weight: 700; }
+        .slide .highlight-green { color: #16a34a; font-weight: 600; }
+        .summary-list-check li::before { content: '✔'; margin-right: 0.8rem; color: #16a34a; }
+        .ai-assist-prompt { background-color: #ecfdf5; border-left: 4px solid #10b981; padding: 0.8rem; margin-top: 1rem; border-radius: 4px; }
+        .ai-assist-prompt strong { color: #047857; }
+        .mermaid { background-color: #f8fafc; border: 1px solid #e2e8f0; border-radius: 8px; padding: 1rem; margin-top: 1rem; display: flex; justify-content: center; align-items: center; min-height: 150px; }
+        .answer-explanation { display: none; margin-top: 1rem; }
+
+        /* --- STYLES FOR PRINTING (FIXED) --- */
+        @media print {
+            .slide-footer, #settingsDrawer, .options-button, .nav-button, .slide-counter, .reveal-answer-btn { display: none !important; }
+            body { background: none !important; display: block !important; height: auto !important; overflow: visible !important; font-size: 10pt; }
+            .presentation-container { width: 100% !important; height: auto !important; max-width: none !important; max-height: none !important; box-shadow: none !important; border-radius: 0 !important; overflow: visible !important; aspect-ratio: auto !important; background-color: transparent !important; }
+            .slide { display: flex !important; flex-direction: column !important; width: 100% !important; height: 100vh !important; overflow: hidden !important; page-break-before: always !important; page-break-inside: avoid !important; padding: 0.5in !important; margin: 0 !important; border: none !important; box-shadow: none !important; aspect-ratio: auto !important; background-color: var(--bg-grad-start) !important; background-image: linear-gradient(160deg, var(--bg-grad-mid-1) 0%, var(--bg-grad-mid-2) 30%, var(--bg-grad-mid-3) 70%, var(--bg-grad-end) 100%) !important; -webkit-print-color-adjust: exact !important; print-color-adjust: exact !important; }
+            .slide:first-child { page-break-before: auto !important; }
+            .slide h1 { font-size: 18pt !important; }
+            .slide h2 { font-size: 14pt !important; }
+            .slide p, .slide ul, .slide ol, .slide li { font-size: 11pt !important; line-height: 1.4 !important; }
+            .slide code.inline, .slide pre code { font-size: 10pt !important; }
+            .slide pre { padding: 0.5rem !important; }
+            .info-card, .comparison-card, .process-step, .ai-assist-prompt { background-color: #fff !important; border-color: #ccc !important; box-shadow: none !important; }
+            .step-number { background-color: #ccc !important; color: #000 !important; }
+            .comparison-grid { grid-template-columns: 1fr !important; }
+            .mermaid { background-color: #f8fafc !important; -webkit-print-color-adjust: exact !important; print-color-adjust: exact !important; }
+            .mermaid svg { max-width: 100%; height: auto; }
+        }
+        @page { size: landscape; margin: 0.5in; }
+    </style>
+</head>
+<body>
+    <div class="presentation-container">
+
+        <!-- Slide 1: Title Slide -->
+        <div id="slide-1" class="slide active session-title-slide">
+            <div class="slide-content-wrapper">
+                <h1>Information Systems Today</h1>
+                <h2>Chapter 10: Securing Information Systems</h2>
+                <p class="instructor-info" style="margin-top: 2rem;">Instructor: N. Long Ha (PhD)</p>
+                <p class="instructor-info" style="margin-top: 2rem;">University of Economics, Hue University</p>
+            </div>
+        </div>
+
+        <!-- Slide 2: Learning Objectives -->
+        <div id="slide-2" class="slide">
+            <h1>Learning Objectives</h1>
+            <ol>
+                <li>Define computer crime and describe several types of computer crime.</li>
+                <li>Explain the differences between hackers, crackers, and hacktivists.</li>
+                <li>Describe various types of malware and cyberattacks (viruses, worms, DoS).</li>
+                <li>Understand the concepts of cyberwar and cyberterrorism.</li>
+                <li>Discuss the process of managing IS security, including risk assessment and controls.</li>
+            </ol>
+        </div>
+
+        <!-- Slide 3: Introduction -->
+        <div id="slide-3" class="slide">
+            <h1>The Vulnerability of Digital Dependence</h1>
+            <p>As individuals and organizations become more dependent on digital technologies, the risks associated with security failures increase exponentially.</p>
+            <div class="info-card">
+                <h3>The Reality</h3>
+                <p>We have never been more vulnerable to catastrophic security disasters. A single breach can compromise millions of records, financial data, and even physical infrastructure.</p>
+            </div>
+            <p>Managing in the digital world requires a proactive and comprehensive approach to Information Systems (IS) security.</p>
+        </div>
+
+        <!-- Slide 4: Computer Crime Defined -->
+        <div id="slide-4" class="slide">
+            <h1>What is Computer Crime?</h1>
+            <p>Computer crime is broadly defined as the use of a computer to commit an illegal act.</p>
+            <div class="comparison-grid">
+                <div class="comparison-card">
+                    <h3>Targeting a Computer</h3>
+                    <p>Gaining unauthorized access to cause damage or steal data (e.g., hacking into a bank server).</p>
+                </div>
+                <div class="comparison-card">
+                    <h3>Using a Computer</h3>
+                    <p>Using a computer as a tool to commit an offense (e.g., stealing credit card numbers online, embezzlement).</p>
+                </div>
+                <div class="comparison-card">
+                    <h3>Supporting Crime</h3>
+                    <p>Using computers to support criminal activity (e.g., drug dealers keeping records, money laundering).</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 5: Hacking vs. Cracking -->
+        <div id="slide-5" class="slide">
+            <div class="two-panel-wrapper">
+                <div class="image-panel">
+                    <div class="visual-content">
+                        <div class="mermaid">
+                            graph TD
+                                A[Computer Experts] --> B[Hackers / White Hats];
+                                A --> C[Crackers / Black Hats];
+                                B --> D[Motivated by Curiosity];
+                                B --> E[Find Bugs to Fix];
+                                C --> F[Motivated by Malice/Profit];
+                                C --> G[Break into Systems to Damage/Steal];
+                            style A fill:#e0f2fe
+                            style B fill:#dbeafe,stroke:#4f46e5
+                            style C fill:#fee2e2,stroke:#ef4444
+                        </div>
+                    </div>
+                </div>
+                <div class="text-panel">
+                    <h1>Hacking vs. Cracking</h1>
+                    <p><strong>Hackers (White Hats):</strong> Originally referred to experts motivated by curiosity and the desire to learn. They often help organizations find vulnerabilities (bug bounties).</p>
+                    <p><strong>Crackers (Black Hats):</strong> Individuals who break into computer systems with the intention of doing damage or committing a crime.</p>
+                    <div class="info-card">
+                        <p>Note: The media often uses the term "hacker" for both, but the distinction is important in the security community.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 6: Hacktivists -->
+        <div id="slide-6" class="slide">
+            <h1>Hacktivists: Electronic Vandals or Activists?</h1>
+            <p><code class="inline">Hacktivists</code> are computer criminals who attempt to break into systems or deface websites to promote political or ideological goals.</p>
+            <ul>
+                <li><strong>Goals:</strong> Free speech, human rights, anti-war campaigns, environmental justice.</li>
+                <li><strong>Tactics:</strong> Website defacement, Denial of Service (DoS) attacks, leaking confidential information.</li>
+            </ul>
+            <div class="info-card">
+                <h3>Example: Anonymous</h3>
+                <p>A loose collective of hacktivists known for attacks on governments and corporations they perceive as acting unethically (e.g., Operation Payback, attacks on ISIS).</p>
+            </div>
+        </div>
+
+        <!-- Slide 7: Who Commits Computer Crimes? -->
+        <div id="slide-7" class="slide">
+            <h1>Who Commits Computer Crimes?</h1>
+            <p>The profile of a computer criminal has evolved beyond the stereotype of a lone teenager.</p>
+            <ol>
+                <li><strong>Current or Former Employees:</strong> Insider threats are the most common and often most damaging source of crime.</li>
+                <li><strong>People with Technical Knowledge:</strong> Committing sabotage for personal gain.</li>
+                <li><strong>Career Criminals:</strong> Using computers to assist in fraud, theft, or drug trafficking.</li>
+                <li><strong>Outside Crackers:</strong> Snooping or hoping to find valuable data (only ~10% cause damage).</li>
+            </ol>
+        </div>
+
+        <!-- Slide 8: Types of Computer Crimes -->
+        <div id="slide-8" class="slide">
+            <h1>Broad Categories of Computer Crimes</h1>
+            <div class="comparison-grid">
+                <div class="comparison-card">
+                    <h3>Theft & Fraud</h3>
+                    <p>Stealing money, merchandise, or time. Identity theft and financial fraud are major components.</p>
+                </div>
+                <div class="comparison-card">
+                    <h3>Data Theft & Modification</h3>
+                    <p>Stealing proprietary information (Industrial Espionage) or altering records (e.g., changing grades, giving unearned raises).</p>
+                </div>
+                <div class="comparison-card">
+                    <h3>Destruction</h3>
+                    <p>Electronic vandalism, planting viruses, crashing systems, and destroying data.</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 9: Unauthorized Access -->
+        <div id="slide-9" class="slide">
+            <h1>Unauthorized Access</h1>
+            <p>This occurs whenever people who are not authorized to see, manipulate, or handle data gain access to it.</p>
+            <h2>Methods of Access:</h2>
+            <ul>
+                <li><strong>Technology:</strong> Using vulnerabilities scanners, packet sniffers (to intercept network traffic), and keyloggers (to capture keystrokes/passwords).</li>
+                <li><strong>Social Engineering:</strong> Misrepresenting oneself to trick others into revealing information.</li>
+                <li><strong>Shoulder Surfing:</strong> Looking over someone's shoulder while they type credentials.</li>
+                <li><strong>Dumpster Diving:</strong> Scouring trash for passwords or sensitive info.</li>
+            </ul>
+        </div>
+
+        <!-- Slide 10: Insider Threats -->
+        <div id="slide-10" class="slide">
+            <div class="two-panel-wrapper image-right">
+                <div class="image-panel">
+                    <div class="visual-content">
+                        <div class="mermaid">
+                            graph TD
+                                A[Insider Threat] --> B[Disgruntled Employees];
+                                A --> C[Negligent Employees];
+                                A --> D[Contractors/Partners];
+                                B --> E[Sabotage/Theft];
+                                C --> F[Accidental Leaks];
+                                D --> G[Access Abuse];
+                            style A fill:#fee2e2,stroke:#ef4444,stroke-width:2px
+                            style B fill:#fff
+                            style C fill:#fff
+                            style D fill:#fff
+                        </div>
+                    </div>
+                </div>
+                <div class="text-panel">
+                    <h1>Insider Threats</h1>
+                    <p>"Trusted adversaries" operating within an organization's boundaries are often more dangerous than outside hackers.</p>
+                    <div class="info-card">
+                        <h3>Why are they dangerous?</h3>
+                        <p>They already have legitimate access to systems and know where the valuable data is stored. They can bypass many perimeter defenses (like firewalls).</p>
+                    </div>
+                    <p><strong>Edward Snowden</strong> is a famous example of an insider who leaked classified documents from the NSA.</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 11: Malware 101: Viruses -->
+        <div id="slide-11" class="slide">
+            <h1>Malware: Computer Viruses</h1>
+            <p><code class="inline">Malware</code> is short for malicious software.</p>
+            <div class="info-card">
+                <h3>Virus</h3>
+                <p>A destructive program that disrupts the normal functioning of information systems. Key characteristic: <strong>It can reproduce itself but needs a host file.</strong></p>
+            </div>
+            <p>Viruses infect a single computer and spread when users share infected files (email attachments, USB drives). They can erase files, slow down processing, or destroy data.</p>
+        </div>
+
+        <!-- Slide 12: Malware 102: Worms -->
+        <div id="slide-12" class="slide">
+            <h1>Malware: Worms</h1>
+            <p>A <code class="inline">Worm</code> is a variation of a virus that is targeted at networks.</p>
+            <div class="comparison-grid">
+                <div class="comparison-card">
+                    <h3>Virus</h3>
+                    <p>Needs a host file (like a Word doc) and human action (sharing the file) to spread.</p>
+                </div>
+                <div class="comparison-card">
+                    <h3>Worm</h3>
+                    <p>Independent program. Spreads by itself across networks using security holes. Can replicate endlessly and crash servers.</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 13: Malware 103: Trojans & Logic Bombs -->
+        <div id="slide-13" class="slide">
+            <h1>Trojan Horses and Logic Bombs</h1>
+            <h2>Trojan Horse</h2>
+            <p>A program that appears legitimate and benign but carries a destructive payload. Unlike viruses, they typically do not replicate. They often open "backdoors" for attackers.</p>
+            <h2>Logic Bomb / Time Bomb</h2>
+            <p>A variation of a Trojan that lies in wait for a specific triggering operation (Logic) or date (Time). <br><em>Example: A disgruntled employee plants code to delete payroll records if his name is removed from the employee database.</em></p>
+        </div>
+
+        <!-- Slide 14: Malware 104: Ransomware -->
+        <div id="slide-14" class="slide">
+            <h1>Ransomware: The Growing Threat</h1>
+            <p>Ransomware holds a user's computer or data hostage by encrypting files or locking the system.</p>
+            <div class="process-step">
+                <div class="step-number">1</div>
+                <div>User accidentally downloads ransomware (via email or website).</div>
+            </div>
+            <div class="process-step">
+                <div class="step-number">2</div>
+                <div>Malware encrypts critical files, making them inaccessible.</div>
+            </div>
+            <div class="process-step">
+                <div class="step-number">3</div>
+                <div>A message demands payment (usually Bitcoin) to receive the decryption key.</div>
+            </div>
+            <p class="conclusion">Having secure, offline backups is the best defense against ransomware.</p>
+        </div>
+
+        <!-- Slide 15: Denial of Service (DoS) -->
+        <div id="slide-15" class="slide">
+            <h1>Denial of Service (DoS) Attacks</h1>
+            <p>Intruders attempt to prevent legitimate users from accessing a service.</p>
+            <div class="info-card">
+                <h3>Distributed Denial of Service (DDoS)</h3>
+                <p>Attackers use a <code class="inline">Botnet</code> (army of zombie computers) to flood a target server with requests. The server becomes overwhelmed and crashes, denying service to legitimate customers.</p>
+            </div>
+            <p><strong>Zombie Computers:</strong> Computers infected with malware that allows an attacker to control them remotely without the owner's knowledge.</p>
+        </div>
+
+        <!-- Slide 16: The Attack Supply Chain -->
+        <div id="slide-16" class="slide">
+            <h1>The Cyberattack Supply Chain</h1>
+            <div class="mermaid">
+                graph LR
+                    A[Programmer] -->|Creates malware| B[Phisher];
+                    B -->|Designs attack| C[Bot Herder];
+                    C -->|Sends spam via Botnet| D[Victims];
+                    D -->|Credentials stolen| E[Collector];
+                    E -->|Funds stolen| F[Mule Herder];
+                    F -->|Withdraws cash| G[Money Mule];
+                style A fill:#e0f2fe
+                style B fill:#e0f2fe
+                style C fill:#e0f2fe
+                style D fill:#fee2e2,stroke:#ef4444
+                style E fill:#e0f2fe
+                style F fill:#e0f2fe
+                style G fill:#e0f2fe
+            </div>
+            <p>Cybercrime is often a sophisticated global business with specialized roles.</p>
+        </div>
+
+        <!-- Slide 17: Spyware and Adware -->
+        <div id="slide-17" class="slide">
+            <h1>Spyware and Adware</h1>
+            <p><strong>Spyware:</strong> Software that covertly gathers data about a user without their knowledge. It can track web activity or capture keystrokes.</p>
+            <p><strong>Adware:</strong> Free software paid for by advertisements. Sometimes contains spyware to customize ads.</p>
+            <p class="conclusion">Spyware eats up system resources, bandwidth, and exposes users to identity theft.</p>
+        </div>
+
+        <!-- Slide 18: Spam and Phishing -->
+        <div id="slide-18" class="slide">
+            <h1>Spam and Phishing</h1>
+            <p><strong>Spam:</strong> Electronic junk mail. A nuisance that eats up storage and bandwidth. Often used to spread malware.</p>
+            <p><strong>Phishing:</strong> Attempts to trick users into giving away authentication credentials by masquerading as a legitimate entity (e.g., a fake email from "Bank of America").</p>
+            <div class="info-card">
+                <h3>Spear Phishing</h3>
+                <p>A sophisticated variation that targets a specific person or organization by personalizing the message to make it appear more trustworthy.</p>
+            </div>
+        </div>
+
+        <!-- Slide 19: Knowledge Check 1 -->
+        <div id="slide-19" class="slide">
+            <h1>Knowledge Check</h1>
+            <h2>Which type of malware spreads by itself across networks without needing a host file?</h2>
+            <ul>
+                <li>A) Virus</li>
+                <li>B) Trojan Horse</li>
+                <li>C) Worm</li>
+                <li>D) Logic Bomb</li>
+            </ul>
+            <button class="reveal-answer-btn">Reveal Answer</button>
+            <div class="answer-explanation">
+                <div class="info-card">
+                    <h3>Correct Answer: C) Worm</h3>
+                    <p>A worm is designed to spread by itself across networks, taking advantage of security holes, and does not need to attach to a host file like a virus does.</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 20: Identity Theft -->
+        <div id="slide-20" class="slide">
+            <h1>Identity Theft</h1>
+            <p>One of the fastest-growing cybercrimes.</p>
+            <p><strong>Definition:</strong> Stealing another person's Social Security number, credit card number, and other personal data for the purpose of using the victim's credit rating to borrow money, buy merchandise, or run up debts.</p>
+            <p><strong>Solution:</strong> Government and private sector must work together to change methods of identity verification (e.g., moving beyond SSNs to biometrics).</p>
+        </div>
+
+        <!-- Slide 21: Cyberharassment and Cyberbullying -->
+        <div id="slide-21" class="slide">
+            <h1>Cyberharassment, Stalking, and Bullying</h1>
+            <p>The anonymity of the internet enables targeted abuse.</p>
+            <ul>
+                <li><strong>Cyberharassment:</strong> Using a computer to communicate obscene, vulgar, or threatening content.</li>
+                <li><strong>Cyberstalking:</strong> Intentionally following, threatening, and intimidating someone electronically.</li>
+                <li><strong>Cyberbullying:</strong> Deliberately causing emotional distress to a victim, often by manipulating or discrediting them.</li>
+                <li><strong>Doxing:</strong> Researching and broadcasting personally identifiable information about a victim.</li>
+            </ul>
+        </div>
+
+        <!-- Slide 22: Software Piracy -->
+        <div id="slide-22" class="slide">
+            <h1>Software Piracy</h1>
+            <p><strong>Software Piracy:</strong> The illegal practice of buying one copy of software and making multiple copies for others or selling them.</p>
+            <div class="info-card">
+                <h3>Global Impact</h3>
+                <p>Costs the industry billions of dollars. There is a strong correlation between unlicensed software and malware infection rates.</p>
+            </div>
+            <p>Intellectual Property (Patents, Copyrights) laws protect software, but enforcement varies globally due to cultural differences regarding ownership of knowledge.</p>
+        </div>
+
+        <!-- Slide 23: Cybersquatting -->
+        <div id="slide-23" class="slide">
+            <h1>Cybersquatting</h1>
+            <p>The practice of registering a domain name and then trying to sell it for a large sum to the person, company, or organization most likely to want it.</p>
+            <p><strong>Example:</strong> Registering <code class="inline">panasonic.com</code> before Panasonic could, hoping they will pay to acquire it.</p>
+            <p>The <strong>Anti-Cybersquatting Consumer Protection Act (1999)</strong> makes it a crime to profit from the goodwill of a trademark belonging to someone else.</p>
+        </div>
+
+        <!-- Slide 24: Laws Against Computer Crime -->
+        <div id="slide-24" class="slide">
+            <h1>Laws Against Computer Crime</h1>
+            <div class="comparison-grid">
+                <div class="comparison-card">
+                    <h3>Computer Fraud and Abuse Act (1986)</h3>
+                    <p>Prohibits stealing data, gaining unauthorized access to government/bank computers, and threatening to damage systems.</p>
+                </div>
+                <div class="comparison-card">
+                    <h3>Electronic Communications Privacy Act (1986)</h3>
+                    <p>Regulates the interception of electronic communications and wiretapping.</p>
+                </div>
+            </div>
+            <p><strong>Challenges:</strong> Defining "damage," enforcing laws across international borders, and balancing surveillance with privacy.</p>
+        </div>
+
+        <!-- Slide 25: Cyberwar -->
+        <div id="slide-25" class="slide">
+            <div class="two-panel-wrapper">
+                <div class="image-panel">
+                    <div class="visual-content">
+                        <div class="mermaid">
+                            graph TD
+                                A[Cyberwar Goals] --> B[Disrupt Infrastructure];
+                                A --> C[Espionage];
+                                A --> D[Propaganda];
+                                B --> E[Power Grids, Banking];
+                                C --> F[Steal Secrets];
+                                D --> G[Misinformation];
+                            style A fill:#dbeafe,stroke:#4f46e5
+                            style B fill:#e0f2fe
+                            style C fill:#e0f2fe
+                            style D fill:#e0f2fe
+                        </div>
+                    </div>
+                </div>
+                <div class="text-panel">
+                    <h1>Cyberwar</h1>
+                    <p>An organized attempt by a country's military to disrupt or destroy the information and communication systems of another country.</p>
+                    <div class="info-card">
+                        <h3>Patriot Hackers</h3>
+                        <p>Independent citizens who perpetrate attacks on perceived enemies of their country, often giving governments plausible deniability.</p>
+                    </div>
+                    <p>Cyberwar can blind, jam, or deceive enemy systems, targeting command-and-control, intelligence, and smart weapons.</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 26: Stuxnet: A Case Study -->
+        <div id="slide-26" class="slide">
+            <h1>Stuxnet: A Case Study in Cyberwar</h1>
+            <p>Discovered in 2010, <strong>Stuxnet</strong> was a computer worm designed to infect specific industrial hardware inside Iranian nuclear plants.</p>
+            <ul>
+                <li><strong>Target:</strong> Centrifuges used for nuclear enrichment.</li>
+                <li><strong>Effect:</strong> Manipulated motor speeds to destroy the equipment physically while telling the monitoring systems everything was normal.</li>
+                <li><strong>Significance:</strong> The first publicly known cyberweapon to cause physical damage to critical infrastructure.</li>
+            </ul>
+        </div>
+
+        <!-- Slide 27: Cyberterrorism -->
+        <div id="slide-27" class="slide">
+            <h1>Cyberterrorism</h1>
+            <p>The use of computer and networking technologies to intimidate or coerce governments, civilians, or any segment of society to attain political, religious, or ideological goals.</p>
+            <div class="comparison-grid">
+                <div class="comparison-card">
+                    <h3>Advantages for Terrorists</h3>
+                    <p>Can be launched from anywhere. No borders to cross. Potential to disrupt critical infrastructure (power, water, finance).</p>
+                </div>
+                <div class="comparison-card">
+                    <h3>Disadvantages</h3>
+                    <p>Systems are complex and hard to control. Requires high technical expertise. Lacks the "drama" of physical attacks.</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 28: Knowledge Check 2 -->
+        <div id="slide-28" class="slide">
+            <h1>Knowledge Check</h1>
+            <h2>What is the primary difference between Cyberwar and Cyberterrorism?</h2>
+            <ul>
+                <li>A) The tools used (viruses vs worms)</li>
+                <li>B) The perpetrator (Government Military vs Non-state Actors)</li>
+                <li>C) The target (Military vs Civilian)</li>
+                <li>D) There is no difference</li>
+            </ul>
+            <button class="reveal-answer-btn">Reveal Answer</button>
+            <div class="answer-explanation">
+                <div class="info-card">
+                    <h3>Correct Answer: B</h3>
+                    <p><strong>Cyberwar</strong> is organized by a country's military. <strong>Cyberterrorism</strong> is launched by individuals or organized groups (non-state actors) to cause fear and panic.</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 29: Managing IS Security -->
+        <div id="slide-29" class="slide">
+            <h1>Managing Information Systems Security</h1>
+            <p>IS Security refers to precautions taken to keep all aspects of information systems safe from destruction, manipulation, or unauthorized use.</p>
+            <div class="mermaid">
+                graph LR
+                    A[Assess Risks] --> B[Develop Strategy];
+                    B --> C[Implement Controls];
+                    C --> D[Monitor Security];
+                    D --> A;
+                    style A fill:#e0f2fe,stroke:#0ea5e9,stroke-width:2px
+                    style B fill:#e0f2fe,stroke:#0ea5e9,stroke-width:2px
+                    style C fill:#e0f2fe,stroke:#0ea5e9,stroke-width:2px
+                    style D fill:#dbeafe,stroke:#4f46e5,stroke-width:2px
+            </div>
+            <p>It is an ongoing process, not a one-time fix.</p>
+        </div>
+
+        <!-- Slide 30: Step 1: Assessing Risks -->
+        <div id="slide-30" class="slide">
+            <h1>Step 1: Assessing Risks</h1>
+            <p>Organizations must identify and rank risks to determine effective strategies.</p>
+            <ul>
+                <li><strong>Threats:</strong> Undesirable events that can cause harm (e.g., hackers, floods).</li>
+                <li><strong>Vulnerabilities:</strong> Weaknesses in the system that can be exploited (e.g., unpatched software, weak passwords).</li>
+                <li><strong>Impact:</strong> The severity of the consequences if a threat exploits a vulnerability.</li>
+            </ul>
+            <p class="conclusion">Protecting an asset only makes sense if the cost of protection is less than the probable loss.</p>
+        </div>
+
+        <!-- Slide 31: Risk Assessment Matrix -->
+        <div id="slide-31" class="slide">
+            <h1>Risk Assessment Matrix</h1>
+            <p>Organizations typically rate risks based on <strong>Impact</strong> and <strong>Likelihood</strong>.</p>
+            <table style="width:100%; border-collapse: collapse; margin-top: 1rem; font-size: 0.9em;">
+                <tr style="background-color: #4f46e5; color: white;">
+                    <th style="padding: 10px; text-align: left;">Risk Category</th>
+                    <th style="padding: 10px; text-align: center;">Impact (1-3)</th>
+                    <th style="padding: 10px; text-align: center;">Likelihood (1-3)</th>
+                    <th style="padding: 10px; text-align: center;">Risk Level</th>
+                </tr>
+                <tr style="background-color: #f5f3ff;">
+                    <td style="padding: 10px;">Confidentiality Breach</td>
+                    <td style="padding: 10px; text-align: center;">3 (High)</td>
+                    <td style="padding: 10px; text-align: center;">2 (Med)</td>
+                    <td style="padding: 10px; text-align: center;"><strong>6 (High)</strong></td>
+                </tr>
+                <tr style="background-color: #fff;">
+                    <td style="padding: 10px;">Data Integrity Loss</td>
+                    <td style="padding: 10px; text-align: center;">2 (Med)</td>
+                    <td style="padding: 10px; text-align: center;">3 (High)</td>
+                    <td style="padding: 10px; text-align: center;"><strong>6 (High)</strong></td>
+                </tr>
+                <tr style="background-color: #f5f3ff;">
+                    <td style="padding: 10px;">System Availability</td>
+                    <td style="padding: 10px; text-align: center;">3 (High)</td>
+                    <td style="padding: 10px; text-align: center;">1 (Low)</td>
+                    <td style="padding: 10px; text-align: center;"><strong>3 (Med)</strong></td>
+                </tr>
+            </table>
+        </div>
+
+        <!-- Slide 32: Risk Response Options -->
+        <div id="slide-32" class="slide">
+            <h1>Options for Addressing Risk</h1>
+            <div class="comparison-grid">
+                <div class="comparison-card">
+                    <h3>Risk Reduction</h3>
+                    <p>Taking active countermeasures to protect systems (e.g., installing firewalls).</p>
+                </div>
+                <div class="comparison-card">
+                    <h3>Risk Acceptance</h3>
+                    <p>Implementing no countermeasures and absorbing any damages (best for low likelihood/impact risks).</p>
+                </div>
+                <div class="comparison-card">
+                    <h3>Risk Transference</h3>
+                    <p>Having someone else absorb the risk (e.g., insurance, outsourcing to cloud).</p>
+                </div>
+                <div class="comparison-card">
+                    <h3>Risk Avoidance</h3>
+                    <p>Not performing the task that causes risk (e.g., not using email). Often impractical.</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 33: Step 2: Developing a Security Strategy -->
+        <div id="slide-33" class="slide">
+            <h1>Step 2: Developing a Security Strategy</h1>
+            <p>The strategy details what IS controls (technology, people, policies) should be implemented.</p>
+            <ul>
+                <li><strong>Preventive Controls:</strong> Stop the event from occurring (e.g., locks, passwords).</li>
+                <li><strong>Detective Controls:</strong> Assess if anything went wrong (e.g., audit logs, intrusion detection).</li>
+                <li><strong>Corrective Controls:</strong> Mitigate impact after an event (e.g., backups, disaster recovery).</li>
+            </ul>
+            <div class="info-card">
+                <h3>Principle of Least Privilege</h3>
+                <p>Users should only be given access to the systems, data, or resources that are needed to perform their duties.</p>
+            </div>
+        </div>
+
+        <!-- Slide 34: Policies and Procedures -->
+        <div id="slide-34" class="slide">
+            <h1>Policies and Procedures</h1>
+            <p>Non-technical controls are critical.</p>
+            <ul>
+                <li><strong>Acceptable Use Policy (AUP):</strong> Outlines appropriate use of company computers (e.g., restricting personal web surfing).</li>
+                <li><strong>Confidential Information Policy:</strong> How sensitive data is handled.</li>
+                <li><strong>Backup Policy:</strong> Requirements for data backup and restoration.</li>
+                <li><strong>Disaster Recovery Plan:</strong> Steps to restore operations after a catastrophe.</li>
+            </ul>
+        </div>
+
+        <!-- Slide 35: Disaster Recovery -->
+        <div id="slide-35" class="slide">
+            <h1>Disaster Recovery Planning</h1>
+            <p><strong>Business Continuity Plan:</strong> Describes how business continues operating after a disaster.</p>
+            <div class="comparison-grid">
+                <div class="comparison-card">
+                    <h3>Cold Backup Site</h3>
+                    <p>An empty warehouse with power/connections but no equipment. Cheap, but slow recovery.</p>
+                </div>
+                <div class="comparison-card">
+                    <h3>Hot Backup Site</h3>
+                    <p>A fully equipped facility with data replication. Expensive, but fast recovery.</p>
+                </div>
+            </div>
+            <p><strong>RTO (Recovery Time Objective):</strong> Max time allowed to recover.<br>
+            <strong>RPO (Recovery Point Objective):</strong> How current the backup data must be.</p>
+        </div>
+
+        <!-- Slide 36: Step 3: Implementing Controls - Physical -->
+        <div id="slide-36" class="slide">
+            <h1>Step 3: Implementing Controls</h1>
+            <h2>Physical Access Restrictions</h2>
+            <p>The first line of defense is keeping unauthorized people away from hardware.</p>
+            <ul>
+                <li><strong>Identification:</strong> User claims an identity (Username).</li>
+                <li><strong>Authentication:</strong> Confirming the identity (Password).</li>
+                <li><strong>Authorization:</strong> Granting access to specific resources.</li>
+            </ul>
+        </div>
+
+        <!-- Slide 37: Types of Authentication -->
+        <div id="slide-37" class="slide">
+            <h1>Types of Authentication</h1>
+            <p>Authorization is granted based on:</p>
+            <ol>
+                <li><strong>Something You Have:</strong> Keys, ID cards, Smart cards.</li>
+                <li><strong>Something You Know:</strong> Passwords, PINs, Secret questions.</li>
+                <li><strong>Something You Are:</strong> Biometrics (Fingerprints, Retina scans, Facial recognition).</li>
+            </ol>
+            <div class="info-card">
+                <h3>Two-Factor Authentication (2FA)</h3>
+                <p>Using two types of credentials (e.g., a Password + a Code sent to your phone) significantly increases security.</p>
+            </div>
+        </div>
+
+        <!-- Slide 38: Firewalls -->
+        <div id="slide-38" class="slide">
+            <div class="two-panel-wrapper">
+                <div class="image-panel">
+                    <div class="visual-content">
+                        <div class="mermaid">
+                            graph LR
+                                A[Internet] -->|Traffic| B{Firewall};
+                                B -->|Blocked| C[Malicious];
+                                B -->|Allowed| D[Private Network];
+                            style B fill:#dbeafe,stroke:#4f46e5
+                            style C fill:#fee2e2,stroke:#ef4444
+                            style D fill:#e0f2fe
+                        </div>
+                    </div>
+                </div>
+                <div class="text-panel">
+                    <h1>Firewalls</h1>
+                    <p>A system designed to detect intrusion and block unauthorized traffic from entering a private network.</p>
+                    <ul>
+                        <li>Acts as a security fence around the organization's perimeter.</li>
+                        <li>Can be hardware, software, or both.</li>
+                        <li>Filters data packets based on security criteria.</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 39: Encryption -->
+        <div id="slide-39" class="slide">
+            <h1>Encryption</h1>
+            <p>The process of encoding messages so that only the intended recipient can read them.</p>
+            <p><strong>Symmetric Encryption:</strong> Sender and receiver use the <em>same</em> key. (Challenge: Sharing the key securely).</p>
+            <p><strong>Asymmetric (Public Key) Encryption:</strong> Uses a pair of keys (Public and Private). A message encrypted with the public key can only be decrypted with the private key.</p>
+        </div>
+
+        <!-- Slide 40: Mermaid: Public Key Encryption -->
+        <div id="slide-40" class="slide">
+            <h1>How Public Key Encryption Works</h1>
+            <div class="mermaid">
+                graph LR
+                    A[Sender] -->|Encrypts with| B(Recipient's Public Key);
+                    B --> C[Encrypted Message];
+                    C -->|Sent over Internet| D[Recipient];
+                    D -->|Decrypts with| E(Recipient's Private Key);
+                    E --> F[Readable Message];
+                style B fill:#dbeafe,stroke:#4f46e5
+                style E fill:#dbeafe,stroke:#4f46e5
+                style C fill:#e0f2fe
+            </div>
+            <p>This allows for secure communication without pre-sharing a secret key.</p>
+        </div>
+
+        <!-- Slide 41: Human Controls -->
+        <div id="slide-41" class="slide">
+            <h1>Human Controls</h1>
+            <p>Technology alone cannot secure a system. Human safeguards are essential.</p>
+            <ul>
+                <li><strong>Ethics:</strong> Promoting appropriate conduct.</li>
+                <li><strong>Laws:</strong> Enforcing penalties for misuse.</li>
+                <li><strong>Management:</strong> Oversight and proper resource allocation.</li>
+                <li><strong>Training:</strong> Educating employees about phishing, password hygiene, and security policies.</li>
+            </ul>
+        </div>
+
+        <!-- Slide 42: Step 4: Monitoring Security -->
+        <div id="slide-42" class="slide">
+            <h1>Step 4: Monitoring Security</h1>
+            <p>Organizations must continuously monitor controls to minimize risk.</p>
+            <ul>
+                <li><strong>Audit Trails:</strong> Records showing who accessed a system and what they did.</li>
+                <li><strong>IS Auditing:</strong> External reviews of controls (often required by laws like Sarbanes-Oxley).</li>
+                <li><strong>Sarbanes-Oxley (S-OX):</strong> Mandates companies to establish internal controls and preserve evidence (like emails) to prevent financial fraud.</li>
+            </ul>
+        </div>
+
+        <!-- Slide 43: Computer Forensics -->
+        <div id="slide-43" class="slide">
+            <h1>Computer Forensics</h1>
+            <p>The use of formal investigative techniques to evaluate digital information for judicial review.</p>
+            <ul>
+                <li>Restoring deleted data.</li>
+                <li>Tracing illegal activity.</li>
+                <li>Used by law enforcement and organizations.</li>
+            </ul>
+            <div class="info-card">
+                <h3>Honeypot</h3>
+                <p>A computer or network site designed to entice crackers so their illegal activity can be detected and studied.</p>
+            </div>
+        </div>
+
+        <!-- Slide 44: Knowledge Check 3 -->
+        <div id="slide-44" class="slide">
+            <h1>Knowledge Check</h1>
+            <h2>Which of the following is a form of biometric authentication?</h2>
+            <ul>
+                <li>A) A Password</li>
+                <li>B) A Smart Card</li>
+                <li>C) A Fingerprint Scan</li>
+                <li>D) A User ID</li>
+            </ul>
+            <button class="reveal-answer-btn">Reveal Answer</button>
+            <div class="answer-explanation">
+                <div class="info-card">
+                    <h3>Correct Answer: C</h3>
+                    <p>Biometrics authorize users based on "Something You Are," such as fingerprints, retinal patterns, or facial features.</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 45: In-Class Assignment -->
+        <div id="slide-45" class="slide">
+            <h1>In-Class Assignment (30 Mins)</h1>
+            <h2>Designing an Acceptable Use Policy (AUP)</h2>
+            <p>Your team is tasked with drafting key points for a university's Acceptable Use Policy regarding student Wi-Fi and Lab use.</p>
+            <div class="ai-assist-prompt">
+                <p><strong>Use ChatGPT or Gemini to help brainstorm.</strong></p>
+                <p><strong>Prompt:</strong> "I need to design an Acceptable Use Policy for a university's computer network. Suggest 5 key rules that should be included to ensure security and fair use. Also, suggest appropriate penalties for violations."</p>
+            </div>
+            <p><strong>Deliverable:</strong> A list of 5 core rules and a brief justification for why each is necessary for security.</p>
+        </div>
+
+        <!-- Slide 46: Key Takeaways -->
+        <div id="slide-46" class="slide">
+            <h1>Key Takeaways</h1>
+            <ul class="summary-list-check">
+                <li>Computer crime takes many forms, from insider theft to global cyberwarfare.</li>
+                <li>Malware (Viruses, Worms, Ransomware) poses a constant threat to data integrity and availability.</li>
+                <li>Security is a management issue, not just a technology issue. It requires a cycle of Assessing, Developing, Implementing, and Monitoring.</li>
+                <li>A Defense-in-Depth strategy uses layers of controls: Physical, Technical (Firewalls, Encryption), and Human (Training, Policy).</li>
+            </ul>
+        </div>
+
+        <!-- Slide 47: Final Slide -->
+        <div id="slide-47" class="slide session-title-slide">
+            <div class="slide-content-wrapper">
+                <h1>Questions?</h1>
+                <h2>Open Discussion</h2>
+            </div>
+        </div>
+
+        <!-- FOOTER AND CONTROLS -->
+        <div class="slide-footer">
+            <button id="optionsBtn" class="options-button" title="Settings">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor">
+                    <path d="M10 3a1.5 1.5 0 110 3 1.5 1.5 0 010-3zM10 8.5a1.5 1.5 0 110 3 1.5 1.5 0 010-3zM11.5 14a1.5 1.5 0 10-3 0 1.5 1.5 0 003 0z" />
+                </svg>
+            </button>
+            <div class="footer-controls">
+                <button id="prevBtn" class="nav-button">Previous</button>
+                <span id="slideCounter" class="slide-counter">Slide 1 / 47</span>
+                <button id="nextBtn" class="nav-button">Next</button>
+            </div>
+            <div style="width: 40px;"></div> 
+        </div>
+
+        <!-- SETTINGS DRAWER -->
+        <div id="settingsDrawer">
+            <div class="drawer-section">
+                <h3>Theme</h3>
+                <div id="themeSwitcher" class="drawer-buttons-container"></div>
+            </div>
+            <div class="drawer-section">
+                <h3>Export</h3>
+                <div class="drawer-buttons-container">
+                    <button id="exportPdfBtn" class="drawer-button">Current Slide (PDF)</button>
+                    <button id="printAllBtn" class="drawer-button">All Slides (PDF)</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            // --- DOM Element References ---
+            const slides = document.querySelectorAll('.slide');
+            const prevBtn = document.getElementById('prevBtn');
+            const nextBtn = document.getElementById('nextBtn');
+            const slideCounter = document.getElementById('slideCounter');
+            const optionsBtn = document.getElementById('optionsBtn');
+            const settingsDrawer = document.getElementById('settingsDrawer');
+            const exportPdfBtn = document.getElementById('exportPdfBtn');
+            const printAllBtn = document.getElementById('printAllBtn');
+            const themeSwitcherContainer = document.getElementById('themeSwitcher');
+            const presentationContainer = document.querySelector('.presentation-container');
+            const slideFooter = document.querySelector('.slide-footer');
+
+            // --- State Variables ---
+            let currentSlideIndex = 0;
+            const totalSlides = 47; 
+            let footerTimeoutId = null;
+            
+            // --- Constants ---
+            const FOOTER_HIDE_DELAY = 3000;
+            const PDF_PAGE_WIDTH_IN = 11;
+            const PDF_PAGE_HEIGHT_IN = PDF_PAGE_WIDTH_IN * 9 / 16;
+
+            // --- THEME DATA ---
+            const themes = {
+                'Leaf Green': {
+                    '--bg-grad-start': '#f0fdf4', '--bg-grad-end': '#dcfce7', '--bg-grad-mid-1': '#f0fdf4', '--bg-grad-mid-2': '#dcfce7', '--bg-grad-mid-3': '#bbf7d0',
+                    '--text-primary': '#334155', '--header-main': '#166534', '--header-sub': '#15803d', '--border-header': '#86efac',
+                    '--nav-button-bg': '#16a34a', '--nav-button-hover-bg': '#15803d', '--info-card-border': '#22c55e', '--conclusion-border': '#22c55e',
+                    '--conclusion-text': '#166534', '--process-step-bg': '#f0fdf4', '--process-step-border': '#bbf7d0', '--step-number-bg': '#16a34a',
+                    '--inline-code-bg': '#dcfce7', '--inline-code-text': '#14532d', '--layer-box-bg': '#dcfce7', '--layer-box-border': '#86efac',
+                    '--flow-arrow-color': '#22c55e', '--scrollbar-thumb': '#4ade80', '--scrollbar-track': '#dcfce7'
+                },
+                'Original Purple': {
+                    '--bg-grad-start': '#f5f3ff', '--bg-grad-end': '#ddd6fe', '--bg-grad-mid-1': '#f5f3ff', '--bg-grad-mid-2': '#ede9fe', '--bg-grad-mid-3': '#ddd6fe',
+                    '--text-primary': '#334155', '--header-main': '#4338ca', '--header-sub': '#4f46e5', '--border-header': '#a5b4fc',
+                    '--nav-button-bg': '#4f46e5', '--nav-button-hover-bg': '#4338ca', '--info-card-border': '#6366f1', '--conclusion-border': '#6366f1',
+                    '--conclusion-text': '#4338ca', '--process-step-bg': '#eef2ff', '--process-step-border': '#c7d2fe', '--step-number-bg': '#4f46e5',
+                    '--inline-code-bg': '#eef2ff', '--inline-code-text': '#312e81', '--layer-box-bg': '#e0e7ff', '--layer-box-border': '#c7d2fe',
+                    '--flow-arrow-color': '#6366f1', '--scrollbar-thumb': '#a78bfa', '--scrollbar-track': '#ddd6fe'
+                },
+                'Ocean Blue': {
+                    '--bg-grad-start': '#f0f9ff', '--bg-grad-end': '#dbeafe', '--bg-grad-mid-1': '#f0f9ff', '--bg-grad-mid-2': '#e0f2fe', '--bg-grad-mid-3': '#bae6fd',
+                    '--text-primary': '#334155', '--header-main': '#0c4a6e', '--header-sub': '#0369a1', '--border-header': '#7dd3fc',
+                    '--nav-button-bg': '#0ea5e9', '--nav-button-hover-bg': '#0284c7', '--info-card-border': '#38bdf8', '--conclusion-border': '#38bdf8',
+                    '--conclusion-text': '#0c4a6e', '--process-step-bg': '#f0f9ff', '--process-step-border': '#bae6fd', '--step-number-bg': '#0ea5e9',
+                    '--inline-code-bg': '#e0f2fe', '--inline-code-text': '#075985', '--layer-box-bg': '#e0f2fe', '--layer-box-border': '#7dd3fc',
+                    '--flow-arrow-color': '#38bdf8', '--scrollbar-thumb': '#38bdf8', '--scrollbar-track': '#dbeafe'
+                },
+                'Slate Gray': {
+                    '--bg-grad-start': '#f8fafc', '--bg-grad-end': '#e2e8f0', '--bg-grad-mid-1': '#f8fafc', '--bg-grad-mid-2': '#f1f5f9', '--bg-grad-mid-3': '#e2e8f0',
+                    '--text-primary': '#334155', '--header-main': '#1e293b', '--header-sub': '#334155', '--border-header': '#94a3b8',
+                    '--nav-button-bg': '#475569', '--nav-button-hover-bg': '#334155', '--info-card-border': '#64748b', '--conclusion-border': '#64748b',
+                    '--conclusion-text': '#1e293b', '--process-step-bg': '#f8fafc', '--process-step-border': '#e2e8f0', '--step-number-bg': '#475569',
+                    '--inline-code-bg': '#f1f5f9', '--inline-code-text': '#1e293b', '--layer-box-bg': '#f1f5f9', '--layer-box-border': '#cbd5e1',
+                    '--flow-arrow-color': '#64748b', '--scrollbar-thumb': '#94a3b8', '--scrollbar-track': '#e2e8f0'
+                }
+            };
+
+            // --- Core Functions ---
+            function applyTheme(themeName) {
+                const theme = themes[themeName];
+                if (!theme) return;
+                for (const [key, value] of Object.entries(theme)) {
+                    document.documentElement.style.setProperty(key, value);
+                }
+                localStorage.setItem('presentationTheme', themeName);
+                document.querySelectorAll('.theme-button').forEach(btn => {
+                    btn.classList.toggle('active', btn.dataset.theme === themeName);
+                });
+            }
+
+            function populateThemeSwitcher() {
+                Object.keys(themes).forEach(themeName => {
+                    const button = document.createElement('button');
+                    button.className = 'drawer-button theme-button';
+                    button.textContent = themeName;
+                    button.dataset.theme = themeName;
+                    button.style.backgroundColor = themes[themeName]['--nav-button-bg'];
+                    button.addEventListener('click', () => applyTheme(themeName));
+                    themeSwitcherContainer.appendChild(button);
+                });
+            }
+            
+            function initializeMermaidDiagrams() {
+                document.querySelectorAll('.mermaid').forEach(el => {
+                    el.setAttribute('data-mermaid', el.innerHTML.trim());
+                });
+            }
+
+            function showSlide(index) {
+                if (index < 0 || index >= totalSlides) return;
+                slides.forEach((slide, i) => slide.classList.toggle('active', i === index));
+                const activeSlide = slides[index];
+                if (activeSlide) {
+                    activeSlide.scrollTop = 0;
+                    setTimeout(() => {
+                        if (window.mermaid) {
+                          try {
+                            activeSlide.querySelectorAll('.mermaid').forEach(el => {
+                                const code = el.getAttribute('data-mermaid');
+                                if (code) {
+                                    el.innerHTML = code;
+                                    el.removeAttribute('data-processed');
+                                }
+                            });
+                            mermaid.run({ nodes: activeSlide.querySelectorAll('.mermaid') });
+                          } catch (e) {
+                            console.error("Mermaid rendering error:", e);
+                            activeSlide.querySelectorAll('.mermaid').forEach(el => el.innerHTML = 'Error rendering diagram.');
+                          }
+                        }
+                    }, 50);
+                }
+                slideCounter.textContent = `Slide ${index + 1} / ${totalSlides}`;
+                prevBtn.disabled = index === 0;
+                nextBtn.disabled = index === totalSlides - 1;
+                settingsDrawer.classList.remove('active');
+                currentSlideIndex = index;
+            }
+
+            function nextSlide() { showSlide(currentSlideIndex + 1); }
+            function prevSlide() { showSlide(currentSlideIndex - 1); }
+            function toggleSettingsDrawer() { settingsDrawer.classList.toggle('active'); }
+            
+            // --- PDF and Print Functions (FIXED) ---
+            function exportCurrentSlideToPdf() {
+                const activeSlide = document.querySelector('.slide.active');
+                if (!activeSlide) return;
+
+                const drawer = document.getElementById('settingsDrawer');
+                const originalStyles = {
+                    footerClassList: Array.from(slideFooter.classList), footerInlineDisplay: slideFooter.style.display,
+                    drawerDisplay: drawer.style.display, drawerTransform: drawer.style.transform,
+                    slideOverflow: activeSlide.style.overflowY, slideHeight: activeSlide.style.height, slideAspectRatio: activeSlide.style.aspectRatio
+                };
+                
+                exportPdfBtn.disabled = true; printAllBtn.disabled = true; exportPdfBtn.textContent = 'Exporting...'; optionsBtn.disabled = true;
+                if (footerTimeoutId) { clearTimeout(footerTimeoutId); footerTimeoutId = null; }
+                slideFooter.style.display = 'none'; drawer.style.display = 'none'; drawer.classList.remove('active');
+
+                activeSlide.style.overflowY = 'visible'; activeSlide.style.height = 'auto'; activeSlide.style.aspectRatio = 'auto';
+
+                const slideNumber = currentSlideIndex + 1;
+                const filename = `IS_Today_Ch10_Slide_${slideNumber}.pdf`;
+                const opt = {
+                    margin: [0.1, 0.1, 0.1, 0.1],
+                    filename: filename,
+                    image: { type: 'jpeg', quality: 0.98 },
+                    html2canvas: { scale: 2.5, useCORS: true, logging: false, scrollY: 0 },
+                    jsPDF: { unit: 'in', format: [PDF_PAGE_WIDTH_IN, PDF_PAGE_HEIGHT_IN], orientation: 'landscape' }
+                };
+                
+                html2pdf().set(opt).from(activeSlide).save().catch(err => {
+                    console.error('PDF export error:', err);
+                }).finally(() => {
+                    slideFooter.style.display = originalStyles.footerInlineDisplay;
+                    slideFooter.className = '';
+                    originalStyles.footerClassList.forEach(cls => slideFooter.classList.add(cls));
+                    drawer.style.display = originalStyles.drawerDisplay;
+                    drawer.style.transform = originalStyles.drawerTransform;
+                    activeSlide.style.overflowY = originalStyles.slideOverflow;
+                    activeSlide.style.height = originalStyles.slideHeight;
+                    activeSlide.style.aspectRatio = originalStyles.slideAspectRatio;
+                    exportPdfBtn.disabled = false;
+                    printAllBtn.disabled = false;
+                    exportPdfBtn.textContent = 'Current Slide (PDF)';
+                    optionsBtn.disabled = false;
+                });
+            }
+
+            async function triggerPrintAllSlides() {
+                settingsDrawer.classList.remove('active');
+                if (footerTimeoutId) { clearTimeout(footerTimeoutId); footerTimeoutId = null; }
+                slideFooter.classList.remove('show-footer');
+                
+                if(window.mermaid) {
+                    try {
+                        await mermaid.run({ nodes: document.querySelectorAll('.mermaid') });
+                    } catch(e) {
+                        console.error("Mermaid printing error:", e);
+                    }
+                }
+                
+                window.print();
+            }
+
+            // --- Event Listeners ---
+            prevBtn.addEventListener('click', prevSlide);
+            nextBtn.addEventListener('click', nextSlide);
+            optionsBtn.addEventListener('click', toggleSettingsDrawer);
+            exportPdfBtn.addEventListener('click', exportCurrentSlideToPdf);
+            printAllBtn.addEventListener('click', triggerPrintAllSlides);
+
+            document.querySelectorAll('.reveal-answer-btn').forEach(button => {
+                button.addEventListener('click', () => {
+                    const explanation = button.nextElementSibling;
+                    if (explanation && explanation.classList.contains('answer-explanation')) {
+                        explanation.style.display = 'block';
+                        button.style.display = 'none';
+                    }
+                });
+            });
+            
+            // --- Initial Setup ---
+            mermaid.initialize({ startOnLoad: false, theme: 'base', themeVariables: {
+                'primaryColor': '#f8fafc', 'primaryTextColor': '#334155', 'lineColor': '#475569',
+                'textColor': '#334155', 'fontSize': '16px',
+            }});
+            
+            initializeMermaidDiagrams();
+            populateThemeSwitcher();
+            const savedTheme = localStorage.getItem('presentationTheme') || 'Original Purple';
+            applyTheme(savedTheme);
+            showSlide(currentSlideIndex);
+
+            // --- Keyboard and Mouse Listeners ---
+            document.addEventListener('keydown', (e) => {
+                if (e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA') return;
+                if (e.key === 'ArrowRight' || e.key === ' ' || e.key === 'PageDown') nextSlide();
+                if (e.key === 'ArrowLeft' || e.key === 'PageUp') prevSlide();
+                if (e.key === 'Escape') settingsDrawer.classList.remove('active');
+            });
+            presentationContainer.addEventListener('mousemove', () => {
+                 if (footerTimeoutId) clearTimeout(footerTimeoutId);
+                 slideFooter.classList.add('show-footer');
+                 footerTimeoutId = setTimeout(() => slideFooter.classList.remove('show-footer'), FOOTER_HIDE_DELAY);
+            });
+            presentationContainer.addEventListener('mouseleave', () => { if (footerTimeoutId) clearTimeout(footerTimeoutId); slideFooter.classList.remove('show-footer'); });
+            document.addEventListener('click', (e) => {
+                if (settingsDrawer.classList.contains('active') && !settingsDrawer.contains(e.target) && !optionsBtn.contains(e.target)) {
+                    settingsDrawer.classList.remove('active');
+                }
+            });
+        });
+    </script>
+</body>
+</html>
